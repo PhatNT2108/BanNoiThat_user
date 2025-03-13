@@ -1,84 +1,77 @@
-import React from 'react';
-import { Carousel } from 'react-responsive-carousel';
+import React, { useEffect, useState } from 'react';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
-
-const Image1 = require('../../assets/images/1.jpg');
-const Image2 = require('../../assets/images/2.jpg');
-const Image3 = require('../../assets/images/3.jpg');
-const Image4 = require('../../assets/images/4.jpg');
-const Slide1 = require('../../assets/images/slide1.jpg');
-const Slide2 = require('../../assets/images/slide2.jpg');
-const Slide3 = require('../../assets/images/slide3.jpg');
-
-const products = [
-    {
-        id: 1,
-        image: Image1,
-        image2: Image3,
-        name: 'Product 1',
-        price: '$100',
-        colors: ['Red', 'Blue', 'Green'],
-        sold: 150,
-    },
-    {
-        id: 2,
-        image: Image2,
-        image2: Image4,
-        name: 'Product 2',
-        price: '$200',
-        colors: [],
-        sold: 200,
-    },
-    // Add more products as needed
-];
+import Sidebar from './Slidebar';
+import clientAPI from '../../api/client-api/rest-client';
+import ProductHome from '../../model/ProductHome';
+import ApiResponse from '../../model/ApiResponse';
+import PagingBar from '../../components/common/PagingBar';
+import PaginationDto from '../../model/PaginationDto';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import Loading from '../../components/common/Loading';
 
 const Homepage: React.FC = () => {
-    return (
-        <div className="homepage">
-            <div className="max-w-screen-lg mx-auto">
-                <Carousel showThumbs={false} autoPlay infiniteLoop showStatus={false} showIndicators={false} className="rounded-lg overflow-hidden shadow-lg">
-                    <div>
-                        <img src={Slide1} alt="Slide 1" className="w-full h-72 object-cover" />
-                    </div>
-                    <div>
-                        <img src={Slide2} alt="Slide 2" className="w-full h-72 object-cover" />
-                    </div>
-                    <div>
-                        <img src={Slide3} alt="Slide 3" className="w-full h-72 object-cover" />
-                    </div>
-                </Carousel>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 p-4 ml-auto mr-auto max-w-7xl mt-8">
-                {products.map((product) => (
-                    <div key={product.id} className="border rounded-lg p-4 shadow-md">
+
+    const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
+    const pageCurrent = parseInt(searchParams.get("pageCurrent") || "1");
+    const stringSearch = searchParams.get("stringSearch") ? searchParams.get("stringSearch") : '';
+
+    const [dataProducts, setDataProducts] = useState<ProductHome[]>([]);
+    const [paginationDto, setPaginationDto] = useState<PaginationDto>() || "";
+    const pageSize = 9;
+
+    const [isLoading, setIsLoading] = useState(false);
+
+    const LoadForm = async () => {
+        try {
+            setIsLoading(true);
+            const result = await clientAPI.service("products").findPagedList<ApiResponse>(`pageSize=${pageSize}&pageCurrent=${pageCurrent}&stringSearch=${stringSearch}`);
+            setDataProducts(() => result.data.result);
+            setPaginationDto(() => result.pagination);
+            setIsLoading(false);
+        }
+        catch (error) {
+            console.error("Error during signup", error);
+        }
+    }
+
+    useEffect(() => {
+        LoadForm();
+    }, [pageCurrent, stringSearch]);
+
+    const navigateProductDetail = (slug: string) => {
+        navigate(`/products/${slug}`);
+    }
+
+    return isLoading ? (<Loading />) :
+        (<div className="homepage">
+            <Sidebar />
+            <div className="grid grid-cols-4">
+                {dataProducts.map((product, index) => (
+                    //Card product
+                    <div key={index} className="border w-1/8 rounded-lg p-4 m-4 shadow-md hover:cursor-pointer hover:opacity-75 " onClick={() => navigateProductDetail(product.slug)}>
                         <div className="relative w-full h-48 mb-4">
                             <img
-                                src={product.image}
+                                src={product.thumbnailUrl}
                                 alt={product.name}
                                 className="w-full h-full object-cover transition-opacity duration-500 ease-in-out hover:opacity-0"
                             />
                             <img
-                                src={product.image2}
+                                src={product.thumbnailUrl}
                                 alt={product.name}
                                 className="absolute top-0 left-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 ease-in-out hover:opacity-100"
                             />
                         </div>
                         <h3 className="text-lg font-semibold mb-2">{product.name}</h3>
-                        <p className="text-gray-700 mb-2">{product.price}</p>
-                        {product.colors.length > 0 && (
-                            <div className="mb-2">
-                                <span className="text-gray-600">Colors: </span>
-                                {product.colors.map((color, index) => (
-                                    <button key={index} className="ml-2 px-2 py-1 border rounded text-sm">{color}</button>
-                                ))}
-                            </div>
-                        )}
-                        <p className="text-gray-600">Sold: {product.sold}</p>
+                        <div className="flex flex-row items-center gap-2 text-gray-700 mb-2">
+                            <div className='text-lg'> {product.salePrice}</div> VNĐ
+                            <div className='text-xs text-red-500'>{((1 - product.salePrice / product.price) * 100).toFixed(2)} %</div>
+                        </div>
                     </div>
                 ))}
             </div>
-        </div>
-    );
+            <PagingBar totalRecords={paginationDto?.TotalRecords} pageSize={pageSize} />
+        </div>);
 };
 
 export default Homepage;

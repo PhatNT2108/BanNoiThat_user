@@ -1,0 +1,62 @@
+import React from "react";
+import { useSearchParams } from "react-router-dom";
+
+const PagingBar = ({ totalRecords, pageSize }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const currentPage = parseInt(searchParams.get("pageCurrent") || "1", 10);
+  const totalPages = Math.ceil(totalRecords / pageSize);
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setSearchParams({ pageCurrent: page.toString() });
+    }
+  };
+
+  return (
+    <div className="flex items-center justify-center gap-2 p-4">
+      {/* Previous Button */}
+      <button
+        onClick={() => handlePageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+        className={`px-4 py-2 border rounded-lg ${
+          currentPage === 1
+            ? "bg-gray-300 cursor-not-allowed"
+            : "bg-blue-500 text-white hover:bg-blue-600"
+        }`}
+      >
+        Prev
+      </button>
+
+      {/* Page Numbers */}
+      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+        <button
+          key={page}
+          onClick={() => handlePageChange(page)}
+          className={`px-4 py-2 border rounded-lg ${
+            page === currentPage
+              ? "bg-blue-500 text-white"
+              : "bg-white hover:bg-gray-100"
+          }`}
+        >
+          {page}
+        </button>
+      ))}
+
+      {/* Next Button */}
+      <button
+        onClick={() => handlePageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+        className={`px-4 py-2 border rounded-lg ${
+          currentPage === totalPages
+            ? "bg-gray-300 cursor-not-allowed"
+            : "bg-blue-500 text-white hover:bg-blue-600"
+        }`}
+      >
+        Next
+      </button>
+    </div>
+  );
+};
+
+export default PagingBar;

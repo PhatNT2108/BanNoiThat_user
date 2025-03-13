@@ -1,16 +1,27 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux'
+import { setUser } from '../../../redux/features/userSlice';
+import clientApi from '../../../api/client-api/rest-client';
+import ApiResponse from '../../../model/ApiResponse';
 
 const Login: React.FC = () => {
-    const [account, setAccount] = useState('');
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [errAccount, setErrAccount] = useState('');
     const [errPassword, setErrPassword] = useState('');
 
-    const handleLogin = () => {
-        // Handle login logic here
+    const handleLogin = async () => {
+        let data: ApiResponse = await clientApi.service("auth/login").authentication(email, password);
+        dispatch(setUser(data.result));
+        if (data.isSuccess) {
+            navigate("/");
+        }
     };
 
     return (
@@ -33,8 +44,8 @@ const Login: React.FC = () => {
                                 name="email"
                                 id="email"
                                 placeholder="Số điện thoại / Email"
-                                value={account}
-                                onChange={(e) => setAccount(e.target.value)}
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                                 className="w-full px-4 py-2 pl-10 border rounded-md focus:ring focus:ring-red-300 focus:outline-none"
                             />
                         </div>
