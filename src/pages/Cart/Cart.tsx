@@ -20,6 +20,8 @@ const Cart: React.FC = () => {
         return items.reduce((total, item) => total + item.price * item.quantity, 0);
     };
 
+    
+
     return (
         <div className="w-1/2 container mx-auto p-4">
             <h1 className="text-3xl font-bold mb-6 text-center">Shopping Cart</h1>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingCart } from 'lucide-react'; // or adjust to your icon library
 import clientAPI from '../../../../../api/client-api/rest-client';
 import { useSelector } from 'react-redux';
@@ -11,27 +11,40 @@ import ApiResponse from '../../../../../model/ApiResponse';
 function Cart() {
   const [cartOpen, setCartOpen] = useState(false);
   const [cartData, setCartData] = useState<CartResponse>();
+  const navigate = useNavigate();
 
   const userData: User = useSelector(
     (state: RootState) => state.users
   );
 
+  //Call Api
   const LoadData = async () => {
     const data: ApiResponse = await clientAPI.service("carts").find(`email=${userData.email}`);
     setCartData(data.result);
   }
 
+  const deleteCartItem = async (idCart: string, idCartItem: string) => {
+    console.log(idCart, idCartItem);
+    const apiResponse: ApiResponse = await clientAPI.service(`carts/${idCart}/cartitems`).remove(`${idCartItem}?email=${userData.email}`);
+    if (apiResponse.isSuccess) {
+      LoadData();
+    }
+  }
+
+  //None
   useEffect(() => {
     if (userData.email) {
       console.log(userData);
       LoadData();
     }
   }, [userData]);
-  console.log(cartData?.cartItems);
-
 
   const toggleCart = () => {
     setCartOpen(!cartOpen);
+  };
+
+  const navigateCheckout = () => {
+    navigate('/checkout');
   };
 
   return (
@@ -44,7 +57,7 @@ function Cart() {
       </button>
 
       {cartOpen && (
-        <div className="absolute right-0 mt-2 w-96 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+        <div className="absolute right-0 mt-2 w-96 bg-white border border-gray-200 rounded-lg shadow-lg z-50" onMouseLeave={() => setCartOpen(false)}>
           <div className="p-4">
             <h3 className="font-bold mb-4">GIỎ HÀNG</h3>
 
@@ -71,7 +84,7 @@ function Cart() {
                         </div>
                       </div>
                     </div>
-                    <button className="text-gray-400 hover:text-gray-600" >
+                    <button className="text-gray-400 hover:text-gray-600" onClick={() => deleteCartItem(cartData?.id!, item.id!)}>
                       ✕
                     </button>
                   </div>
@@ -85,7 +98,7 @@ function Cart() {
                 </div>
 
                 <div className="flex space-x-2">
-                  <Link to="/checkOut" className="flex-1 py-2 bg-blue-700 text-white text-center rounded font-medium">
+                  <Link to="/checkOut" className="flex-1 py-2 bg-blue-700 text-white text-center rounded font-medium" onClick={navigateCheckout}>
                     THANH TOÁN
                   </Link>
                 </div>

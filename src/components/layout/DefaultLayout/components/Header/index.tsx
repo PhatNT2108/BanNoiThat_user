@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import Cart from '../Cart';
 import type { RootState } from '../../../../../redux/store';
 import User from '../../../../../model/User';
+import { ChevronDown } from "lucide-react";
 
 const Header = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -55,7 +56,19 @@ const Header = () => {
 
             <div className="flex items-center space-x-2">
               {
-                userData.email ? (<h1> {userData.email} </h1>) : (<div className="text-sm">
+                userData.email ? (
+                  <div className='flex items-center relative group'>
+                    <span className='hover:text-orange-700'>{userData.email}</span>
+                    <div className="">
+                      <ChevronDown className="w-4 h-4 ml-1" />
+                      <div className='absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50'>
+                        <p className='p-2 hover:text-orange-600 hover:cursor-pointer'>Thông tin tài khoản</p>
+                        <p className='p-2 hover:text-orange-600 hover:cursor-pointer'>Đơn hàng</p>
+                        <p className='p-2 hover:text-orange-600 hover:cursor-pointer'>Đăng xuất</p>
+                      </div>
+                    </div>
+                  </div>
+                ) : (<div className="text-sm">
                   <Link to="/auth" className="hover:text-orange-500">
                     Đăng nhập / Đăng ký
                   </Link>

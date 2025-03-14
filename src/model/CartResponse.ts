@@ -4,6 +4,7 @@ export interface CartResponse {
 }
 
 export interface CartItemResponse {
+  id: string;
   productItem_Id: string;
   productName: string;
   nameOption: string;
