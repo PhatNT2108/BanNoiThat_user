@@ -1,26 +1,31 @@
-import React, { useState } from 'react';
+import React, { ReactEventHandler, useState } from 'react';
 import { Search } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Cart from '../Cart';
-import type { RootState } from '../../../../../redux/store';
-import User from '../../../../../model/User';
+import type { RootState } from '../../../../redux/store';
+import User from '../../../../model/User';
 import { ChevronDown } from "lucide-react";
+import { setUser, emptyUserState } from '../../../../redux/features/userSlice';
 
 const Header = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [stringSearch, setStringSearch] = useState('');
+  const dispatch = useDispatch();
 
   const userData: User = useSelector(
     (state: RootState) => state.users
   );
 
-  console.log(userData);
-
-
   const triggerSearch = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setSearchParams({ stringSearch: stringSearch });
+  }
+
+  const triggerLogout = () => {
+    localStorage.removeItem('userToken');
+    dispatch(setUser(emptyUserState));
+    window.location.reload();
   }
 
   return (
@@ -62,9 +67,9 @@ const Header = () => {
                     <div className="">
                       <ChevronDown className="w-4 h-4 ml-1" />
                       <div className='absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50'>
-                        <p className='p-2 hover:text-orange-600 hover:cursor-pointer'>Thông tin tài khoản</p>
-                        <p className='p-2 hover:text-orange-600 hover:cursor-pointer'>Đơn hàng</p>
-                        <p className='p-2 hover:text-orange-600 hover:cursor-pointer'>Đăng xuất</p>
+                        <Link to="/information" className='p-2 hover:text-orange-600 hover:cursor-pointer block'>Thông tin tài khoản</Link>
+                        <Link to="/orders" className='p-2 hover:text-orange-600 hover:cursor-pointer block'>Đơn hàng</Link>
+                        <div className='p-2 hover:text-orange-600 hover:cursor-pointer' onClick={triggerLogout}>Đăng xuất</div>
                       </div>
                     </div>
                   </div>

@@ -63,6 +63,7 @@ class RestClient {
   // Thiết lập đường dẫn dịch vụ
   service(path: string): this {
     this.path = path;
+
     return this;
   }
 
@@ -135,13 +136,16 @@ class RestClient {
   async create<T>(data: any): Promise<T> {
     try {
       const isFormData = data instanceof FormData;
+      const authToken = localStorage.getItem("userToken");
       const response = await this.axiosInstance.post<T>(`/${this.path}`, data, {
         headers: {
           "Content-Type": isFormData
             ? "multipart/form-data"
             : "application/json",
+          Authorization: `Bearer ${authToken}`,
         },
       });
+
       return response.data;
     } catch (error) {
       console.error("Error creating data", error);
@@ -166,7 +170,11 @@ class RestClient {
   async find<T>(query: string = ""): Promise<T> {
     try {
       const url = query ? `/${this.path}?${query}` : `/${this.path}`;
-      const response = await this.axiosInstance.get<T>(url);
+      const response = await this.axiosInstance.get<T>(url, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+        },
+      });
       return response.data;
     } catch (error: any) {
       if (!error.response) {

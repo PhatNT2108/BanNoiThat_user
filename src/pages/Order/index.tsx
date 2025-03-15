@@ -1,0 +1,125 @@
+import React, { useEffect, useState } from "react";
+import clientAPI from "../../api/client-api/rest-client";
+import ApiResponse from "../../model/ApiResponse";
+import { OrderResponse } from "../../model/OrderResponse.";
+import { format } from "date-fns";
+
+const OrderPage = () => {
+  const [activeTab, setActiveTab] = useState("Pending");
+  const [dataOrders, setDataOrders] = useState<OrderResponse[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const tabs = ["Pending", "Processing", "Shipping", "Returned", "Done", "Cancelled"];
+
+  const LoadOrders = async () => {
+    setIsLoading(true);
+    try {
+      const response: ApiResponse = await clientAPI
+        .service("orders")
+        .find(`orderStatus=${activeTab}`);
+      setDataOrders(response.result || []);
+    } catch (error) {
+      console.error("Error loading orders:", error);
+      setDataOrders([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    LoadOrders();
+  }, [activeTab]);
+
+  const filteredOrders = dataOrders.filter((order) =>
+    order.orderItems.some(
+      (item) =>
+        item.nameItem.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.id.toString().includes(searchQuery)
+    )
+  );
+
+  return (
+    <div className="min-h-screen bg-gray-100 p-4">
+      <div className="bg-white  shadow-md rounded-md">
+        {/* Tabs */}
+        <div className="flex border-b">
+          {tabs.map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`flex-1 text-center py-2 text-sm font-medium ${activeTab === tab
+                ? "text-red-500 border-b-2 border-red-500"
+                : "text-gray-700 hover:text-red-500"
+                }`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+
+        {/* Search bar */}
+        <div className="p-4">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Bạn có thể tìm kiếm theo tên Shop, ID đơn hàng hoặc Tên Sản phẩm"
+            className="w-full border rounded-md px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+          />
+        </div>
+
+        {/* Content */}
+        <div className="p-4">
+          <h2 className="text-lg font-semibold text-gray-800">
+            {activeTab} Orders
+          </h2>
+          <p className="text-sm text-gray-600 mt-2">
+            Hiển thị danh sách đơn hàng trong trạng thái "{activeTab}".
+          </p>
+
+          {isLoading ? (
+            <div className="text-center text-gray-500 mt-4">Đang tải...</div>
+          ) : filteredOrders.length === 0 ? (
+            <div className="text-gray-500 text-center mt-4">
+              Không có đơn hàng trong trạng thái "{activeTab}".
+            </div>
+          ) : (
+            filteredOrders.map((order, index) => (
+              <div key={index} className="border border-black rounded-md p-4 mt-4">
+                <div className="flex justify-between">
+                  <div>Trạng thái đơn hàng: {order.orderStatus}</div>
+                  <div>
+                    Ngày đặt hàng:{" "}
+                    {order?.orderPaidTime
+                      ? format(new Date(order?.orderPaidTime), "dd/MM/yyyy")
+                      : "Chưa có thông tin"}
+                  </div>
+                </div>
+                <div className="flex flex-col bg-gray-300 gap-4 p-3">
+                  {order.orderItems.map((orderItem, indexOr) => (
+                    <div key={indexOr} className="flex justify-around gap-4">
+                      <img
+                        src={orderItem.imageItemUrl || "https://placehold.co/600x400"}
+                        className="w-16 h-16 object-cover rounded-md"
+                      />
+                      <div className="flex flex-col">
+                        <div>{orderItem.nameItem}</div>
+                        <div>x{orderItem.quantity}</div>
+                      </div>
+                      <div className="flex-1 text-orange-700 mt-2 text-right">
+                        {orderItem.price} đ
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default OrderPage;

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingCart } from 'lucide-react'; // or adjust to your icon library
-import clientAPI from '../../../../../api/client-api/rest-client';
+import clientAPI from '../../../../api/client-api/rest-client';
 import { useSelector } from 'react-redux';
-import User from '../../../../../model/User';
-import { RootState } from '../../../../../redux/store';
-import { CartResponse } from '../../../../../model/CartResponse';
-import ApiResponse from '../../../../../model/ApiResponse';
+import User from '../../../../model/User';
+import { RootState } from '../../../../redux/store';
+import { CartResponse } from '../../../../model/CartResponse';
+import ApiResponse from '../../../../model/ApiResponse';
 
 function Cart() {
   const [cartOpen, setCartOpen] = useState(false);

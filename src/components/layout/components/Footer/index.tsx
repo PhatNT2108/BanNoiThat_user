@@ -1,5 +1,3 @@
-import React from 'react';
-
 const Footer = () => {
     return (
         <footer className="bg-gray-800 text-white py-4">
@@ -13,6 +11,6 @@ const Footer = () => {
             </div>
         </footer>
     );
-};
+}
 
 export default Footer;

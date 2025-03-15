@@ -107,7 +107,7 @@ const CheckOutMain = () => {
     formOrder.append("paymentMethod", orderInfo.paymentMethod);
 
     try {
-      const response: ApiResponse = await clientAPI.service(`Payment?userId=${userData.email}`).create(formOrder);
+      const response: ApiResponse = await clientAPI.service(`Payment`).create(formOrder);
       if (response.isSuccess && orderInfo.paymentMethod === "cod") {
         navigate("/");
         console.log("Create order success");

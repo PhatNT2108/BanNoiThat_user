@@ -1,16 +1,20 @@
-import Home from "../pages/Home/Homepage";
-import Auth from "../pages/Auth/";
+import HomePage from "../pages/Home/Homepage";
+import AuthPage from "../pages/Auth/";
 import ProductDetail from "../pages/ProductDetail";
-import CheckoutPage from "../pages/Checkout";
-import CheckOut from "../pages/Order/CheckOut";
+import CheckOutPage from "../pages/Checkout/CheckOut";
+import InformationUserPage from "../pages/InformationUser";
 import DefaultLayout from "../components/layout/DefaultLayout";
+import UserLayout from "../components/layout/UserLayout";
+import MangeOrderPage from "../pages/Order";
 
 //Public
 const publicRoutes = [
-  { path: "/", component: Home },
-  { path: "/auth", component: Auth, Layout: null },
+  { path: "/", component: HomePage },
+  { path: "/auth", component: AuthPage, Layout: null },
   { path: "/products/:slug", component: ProductDetail, Layout: DefaultLayout },
-  { path: "/checkout", component: CheckOut, Layout: DefaultLayout },
+  { path: "/checkout", component: CheckOutPage, Layout: DefaultLayout },
+  { path: "/information", component: InformationUserPage, Layout: UserLayout },
+  { path: "/orders", component: MangeOrderPage, Layout: UserLayout },
 ];
 
 //Private

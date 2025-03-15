@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
-import clientAPI from "../../../../../api/client-api/rest-client";
-import ApiResponse from "../../../../../model/ApiResponse";
-import CategoriesResponse from "../../../../../model/CategoriesResponse";
+import clientAPI from "../../../../api/client-api/rest-client";
+import ApiResponse from "../../../../model/ApiResponse";
+import CategoriesResponse from "../../../../model/CategoriesResponse";
 import { useEffect, useState } from "react";
 
 function Navigation() {
@@ -53,13 +53,13 @@ function Navigation() {
   ];
 
   return (
-    <nav className="flex flex-row justify-center py-4 shadow-sm">
+    <nav className="flex flex-row justify-center py-4 shadow-sm font-medium">
       <ul className="flex space-x-8">
         {menuItems.map((item) => (
           <li key={item.label} className="relative group">
             <Link
               to={item.href}
-              className="text-gray-700 hover:text-orange-500 flex items-center"
+              className="text-gray-700 hover:text-orange-500 flex items-center font-semibold"
             >
               {item.label}
               {item.hasDropdown && <ChevronDown className="w-4 h-4 ml-1" />}
@@ -77,7 +77,7 @@ function Navigation() {
                         <li key={category.id || category.name} className="relative">
                           <Link
                             to={category.name || "#"}
-                            className="text-gray-700 hover:text-orange-500 flex items-center"
+                            className="text-gray-700 font-mono hover:text-orange-500 flex items-center"
                             onMouseEnter={() => (triggerShow(category.id || "", true))}
                             onMouseLeave={() => (triggerShow(category.id || "", false))}
                           >

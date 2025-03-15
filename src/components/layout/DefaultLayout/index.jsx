@@ -1,6 +1,6 @@
-import Footer from "./components/Footer/Footer";
-import Header from "./components/Header";
-import Navigation from "./components/Navigation";
+import Header from "../components/Header";
+import Navigation from "../components/Navigation";
+import Footer from "../components/Footer";
 
 function DefaultLayout({ children }) {
   return (
