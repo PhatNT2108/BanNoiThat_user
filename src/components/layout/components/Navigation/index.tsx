@@ -4,9 +4,13 @@ import clientAPI from "../../../../api/client-api/rest-client";
 import ApiResponse from "../../../../model/ApiResponse";
 import CategoriesResponse from "../../../../model/CategoriesResponse";
 import { useEffect, useState } from "react";
+import { Brand } from "../../../../model/ProductDetail";
+import NavItem from "./components/CategoriesNav";
+import BrandsResponse from "../../../../model/BrandsResponse";
 
 function Navigation() {
   const [dataCategories, setDataCategories] = useState<CategoriesResponse[]>([]);
+  const [dataBrands, setDataBrands] = useState<BrandsResponse[]>([]);
   const [loading, setLoading] = useState(true);
 
   const loadCategory = async () => {
@@ -25,85 +29,64 @@ function Navigation() {
     }
   };
 
-  const triggerShow = (idCategory: string, isShow: boolean) => {
-    const updatedCategories = dataCategories.map((category) => {
-      if (category.id === idCategory) {
-        return {
-          ...category,
-          isShow: isShow,
-        };
-      }
-      return category; // Giữ nguyên các đối tượng khác
-    });
-
-    setDataCategories(updatedCategories); // Cập nhật state
+  const loadBrands = async () => {
+    try {
+      const response: ApiResponse = await clientAPI
+        .service("brands")
+        .find();
+      response.result.map((brand: BrandsResponse) => {
+        brand.isShow = false;
+      })
+      setDataBrands(response.result);
+    } catch (error) {
+      console.error("Failed to load brands", error);
+    } finally {
+      setLoading(false);
+    }
   };
+
 
   useEffect(() => {
     loadCategory();
+    loadBrands();
   }, []);
 
   const menuItems = [
     {
-      label: "Sản Phẩm",
-      href: "/san-pham",
+      label: "Danh mục",
+      href: "/categories",
       hasDropdown: true,
       data: dataCategories,
     },
+    {
+      label: "Thương hiệu",
+      href: "/brands",
+      hasDropdown: true,
+      data: dataCategories,
+    }
   ];
 
   return (
     <nav className="flex flex-row justify-center py-4 shadow-sm font-medium">
+      {/*Dynamic*/}
       <ul className="flex space-x-8">
         {menuItems.map((item) => (
           <li key={item.label} className="relative group">
-            <Link
-              to={item.href}
-              className="text-gray-700 hover:text-orange-500 flex items-center font-semibold"
+            <div
+              className="text-gray-700 hover:text-orange-500 flex items-center font-bold"
             >
               {item.label}
               {item.hasDropdown && <ChevronDown className="w-4 h-4 ml-1" />}
-            </Link>
-
+            </div>
             {(
               //Parent
-              <div className="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+              <div className="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 font-bold">
                 {loading ? (
                   <div className="p-4 text-gray-500">Đang tải...</div>
                 ) : (
                   <ul className="p-2 space-y-2">
-                    {
-                      item.data?.map((category) => (
-                        <li key={category.id || category.name} className="relative">
-                          <Link
-                            to={category.name || "#"}
-                            className="text-gray-700 font-mono hover:text-orange-500 flex items-center"
-                            onMouseEnter={() => (triggerShow(category.id || "", true))}
-                            onMouseLeave={() => (triggerShow(category.id || "", false))}
-                          >
-                            {category.name}
-                          </Link>
-                          {
-                            //Children
-                            category.children?.length > 0 && (
-                              <div className={`absolute left-full top-0 ml w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 ${category.isShow ? 'visible opacity-100' : 'invisible'} transition-all duration-300 z-50`}
-                                onMouseEnter={() => (triggerShow(category.id || "", true))}>
-                                <ul className="p-2 space-y-2">
-                                  {category.children.map((child) => (
-                                    <li key={child.id || child.name}>
-                                      <Link
-                                        to={child.name || "#"}
-                                        className="text-gray-700 hover:text-orange-500"
-                                      >
-                                        {child.name}
-                                      </Link>
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-                            )}
-                        </li>
-                      ))}
+                    {item.href === "/categories" && (<NavItem items={dataCategories} setState={setDataCategories} />)}
+                    {item.href === "/brands" && (<NavItem items={dataBrands} setState={setDataBrands} />)}
                   </ul>
                 )}
               </div>
@@ -111,7 +94,7 @@ function Navigation() {
           </li>
         ))}
 
-        {/* Static menu items */}
+        {/* Static */}
         <li>
           <Link to="/about-us" className="text-gray-700 hover:text-orange-500">
             About Us

@@ -22,10 +22,10 @@ const PagingBar = ({ totalRecords, pageSize }) => {
         className={`px-4 py-2 border rounded-lg ${
           currentPage === 1
             ? "bg-gray-300 cursor-not-allowed"
-            : "bg-blue-500 text-white hover:bg-blue-600"
+            : "bg-orange-500 text-white hover:bg-red-400"
         }`}
       >
-        Prev
+        &lt;
       </button>
 
       {/* Page Numbers */}
@@ -35,7 +35,7 @@ const PagingBar = ({ totalRecords, pageSize }) => {
           onClick={() => handlePageChange(page)}
           className={`px-4 py-2 border rounded-lg ${
             page === currentPage
-              ? "bg-blue-500 text-white"
+              ? "bg-orange-500 text-white"
               : "bg-white hover:bg-gray-100"
           }`}
         >
@@ -50,10 +50,10 @@ const PagingBar = ({ totalRecords, pageSize }) => {
         className={`px-4 py-2 border rounded-lg ${
           currentPage === totalPages
             ? "bg-gray-300 cursor-not-allowed"
-            : "bg-blue-500 text-white hover:bg-blue-600"
+            : "bg-orange-500 text-white hover:bg-red-400"
         }`}
       >
-        Next
+        &gt;
       </button>
     </div>
   );

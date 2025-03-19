@@ -1,41 +1,32 @@
 import React from "react";
 import ItemCheckOut from "./ItemCheckOut";
+import { CartResponse } from "../../../model/CartResponse";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../redux/store";
 
 const CheckOutBill: React.FC = () => {
+  const [priceShip, setPriceShip] = React.useState(0);
+
+  const cartData: CartResponse = useSelector(
+    (state: RootState) => state.carts
+  );
+
+  console.log(cartData);
+
   return (
     <div className="max-w-md mx-auto bg-white rounded shadow">
       {/* Order Items */}
       <div className="mb-4">
-        <ItemCheckOut />
+        {cartData.cartItems.map((item) => (
+          <ItemCheckOut key={item.id} itemCart={item} />
+        ))}
       </div>
-      
-      {/* Discount Code */}
-      <div className="px-4 py-3 flex space-x-2">
-        <input 
-          type="text" 
-          placeholder="Mã giảm giá" 
-          className="flex-grow border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-        />
-        <button className="bg-gray-300 text-gray-600 px-4 py-2 rounded text-sm font-medium">
-          Sử dụng
-        </button>
-      </div>
-      
-      {/* Customer Status */}
-      <div className="px-4 py-3 border-t border-b">
-        <div className="flex justify-between items-center">
-          <p className="text-sm">Khách hàng thân thiết</p>
-          <button className="bg-blue-500 text-white px-4 py-1.5 rounded text-sm">
-            Đăng nhập
-          </button>
-        </div>
-      </div>
-      
+
       {/* Order Summary */}
       <div className="px-4 py-3">
         <div className="flex justify-between py-1.5">
           <p className="text-sm text-gray-600">Tạm tính</p>
-          <p className="text-sm">7.999.000₫</p>
+          <p className="text-sm">{cartData.cartItems.reduce((total, cartItem) => total + cartItem.salePrice, 0)}</p>
         </div>
         <div className="flex justify-between py-1.5">
           <p className="text-sm text-gray-600">Phí vận chuyển</p>
@@ -45,7 +36,7 @@ const CheckOutBill: React.FC = () => {
           <p className="text-sm font-medium">Tổng cộng</p>
           <div className="text-right">
             <p className="text-xs text-gray-500">VND</p>
-            <p className="text-lg font-medium">7.999.000₫</p>
+            <p className="text-lg font-medium">{cartData.cartItems.reduce((total, cartItem) => total + cartItem.salePrice, 0) + priceShip}</p>
           </div>
         </div>
       </div>

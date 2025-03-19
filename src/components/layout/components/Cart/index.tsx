@@ -2,13 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingCart } from 'lucide-react'; // or adjust to your icon library
 import clientAPI from '../../../../api/client-api/rest-client';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import User from '../../../../model/User';
 import { RootState } from '../../../../redux/store';
 import { CartResponse } from '../../../../model/CartResponse';
 import ApiResponse from '../../../../model/ApiResponse';
+import { setCart } from '../../../../redux/features/cartSlice';
 
 function Cart() {
+  const dispatch = useDispatch();
+
   const [cartOpen, setCartOpen] = useState(false);
   const [cartData, setCartData] = useState<CartResponse>();
   const navigate = useNavigate();
@@ -20,12 +23,13 @@ function Cart() {
   //Call Api
   const LoadData = async () => {
     const data: ApiResponse = await clientAPI.service("carts").find(`email=${userData.email}`);
+    dispatch(setCart(data.result));
     setCartData(data.result);
   }
 
-  const deleteCartItem = async (idCart: string, idCartItem: string) => {
-    console.log(idCart, idCartItem);
-    const apiResponse: ApiResponse = await clientAPI.service(`carts/${idCart}/cartitems`).remove(`${idCartItem}?email=${userData.email}`);
+  const deleteCartItem = async (cartId: string, cartItemId: string) => {
+    console.log(cartId, cartItemId);
+    const apiResponse: ApiResponse = await clientAPI.service(`carts/${cartId}/cartitems`).remove(cartItemId);
     if (apiResponse.isSuccess) {
       LoadData();
     }

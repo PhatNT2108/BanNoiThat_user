@@ -1,6 +1,6 @@
 import React, { ReactEventHandler, useState } from 'react';
 import { Search } from 'lucide-react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Cart from '../Cart';
 import type { RootState } from '../../../../redux/store';
@@ -9,8 +9,8 @@ import { ChevronDown } from "lucide-react";
 import { setUser, emptyUserState } from '../../../../redux/features/userSlice';
 
 const Header = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
   const [stringSearch, setStringSearch] = useState('');
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const userData: User = useSelector(
@@ -19,7 +19,10 @@ const Header = () => {
 
   const triggerSearch = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    setSearchParams({ stringSearch: stringSearch });
+    navigate({
+      pathname: "/",
+      search: `?stringSearch=${stringSearch.toString()}`
+    });
   }
 
   const triggerLogout = () => {

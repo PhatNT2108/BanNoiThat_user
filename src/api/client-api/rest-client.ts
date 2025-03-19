@@ -206,6 +206,34 @@ class RestClient {
     }
   }
 
+  // Tìm kiếm dữ liệu với query có phân trang
+  async findRecommend<T>(
+    query: string = "",
+    bodyForm: any
+  ): Promise<{ data: T; pagination: PaginationDto }> {
+    let paginationDto: PaginationDto;
+    try {
+      const url = query ? `/${this.path}?${query}` : `/${this.path}`;
+      const isFormData = bodyForm instanceof FormData;
+      const response = await this.axiosInstance.post<T>(url, bodyForm, {
+        headers: {
+          "Content-Type": isFormData
+            ? "multipart/form-data"
+            : "application/json",
+        },
+      });
+      paginationDto = JSON.parse(response.headers["x-pagination"]);
+      return { data: response.data, pagination: paginationDto };
+    } catch (error: any) {
+      if (!error.response) {
+        console.error("Network error", error);
+        throw new Error("Network error");
+      }
+      console.error("Error finding data", error);
+      throw error;
+    }
+  }
+
   // Cập nhật dữ liệu
   async patch<T>(objectId: string, data: any): Promise<T> {
     try {
@@ -218,6 +246,56 @@ class RestClient {
             "Content-Type": isFormData
               ? "multipart/form-data"
               : "application/json",
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error updating data", error);
+      throw error;
+    }
+  }
+
+  async patchEachProperty<T>(
+    objectId: string,
+    property: string,
+    data: any
+  ): Promise<T> {
+    try {
+      const isFormData = data instanceof FormData;
+      const response = await this.axiosInstance.patch<T>(
+        `/${this.path}/${objectId}/${property}`,
+        data,
+        {
+          headers: {
+            "Content-Type": isFormData
+              ? "multipart/form-data"
+              : "application/json",
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error updating data", error);
+      throw error;
+    }
+  }
+
+  // Cập nhật dữ liệu
+  async put<T>(objectId: string, data: any): Promise<T> {
+    try {
+      const isFormData = data instanceof FormData;
+      const response = await this.axiosInstance.put<T>(
+        `/${this.path}/${objectId}`,
+        data,
+        {
+          headers: {
+            "Content-Type": isFormData
+              ? "multipart/form-data"
+              : "application/json",
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`,
           },
         }
       );
@@ -232,7 +310,12 @@ class RestClient {
   async remove<T>(objectId: string): Promise<T> {
     try {
       const response = await this.axiosInstance.delete<T>(
-        `/${this.path}/${objectId}`
+        `/${this.path}/${objectId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+          },
+        }
       );
       return response.data;
     } catch (error) {

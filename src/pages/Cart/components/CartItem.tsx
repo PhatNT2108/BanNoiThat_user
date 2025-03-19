@@ -29,15 +29,15 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
             <Checkbox className="mr-4" checked={checked} onChange={handleCheckboxChange} />
             <img src={item.imageUrl} alt={item.name} className="w-16 h-16 object-cover mr-4 rounded-md" />
             <div className="flex-1 flex items-center justify-between">
-            <div>
-            <h3 className="text-lg font-semibold">{item.name}</h3>
-            <p className="text-gray-600">${item.price.toFixed(2)}</p>
-            </div>
-            <div className="flex items-center">
-            <Button onClick={() => handleQuantityChange(quantity > 1 ? quantity - 1 : 1)} disabled={quantity <= 1}>-</Button>
-            <InputNumber min={1} value={quantity} onChange={handleQuantityChange} className="mx-2" />
-            <Button onClick={() => handleQuantityChange(quantity + 1)}>+</Button>
-            </div>
+                <div>
+                    <h3 className="text-lg font-semibold">{item.name}</h3>
+                    <p className="text-gray-600">${item.price.toFixed(2)}</p>
+                </div>
+                <div className="flex items-center">
+                    <Button onClick={() => handleQuantityChange(quantity > 1 ? quantity - 1 : 1)} disabled={quantity <= 1}>-</Button>
+                    <InputNumber min={1} value={quantity} onChange={handleQuantityChange} className="mx-2" />
+                    <Button onClick={() => handleQuantityChange(quantity + 1)}>+</Button>
+                </div>
             </div>
         </div>
     );

@@ -39,6 +39,16 @@ const OrderPage = () => {
     )
   );
 
+  const triggerCancelOrder = async (orderId: string) => {
+    let formData = new FormData();
+    formData.append("orderStatus", "Cancelled");
+
+    const response: ApiResponse = await clientAPI.service("orders").patchEachProperty(orderId, 'orderStatus', formData);
+    if (response.isSuccess) {
+      LoadOrders();
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-100 p-4">
       <div className="bg-white  shadow-md rounded-md">
@@ -86,32 +96,40 @@ const OrderPage = () => {
             </div>
           ) : (
             filteredOrders.map((order, index) => (
-              <div key={index} className="border border-black rounded-md p-4 mt-4">
-                <div className="flex justify-between">
-                  <div>Trạng thái đơn hàng: {order.orderStatus}</div>
-                  <div>
-                    Ngày đặt hàng:{" "}
-                    {order?.orderPaidTime
-                      ? format(new Date(order?.orderPaidTime), "dd/MM/yyyy")
-                      : "Chưa có thông tin"}
+              <div key={index} className="bg-gray-100 shadow-md rounded-md p-4 mt-4">
+                <div className="flex justify-between m-2">
+                  <div className="flex  items-center">Trạng thái đơn hàng:&nbsp;
+                    <div className="text-green-600">{order.orderStatus}
+                    </div></div>
+                  <div className="flex items-center">
+                    <span className="text-gray-700 text-sm">Ngày đặt hàng:&nbsp;</span>
+                    <div className="text-green-500">
+                      {order?.orderPaidTime
+                        ? format(new Date(order?.orderPaidTime), "dd/MM/yyyy")
+                        : "Chưa có thông tin"}
+                    </div>
+
                   </div>
                 </div>
-                <div className="flex flex-col bg-gray-300 gap-4 p-3">
+                <div className="flex flex-col bg-gray-100 gap-4 p-3">
                   {order.orderItems.map((orderItem, indexOr) => (
-                    <div key={indexOr} className="flex justify-around gap-4">
+                    <div key={indexOr} className="flex border border-y-black justify-around gap-4">
                       <img
                         src={orderItem.imageItemUrl || "https://placehold.co/600x400"}
-                        className="w-16 h-16 object-cover rounded-md"
+                        className="w-16 h-16 m-2 object-cover rounded-md"
                       />
                       <div className="flex flex-col">
                         <div>{orderItem.nameItem}</div>
                         <div>x{orderItem.quantity}</div>
                       </div>
-                      <div className="flex-1 text-orange-700 mt-2 text-right">
+                      <div className="flex-1 text-orange-700 mt-2 text-right px-3">
                         {orderItem.price} đ
                       </div>
                     </div>
                   ))}
+                </div>
+                <div className="flex justify-end">
+                  <button className="bg-red-600 rounded-md px-2 py-1 text-white" onClick={() => triggerCancelOrder(order.id)}>Hủy đơn</button>
                 </div>
               </div>
             ))

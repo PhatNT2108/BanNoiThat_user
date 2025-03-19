@@ -10,6 +10,7 @@ import MangeOrderPage from "../pages/Order";
 //Public
 const publicRoutes = [
   { path: "/", component: HomePage },
+  { path: "/collections/:slug", component: HomePage, Layout: DefaultLayout },
   { path: "/auth", component: AuthPage, Layout: null },
   { path: "/products/:slug", component: ProductDetail, Layout: DefaultLayout },
   { path: "/checkout", component: CheckOutPage, Layout: DefaultLayout },

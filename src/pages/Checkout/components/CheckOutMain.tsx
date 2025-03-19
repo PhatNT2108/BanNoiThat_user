@@ -196,7 +196,7 @@ const CheckOutMain = () => {
         <div className="space-y-2">
           <div className="flex items-center space-x-2">
             <input type="radio" name="payment" value="cod" id="cod" onChange={(e) => setOrderInfo((prev) => ({ ...prev, paymentMethod: e.target.value }))} />
-            <label htmlFor="cod">Thánh toán khi nhận hàng (COD)</label>
+            <label htmlFor="cod">Thanh toán khi nhận hàng (COD)</label>
           </div>
           <div className="flex items-center space-x-2">
             <input type="radio" name="payment" value="momo" id="momo" onChange={(e) => setOrderInfo((prev) => ({ ...prev, paymentMethod: e.target.value }))} />
