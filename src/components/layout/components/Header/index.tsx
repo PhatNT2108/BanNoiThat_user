@@ -20,7 +20,7 @@ const Header = () => {
   const triggerSearch = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     navigate({
-      pathname: "/",
+      pathname: "/collections",
       search: `?stringSearch=${stringSearch.toString()}`
     });
   }

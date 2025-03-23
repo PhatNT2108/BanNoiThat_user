@@ -14,11 +14,15 @@ function InformationUserPage() {
 
   // Call API để load thông tin user
   const loadForm = async () => {
-    const response: ApiResponse = await clientAPI.service(`users/${userData.user_id}`).find();
-    console.log(response.result);
-    if (response.isSuccess) {
-      setUserInfo(response.result);
+    try {
+      const response: ApiResponse = await clientAPI.service(`users/${userData.user_id}`).find();
+      if (response.isSuccess) {
+        setUserInfo(response.result);
+      }
+    } catch {
+      console.error("Error loading user information");
     }
+
   };
 
   // Call API để cập nhật thông tin user

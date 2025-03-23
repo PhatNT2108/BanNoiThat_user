@@ -2,20 +2,38 @@ import HomePage from "../pages/Home/Homepage";
 import AuthPage from "../pages/Auth/";
 import ProductDetail from "../pages/ProductDetail";
 import CheckOutPage from "../pages/Checkout/CheckOut";
-import InformationUserPage from "../pages/InformationUser";
+import InformationUserPage from "../pages/InformationUser/InformationUserPage";
 import DefaultLayout from "../components/layout/DefaultLayout";
 import UserLayout from "../components/layout/UserLayout";
 import MangeOrderPage from "../pages/Order";
+import AddressUser from "../pages/InformationUser/addressUser";
+import FilteredProductPage from "../pages/Home/FilteredProductPage";
+import ForgotPasswordPage from "../pages/Auth/ForgotPasswordPage";
 
 //Public
 const publicRoutes = [
   { path: "/", component: HomePage },
-  { path: "/collections/:slug", component: HomePage, Layout: DefaultLayout },
+  {
+    path: "/collections/",
+    component: FilteredProductPage,
+    Layout: DefaultLayout,
+  },
+  {
+    path: "/collections/:slug",
+    component: FilteredProductPage,
+    Layout: DefaultLayout,
+  },
   { path: "/auth", component: AuthPage, Layout: null },
   { path: "/products/:slug", component: ProductDetail, Layout: DefaultLayout },
   { path: "/checkout", component: CheckOutPage, Layout: DefaultLayout },
   { path: "/information", component: InformationUserPage, Layout: UserLayout },
   { path: "/orders", component: MangeOrderPage, Layout: UserLayout },
+  { path: "/address", component: AddressUser, Layout: UserLayout },
+  {
+    path: "/forgot-password",
+    component: ForgotPasswordPage,
+    Layout: null,
+  },
 ];
 
 //Private

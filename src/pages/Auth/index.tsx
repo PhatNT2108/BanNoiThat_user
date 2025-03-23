@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
+import { useNavigate } from 'react-router-dom';
 
 const Auth: React.FC = () => {
     const [activeTab, setActiveTab] = useState<'login' | 'signup'>('login');

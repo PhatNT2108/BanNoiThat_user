@@ -3,6 +3,7 @@ export interface OrderResponse {
   totalPrice: string;
   orderItems: OrderItemResponse[];
   paymentStatus: string;
+  shippingAddress: string;
   orderStatus: string;
   orderPaidTime: Date;
 }

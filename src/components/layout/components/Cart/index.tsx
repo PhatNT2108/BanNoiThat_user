@@ -22,13 +22,17 @@ function Cart() {
 
   //Call Api
   const LoadData = async () => {
-    const data: ApiResponse = await clientAPI.service("carts").find(`email=${userData.email}`);
-    dispatch(setCart(data.result));
-    setCartData(data.result);
+    try {
+      const data: ApiResponse = await clientAPI.service("carts").find(`email=${userData.email}`);
+      dispatch(setCart(data.result));
+      setCartData(data.result);
+    } catch {
+      console.error("Error during system");
+    }
+
   }
 
   const deleteCartItem = async (cartId: string, cartItemId: string) => {
-    console.log(cartId, cartItemId);
     const apiResponse: ApiResponse = await clientAPI.service(`carts/${cartId}/cartitems`).remove(cartItemId);
     if (apiResponse.isSuccess) {
       LoadData();

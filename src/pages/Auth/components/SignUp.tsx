@@ -1,18 +1,41 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import ApiResponse from '../../../model/ApiResponse';
+import clientAPI from '../../../api/client-api/rest-client';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../../../redux/features/userSlice';
 
 const SignUp: React.FC = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [fullName, setFullName] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+
     const [loading, setLoading] = useState(false);
     const [errEmail, setErrEmail] = useState('');
     const [errPassword, setErrPassword] = useState('');
     const [errConfirmPassword, setErrConfirmPassword] = useState('');
 
-    const handleSignUp = () => {
-        // Handle sign up logic here
+    const handleSignUp = async () => {
+        try {
+            var formData = new FormData();
+            formData.append("FullName", fullName);
+            formData.append("Email", email);
+            formData.append("Password", password);
+
+            let data: ApiResponse = await clientAPI.service("auth/register").create(formData);
+            dispatch(setUser(data.result));
+            if (data.isSuccess) {
+                navigate("/login");
+            }
+        }
+        catch {
+            setErrConfirmPassword("Thông tin không chính xác");
+        }
     };
 
     return (
@@ -37,6 +60,26 @@ const SignUp: React.FC = () => {
                                 placeholder="Email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
+                                className="w-full px-4 py-2 pl-10 border rounded-md focus:ring focus:ring-red-300 focus:outline-none"
+                            />
+                        </div>
+                        {errEmail && <p className="text-red-500 text-sm mt-1">{errEmail}</p>}
+                    </div>
+
+                    {/* Input Full name */}
+                    <div>
+                        <label htmlFor="fullName" className="sr-only">
+                            Email
+                        </label>
+                        <div className="relative">
+                            <span className="absolute top-1/2 transform -translate-y-1/2 left-3 text-green-400">O</span>
+                            <input
+                                type="fullName"
+                                name="fullName"
+                                id="fullName"
+                                placeholder="Full Name"
+                                value={fullName}
+                                onChange={(e) => setFullName(e.target.value)}
                                 className="w-full px-4 py-2 pl-10 border rounded-md focus:ring focus:ring-red-300 focus:outline-none"
                             />
                         </div>

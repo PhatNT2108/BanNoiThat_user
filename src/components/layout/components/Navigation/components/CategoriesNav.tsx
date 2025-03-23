@@ -33,14 +33,14 @@ const NavItem: React.FC<Props> = ({ items, setState }) => {
       {
         items.map((item: ItemCategory, index: number) => (
           <li key={index} className="relative">
-            <div
-              // to={`/collections/${item.slug || "#"}`}
+            <Link
+              to={`/collections/${item.slug || "#"}`}
               className="text-gray-700 font-mono hover:text-orange-500 flex items-center"
               onMouseEnter={() => (triggerShow(item.id || "", true))}
               onMouseLeave={() => (triggerShow(item.id || "", false))}
             >
               {item.name}
-            </div>
+            </Link>
             {
               //Children
               item.children && item.children.length > 0 && (

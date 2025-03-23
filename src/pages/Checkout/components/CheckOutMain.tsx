@@ -96,7 +96,6 @@ const CheckOutMain = () => {
     fetchWards();
   }, [selectedDistrict]);
 
-  console.log(orderInfo);
 
   //Call Api
   const createOrder = async () => {
@@ -105,6 +104,9 @@ const CheckOutMain = () => {
     formOrder.append("phoneNumber", orderInfo.phoneNumber);
     formOrder.append("shippingAddress", orderInfo.shippingAddress);
     formOrder.append("paymentMethod", orderInfo.paymentMethod);
+    formOrder.append("province", provinces.find(province => province.code == selectedProvince)?.name || "");
+    formOrder.append("district", districts.find(district => district.code == selectedDistrict)?.name || "");
+    formOrder.append("ward", wards.find(wards => wards.code == selectedWard)?.name || "");
 
     try {
       const response: ApiResponse = await clientAPI.service(`Payment`).create(formOrder);
@@ -113,6 +115,10 @@ const CheckOutMain = () => {
         console.log("Create order success");
       }
       else if (response.isSuccess && orderInfo.paymentMethod === "momo") {
+        window.location.href = response.result;
+        console.log("Create order success");
+      }
+      else if (response.isSuccess && orderInfo.paymentMethod === "vnpay") {
         window.location.href = response.result;
         console.log("Create order success");
       }
@@ -201,6 +207,10 @@ const CheckOutMain = () => {
           <div className="flex items-center space-x-2">
             <input type="radio" name="payment" value="momo" id="momo" onChange={(e) => setOrderInfo((prev) => ({ ...prev, paymentMethod: e.target.value }))} />
             <label htmlFor="momo">Ví MoMo</label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <input type="radio" name="payment" value="vnpay" id="vnpay" onChange={(e) => setOrderInfo((prev) => ({ ...prev, paymentMethod: e.target.value }))} />
+            <label htmlFor="vnpay">Thanh toán qua VNPAY</label>
           </div>
         </div>
       </div>

@@ -16,11 +16,10 @@ const OrderPage = () => {
     setIsLoading(true);
     try {
       const response: ApiResponse = await clientAPI
-        .service("orders")
+        .service("orders/customer")
         .find(`orderStatus=${activeTab}`);
       setDataOrders(response.result || []);
     } catch (error) {
-      console.error("Error loading orders:", error);
       setDataOrders([]);
     } finally {
       setIsLoading(false);
@@ -90,12 +89,12 @@ const OrderPage = () => {
 
           {isLoading ? (
             <div className="text-center text-gray-500 mt-4">Đang tải...</div>
-          ) : filteredOrders.length === 0 ? (
+          ) : dataOrders.length === 0 ? (
             <div className="text-gray-500 text-center mt-4">
               Không có đơn hàng trong trạng thái "{activeTab}".
             </div>
           ) : (
-            filteredOrders.map((order, index) => (
+            dataOrders.map((order, index) => (
               <div key={index} className="bg-gray-100 shadow-md rounded-md p-4 mt-4">
                 <div className="flex justify-between m-2">
                   <div className="flex  items-center">Trạng thái đơn hàng:&nbsp;
@@ -119,7 +118,7 @@ const OrderPage = () => {
                         className="w-16 h-16 m-2 object-cover rounded-md"
                       />
                       <div className="flex flex-col">
-                        <div>{orderItem.nameItem}</div>
+                        <div className="text-lg">{orderItem.nameItem}</div>
                         <div>x{orderItem.quantity}</div>
                       </div>
                       <div className="flex-1 text-orange-700 mt-2 text-right px-3">
@@ -127,10 +126,14 @@ const OrderPage = () => {
                       </div>
                     </div>
                   ))}
+                  <div><span className="text-lg text-black font-bold">Địa chỉ nhận hàng: </span>{order.shippingAddress}</div>
                 </div>
-                <div className="flex justify-end">
-                  <button className="bg-red-600 rounded-md px-2 py-1 text-white" onClick={() => triggerCancelOrder(order.id)}>Hủy đơn</button>
-                </div>
+                {
+                  activeTab === "Pending" && (<div className="flex justify-end">
+                    <button className="bg-red-600 rounded-md px-2 py-1 text-white" onClick={() => triggerCancelOrder(order.id)}>Hủy đơn</button>
+                  </div>)
+                }
+
               </div>
             ))
           )}

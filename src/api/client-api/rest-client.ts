@@ -109,29 +109,6 @@ class RestClient {
     }
   }
 
-  // Đăng ký tài khoản mới
-  async signup<T>({
-    username,
-    email,
-    password,
-  }: {
-    username: string;
-    email: string;
-    password: string;
-  }): Promise<T> {
-    try {
-      const response = await this.axiosInstance.post<T>("/services/sign-up", {
-        username,
-        email,
-        password,
-      });
-      return response.data;
-    } catch (error) {
-      console.error("Error during signup", error);
-      throw error;
-    }
-  }
-
   // Tạo mới dữ liệu
   async create<T>(data: any): Promise<T> {
     try {

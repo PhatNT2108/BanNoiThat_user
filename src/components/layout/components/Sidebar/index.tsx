@@ -19,7 +19,7 @@ function Sidebar() {
             </Link>
           </li>
           <li>
-            <Link to="/orders" className="block p-2 text-gray-700 rounded hover:bg-gray-200">
+            <Link to="/address" className="block p-2 text-gray-700 rounded hover:bg-gray-200">
               Địa chỉ
             </Link>
           </li>

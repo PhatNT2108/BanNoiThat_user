@@ -16,7 +16,7 @@ export interface Category {
 
 export interface Brand {
   id: string;
-  brandName: string;
+  name: string;
 }
 
 export interface ProductItemResponse {

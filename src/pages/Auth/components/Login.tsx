@@ -14,15 +14,24 @@ const Login: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [errAccount, setErrAccount] = useState('');
-    const [errPassword, setErrPassword] = useState('');
 
     const handleLogin = async () => {
-        let data: ApiResponse = await clientApi.service("auth/login").authentication(email, password);
-        dispatch(setUser(data.result));
-        if (data.isSuccess) {
-            navigate("/");
+        try {
+            let data: ApiResponse = await clientApi.service("auth/login").authentication(email, password);
+            dispatch(setUser(data.result));
+            if (data.isSuccess) {
+                navigate("/");
+            }
         }
+        catch {
+            setErrAccount("Thông tin không chính xác");
+        }
+
     };
+
+    const navigateForgotPassword = () => {
+        navigate("/forgot-password");
+    }
 
     return (
         <div className="min-h flex items-center justify-center">
@@ -49,9 +58,7 @@ const Login: React.FC = () => {
                                 className="w-full px-4 py-2 pl-10 border rounded-md focus:ring focus:ring-red-300 focus:outline-none"
                             />
                         </div>
-                        {errAccount && <p className="text-red-500 text-sm mt-1">{errAccount}</p>}
                     </div>
-
                     {/* Input Password */}
                     <div>
                         <label htmlFor="password" className="sr-only">
@@ -76,7 +83,8 @@ const Login: React.FC = () => {
                                 {showPassword ? "🙈" : "👁️"}
                             </button>
                         </div>
-                        {errPassword && <p className="text-red-500 text-sm mt-1">{errPassword}</p>}
+                        {/* {errPassword && <p className="text-red-500 text-sm mt-1">{errPassword}</p>} */}
+                        {errAccount && <p className="text-red-500 text-sm mt-2">{errAccount}</p>}
                     </div>
 
                     {/* Quên mật khẩu */}
@@ -85,7 +93,6 @@ const Login: React.FC = () => {
                             Quên mật khẩu?
                         </Link>
                     </div>
-
                     {/* Nút Đăng nhập */}
                     <button
                         onClick={handleLogin}
