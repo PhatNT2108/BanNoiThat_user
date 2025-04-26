@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
-import SliderBar from './Slidebar';
 import clientAPI from '../../api/client-api/rest-client';
 import ProductHome from '../../model/ProductHome';
 import ApiResponse from '../../model/ApiResponse';
@@ -10,6 +9,8 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import Loading from '../../components/common/Loading';
 import { getFromLocalStorage } from '../../utils/HandleInteracted';
 import ProductCard from './components/ProductCard';
+import './Home.css';
+import SectionCategories from '../../components/layout/components/SectionCategory';
 
 const Homepage: React.FC = () => {
 
@@ -86,12 +87,11 @@ const Homepage: React.FC = () => {
 
     return isLoading ? (<Loading />) :
         (<div className="">
-            <SliderBar />
             {/*new product*/}
             <div className='p-10'>
-                <div className="flex justify-between px-4 text-3xl font-bold ">
+                <div className="headline flex justify-between items-center p-4 text-3xl font-bold ">
                     <span> Sản phẩm mới </span>
-                    <span className='text-blue-500 text-sm'> Xem thêm </span>
+                    <span className='hover:cursor-pointer text-sm text-green-300'> Xem thêm </span>
                 </div>
                 <div className="grid grid-cols-4 grid-rows-1">
                     {dataNewProducts.length > 0 ? dataNewProducts.map((product, index) => (
@@ -101,11 +101,14 @@ const Homepage: React.FC = () => {
                     )) : <div className="text-center text-lg">Không có sản phẩm nào</div>}
                 </div>
             </div>
+
+            <SectionCategories />
+
             {/*recommend product*/}
             <div className='p-10'>
-                <div className="flex justify-between px-4 text-3xl font-bold ">
+                <div className="headline flex justify-between items-center p-4 text-3xl font-bold ">
                     <span> Gợi ý cho bạn</span>
-                    <span className='text-blue-500 text-sm'> Xem thêm </span>
+                    <span className='hover:cursor-pointer text-sm text-green-300'> Xem thêm </span>
                 </div>
                 <div className="grid grid-cols-4">
                     {dataRecommendProducts.length > 0 ? dataRecommendProducts.map((product, index) => (

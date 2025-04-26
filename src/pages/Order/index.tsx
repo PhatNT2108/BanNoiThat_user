@@ -46,6 +46,7 @@ const OrderPage = () => {
     if (response.isSuccess) {
       LoadOrders();
     }
+    window.location.reload();
   }
 
   return (

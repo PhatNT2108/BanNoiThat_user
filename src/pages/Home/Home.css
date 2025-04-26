@@ -1,0 +1,6 @@
+.headline {
+  color: #2f9e44;
+  border-radius: 10px;
+  border: 1px solid #2f9e44;
+  background-image: linear-gradient(to right, #a4e7b0, #2f9e44);
+}

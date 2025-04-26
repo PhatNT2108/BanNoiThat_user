@@ -7,35 +7,35 @@ const Slide3 = require('../../assets/images/slide3.jpg');
 
 function Slidebar() {
   return (
-    <div className="max-w-screen h-72 mx-auto">
+    <div className="max-w-screen h-[50vh] mx-auto overflow-hidden shadow-xl">
       <Carousel
         showThumbs={false}
         autoPlay
         infiniteLoop
         showStatus={false}
-        showIndicators={false}
-        className="overflow-hidden shadow-lg"
+        showIndicators={true}
+        className="h-[50vh]"
       >
-        <div>
+        <div className="relative group">
           <img
             src={Slide1}
             alt="Slide 1"
-            className="w-full h-72 object-cover"
+            className="w-full h-[50vh] object-cover transition-transform duration-300 group-hover:scale-105"
           />
+          <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <h2 className="text-white text-xl font-semibold">Chào mừng đến với Slide 1</h2>
+          </div>
         </div>
-        <div>
+
+        <div className="relative group">
           <img
             src={Slide2}
             alt="Slide 2"
-            className="w-full h-72 object-cover"
+            className="w-full h-[50vh] object-cover transition-transform duration-300 group-hover:scale-105"
           />
-        </div>
-        <div>
-          <img
-            src={Slide3}
-            alt="Slide 3"
-            className="w-full h-72 object-cover"
-          />
+          <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <h2 className="text-white text-xl font-semibold">Khám phá Slide 2</h2>
+          </div>
         </div>
       </Carousel>
     </div>

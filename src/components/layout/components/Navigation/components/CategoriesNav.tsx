@@ -35,7 +35,7 @@ const NavItem: React.FC<Props> = ({ items, setState }) => {
           <li key={index} className="relative">
             <Link
               to={`/collections/${item.slug || "#"}`}
-              className="text-gray-700 font-mono hover:text-orange-500 flex items-center"
+              className="text-gray-700 font-mono hover:text-green-700 flex items-center"
               onMouseEnter={() => (triggerShow(item.id || "", true))}
               onMouseLeave={() => (triggerShow(item.id || "", false))}
             >
@@ -51,7 +51,7 @@ const NavItem: React.FC<Props> = ({ items, setState }) => {
                       <li key={child.id || child.name}>
                         <Link
                           to={`/collections/${child.slug || "#"}`}
-                          className="text-gray-700 hover:text-orange-500"
+                          className="text-gray-700 hover:text-green-700"
                         >
                           {child.name}
                         </Link>

@@ -1,17 +1,15 @@
 import Header from "../components/Header";
 import Navigation from "../components/Navigation";
 import Footer from "../components/Footer";
-import ChatbotRecommend from "../components/Chatbox";
+import ChatbotRecommend from "../components/ChatbotBox";
+import SectionCategories from "../components/SectionCategory";
 
 function DefaultLayout({ children }) {
   return (
-    <div>
+    <div className="relative ">
       <Header />
-      <Navigation />
       <div className="py-3">{children}</div>
-      <div className="sticky inline right-0 bottom-0 ">
-        <ChatbotRecommend />
-      </div>
+      <ChatbotRecommend />
       <Footer />
     </div>
   );

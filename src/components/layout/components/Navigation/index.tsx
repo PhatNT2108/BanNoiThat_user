@@ -67,20 +67,20 @@ function Navigation() {
   ];
 
   return (
-    <nav className="flex flex-row justify-center py-4 shadow-sm font-medium">
+    <nav className="flex flex-row justify-center  py-4 shadow-sm font-medium">
       {/*Dynamic*/}
       <ul className="flex space-x-8">
         {menuItems.map((item) => (
-          <li key={item.label} className="relative group">
+          <li key={item.label} className="relative group background">
             <div
-              className="text-gray-700 hover:text-orange-500 flex items-center font-bold"
+              className="text-[#d7f0db] hover:text-[#87d194] flex items-center font-bold"
             >
               {item.label}
               {item.hasDropdown && <ChevronDown className="w-4 h-4 ml-1" />}
             </div>
             {(
               //Parent
-              <div className="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 font-bold">
+              <div className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 font-bold">
                 {loading ? (
                   <div className="p-4 text-gray-500">Đang tải...</div>
                 ) : (
@@ -96,15 +96,16 @@ function Navigation() {
 
         {/* Static */}
         <li>
-          <Link to="/about-us" className="text-gray-700 hover:text-orange-500">
-            About Us
-          </Link>
-        </li>
-        <li>
-          <Link to="/showroom" className="text-gray-700 hover:text-orange-500">
+          <Link to="/showroom" className="text-[#d7f0db] font-bold hover:text-[#d7f0db]">
             Showroom
           </Link>
         </li>
+        <li>
+          <Link to="/about-us" className="text-[#d7f0db] font-bold hover:text-[#d7f0db]">
+            About Us
+          </Link>
+        </li>
+
       </ul>
     </nav >
   );

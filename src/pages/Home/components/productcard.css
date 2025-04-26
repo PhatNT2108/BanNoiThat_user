@@ -1,0 +1,14 @@
+.card-product {
+  font-family: sans-serif;
+  position: relative;
+  border-radius: 10px;
+  border: 0.5px solid #e4e2e2;
+  padding: 1rem;
+  margin: 1rem 1rem;
+}
+
+.card-product:hover {
+  opacity: 0.75;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}

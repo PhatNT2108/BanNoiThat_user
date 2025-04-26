@@ -1,13 +1,12 @@
 import Footer from "../components/Footer";
 import Header from "../components/Header";
-import Navigation from "../components/Navigation";
 import Sidebar from "../components/Sidebar";
+import HeaderShort from "../components/HeaderShort";
 
 function UseLayout({ children }) {
   return (
     <div className="relative ">
-      <Header />
-      <Navigation />
+      <HeaderShort />
       <div className="flex">
         <Sidebar />
         <div className="flex-1">{children}</div>

@@ -303,6 +303,6 @@ class RestClient {
 }
 
 // Khởi tạo clientAPI với baseURL là localhost:7000
+// const clientAPI = new RestClient().config("http://161.248.146.74:4000/api");
 const clientAPI = new RestClient().config("https://localhost:7000/api");
-
 export default clientAPI;

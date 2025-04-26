@@ -10,7 +10,6 @@ import { getFromLocalStorage, saveInteraction } from '../../utils/HandleInteract
 import Tabs from './Components/Tabs';
 import ProductHome from '../../model/ProductHome';
 import ProductCard from '../Home/components/ProductCard';
-import { Underline } from 'lucide-react';
 
 const ProductDetailPage: React.FC = () => {
     const { slug } = useParams();
@@ -102,9 +101,25 @@ const ProductDetailPage: React.FC = () => {
         }
     }
 
+    const trigger3D = () => {
+        let url = 'http://localhost:5173/?productItemId=' + currentItemSelected?.id
+        window.location.href = url;
+    }
+
     return (isLoading ? <div> Loading...</div > :
         <div>
             <div className="relative flex flex-row w-2/3 gap-4 p-4 mx-auto">
+                <div className="flex flex-col gap-2 z-50">
+                    {additionalImages?.map((image, index) => (
+                        <img
+                            key={index}
+                            className="w-20 h-20 object-cover rounded-md border"
+                            src={image || "https://placehold.co/600x400"}
+                            alt={`Additional Image ${index}`}
+                        />
+                    ))}
+                </div>
+
                 {/* Left Section: Product Images */}
                 <div className="relative flex flex-col gap-2 z-10">
                     <div className="relative">
@@ -117,17 +132,6 @@ const ProductDetailPage: React.FC = () => {
                         {
                             currentItemSelected === undefined && <div className="absolute flex w-1/2 h-1/2 justify-center items-center rounded-full inset-0 m-auto text-lg text-white bg-gray-700 opacity-45 ">Hết hàng</div>
                         }
-                    </div>
-
-                    <div className="flex flex-row gap-2 z-50">
-                        {additionalImages?.map((image, index) => (
-                            <img
-                                key={index}
-                                className="w-10 h-10 object-cover rounded-md border"
-                                src={image || "https://placehold.co/600x400"}
-                                alt={`Additional Image ${index}`}
-                            />
-                        ))}
                     </div>
                 </div>
 
@@ -142,58 +146,60 @@ const ProductDetailPage: React.FC = () => {
                     </div>
 
                     {/* Price */}
-                    <div className="text-xl text-orange-500 font-semibold mb-4">
-                        {currentItemSelected?.salePrice} VND
+                    <div className="text-xl text-green-700 font-semibold mb-4">
+                        {currentItemSelected?.salePrice.toLocaleString()} &#8363;
                         <span className="text-gray-500 line-through text-sm ml-2">
-                            {currentItemSelected?.price} VND
+                            {currentItemSelected?.price.toLocaleString()} &#8363;
                         </span>
                     </div>
 
                     {/* Options */}
-                    <div className="flex items-center gap-4 mb-4">
+                    <h2 className="text-lg font-bold ">Phân loại:</h2>
+                    <div className="flex items-center gap-4 mb-4 p-3">
                         {dataProduct?.productItems?.map((item, index) => {
                             return item.quantity > 0 ? (<div
                                 key={index}
                                 onClick={() => triggerSelectItem(item)}
-                                className={`p-2 rounded-xs border flex items-center justify-center cursor-pointer ${currentItemSelected?.id === item.id ? 'bg-black text-white rounded-md' : 'border-orange-400 rounded-md'}`}
+                                className={`p-2 border flex items-center justify-center cursor-pointer ${currentItemSelected?.id === item.id ? 'bg-black text-white rounded-md' : 'border-green-700 rounded-md'}`}
                             >{item.nameOption}</div>
-                            ) : (<div>
+                            ) : (
                                 <div
                                     key={index}
-                                    className={`p-2 rounded-xs border flex items-center justify-center cursor-pointer bg-gray-300 rounded-md`}
+                                    className={`p-2 border flex items-center justify-center cursor-pointer bg-gray-300 rounded-md`}
                                 >{item.nameOption}</div>
-                            </div>)
+                            )
                         })}
                     </div>
 
                     {/* Product Details */}
-                    <div className="mb-4">
-                        <h2 className="text-lg font-bold mb-2">Chi tiết sản phẩm:</h2>
-                        <ul className="list-disc list-inside text-gray-700">
+                    <div className="flex items-center mb-2 ">
+                        <h2 className="text-lg font-bold ">Thông tin chung:&nbsp;</h2>
+                        <ul className="text-gray-700">
                             {dataProduct?.description}
                         </ul>
                     </div>
 
                     {/* Product Details */}
-                    <div className="mb-4">
-                        <h2 className="text-lg font-bold mb-2">Thương thiệu: </h2>
-                        <ul className="list-disc list-inside text-gray-700">
-                            {dataProduct?.brand.name}
+                    <div className="flex items-center mb-4">
+                        <h2 className="text-lg font-bold">Thương thiệu:&nbsp;</h2>
+                        <ul className=" text-gray-700">
+                            {dataProduct?.brand?.name}
                         </ul>
                     </div>
 
                     {/* Buttons */}
                     {
                         currentItemSelected !== undefined && (
-                            <div>
-                                <div className="flex flex-col gap-4">
-                                    <button className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600" onClick={triggerAddItemManual}>
-                                        Thêm vào giỏ hàng
-                                    </button>
-                                    <button className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600">
-                                        Mua ngay
-                                    </button>
-                                </div>
+                            <div className="flex flex-row items-center rounded-3xl gap-4">
+                                <button className="font-semibold font-sans rounded-3xl bg-[#da684c] uppercase text-white py-2 px-4 hover:bg-[#f89075]">
+                                    Mua ngay
+                                </button>
+                                <button className="font-sans uppercase border rounded-3xl border-gray-950 py-2 px-4 hover:bg-gray-400" onClick={triggerAddItemManual}>
+                                    Thêm vào giỏ hàng
+                                </button>
+                                <button className="w-20 h-full font-semibold bg-gray-200 flex justify-center items-center hover:bg-gray-100 hover:cursor-pointer" onClick={trigger3D}>
+                                    3D
+                                </button>
                             </div>
                         )}
                 </div>
@@ -201,7 +207,7 @@ const ProductDetailPage: React.FC = () => {
 
             {/*Tabs*/}
             <div className='w-1/2 mx-auto'>
-                <Tabs />
+                <Tabs description={dataProduct?.description || ""} product_id={dataProduct?.id || null} />
             </div>
 
             {/*Gợi ý sản phẩm*/}
@@ -218,7 +224,7 @@ const ProductDetailPage: React.FC = () => {
                     )) : <div className="text-center text-lg">Không có sản phẩm nào</div>}
                 </div>
             </div>
-        </div>)
+        </div >)
 };
 
 export default ProductDetailPage;

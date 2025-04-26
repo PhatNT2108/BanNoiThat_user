@@ -32,6 +32,7 @@ const SignUp: React.FC = () => {
             if (data.isSuccess) {
                 navigate("/login");
             }
+            setErrConfirmPassword("Đăng ký thành công!");
         }
         catch {
             setErrConfirmPassword("Thông tin không chính xác");

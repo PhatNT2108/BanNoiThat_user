@@ -1,16 +1,15 @@
-import React, { ReactEventHandler, useState } from 'react';
+import { useState } from 'react';
 import { Search } from 'lucide-react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Cart from '../Cart';
 import type { RootState } from '../../../../redux/store';
 import User from '../../../../model/User';
 import { setUser, emptyUserState } from '../../../../redux/features/userSlice';
-import "./Header_style.css";
 import Navigation from "../Navigation";
+import "./headershort.css";
 
-
-const Header = () => {
+function HeaderShort() {
   const [stringSearch, setStringSearch] = useState('');
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -34,7 +33,7 @@ const Header = () => {
   }
 
   return (
-    <header className="header max-w-full relative">
+    <header className="header-short max-w-full relative">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-around py-4">
           {/* Logo */}
@@ -92,6 +91,6 @@ const Header = () => {
       </div >
     </header >
   );
-};
+}
 
-export default Header;
+export default HeaderShort;
