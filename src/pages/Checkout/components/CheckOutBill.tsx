@@ -25,8 +25,12 @@ const CheckOutBill: React.FC = () => {
       {/* Order Summary */}
       <div className="px-4 py-3">
         <div className="flex justify-between py-1.5">
-          <p className="text-sm text-gray-600">Tạm tính</p>
-          <p className="text-sm">{cartData.cartItems.reduce((total, cartItem) => total + cartItem.salePrice, 0)}</p>
+          <p className="text-lg text-gray-600">Tạm tính</p>
+          <p className="text-lg">{cartData.cartItems.reduce((total, cartItem) => total + cartItem.price, 0).toLocaleString("vi-VN")} ₫</p>
+        </div>
+        <div className="flex justify-between py-1.5">
+          <p className="text-sm text-gray-600">Giảm giá</p>
+          <p className="text-sm">-{cartData.cartItems.reduce((total, cartItem) => (total + cartItem.price - cartItem.salePrice), 0).toLocaleString("vi-VN")} ₫</p>
         </div>
         <div className="flex justify-between py-1.5">
           <p className="text-sm text-gray-600">Phí vận chuyển</p>
@@ -36,7 +40,7 @@ const CheckOutBill: React.FC = () => {
           <p className="text-sm font-medium">Tổng cộng</p>
           <div className="text-right">
             <p className="text-xs text-gray-500">VND</p>
-            <p className="text-lg font-medium">{cartData.cartItems.reduce((total, cartItem) => total + cartItem.salePrice, 0) + priceShip}</p>
+            <p className="text-lg font-medium">{(cartData.cartItems.reduce((total, cartItem) => total + cartItem.salePrice, 0) + priceShip).toLocaleString("vi-VN")} ₫</p>
           </div>
         </div>
       </div>

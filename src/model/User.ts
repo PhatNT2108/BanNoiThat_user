@@ -4,4 +4,6 @@ export default interface User {
   email: string;
   birthday: string;
   isMale: string;
+  address: string;
+  phoneNumber: string;
 }

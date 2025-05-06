@@ -13,6 +13,7 @@ const ItemCheckOut: React.FC<Props> = ({ itemCart }) => {
       </div>
       <div className="flex-grow">
         <h2 className="text-sm font-medium">{itemCart.nameOption}</h2>
+        <h2 className="text-[0.8rem] text-gray-400 font-medium">x{itemCart.quantity}</h2>
       </div>
       <div className="text-right">
         <p className="font-medium text-orange-500 text-lg">{itemCart.salePrice.toLocaleString("vi-VN")}₫</p>

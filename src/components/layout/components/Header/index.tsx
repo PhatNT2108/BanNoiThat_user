@@ -1,4 +1,4 @@
-import React, { ReactEventHandler, useState } from 'react';
+import React, { memo, ReactEventHandler, useState } from 'react';
 import { Search } from 'lucide-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -32,6 +32,8 @@ const Header = () => {
     dispatch(setUser(emptyUserState));
     window.location.reload();
   }
+
+  console.log("test rerender header");
 
   return (
     <header className="header max-w-full relative">
@@ -94,4 +96,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default memo(Header);

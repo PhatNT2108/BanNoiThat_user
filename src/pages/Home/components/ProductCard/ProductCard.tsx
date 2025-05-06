@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import ProductHome from "../../../model/ProductHome";
+import ProductHome from "../../../../model/ProductHome";
 import './productcard.css';
 
 interface Props {

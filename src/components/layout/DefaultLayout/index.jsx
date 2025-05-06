@@ -1,18 +1,17 @@
 import Header from "../components/Header";
-import Navigation from "../components/Navigation";
 import Footer from "../components/Footer";
-import ChatbotRecommend from "../components/ChatbotBox";
-import SectionCategories from "../components/SectionCategory";
+import { memo } from "react";
 
 function DefaultLayout({ children }) {
+  console.log("test rerender");
+
   return (
     <div className="relative ">
       <Header />
       <div className="py-3">{children}</div>
-      <ChatbotRecommend />
       <Footer />
     </div>
   );
 }
 
-export default DefaultLayout;
+export default memo(DefaultLayout);

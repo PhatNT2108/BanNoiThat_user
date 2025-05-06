@@ -27,4 +27,5 @@ export interface ProductItemResponse {
   salePrice: number;
   sku: string;
   imageUrl: string;
+  modelUrl: string;
 }

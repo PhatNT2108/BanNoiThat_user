@@ -3,7 +3,7 @@ import { ChevronDown } from "lucide-react";
 import clientAPI from "../../../../api/client-api/rest-client";
 import ApiResponse from "../../../../model/ApiResponse";
 import CategoriesResponse from "../../../../model/CategoriesResponse";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { Brand } from "../../../../model/ProductDetail";
 import NavItem from "./components/CategoriesNav";
 import BrandsResponse from "../../../../model/BrandsResponse";
@@ -44,7 +44,6 @@ function Navigation() {
       setLoading(false);
     }
   };
-
 
   useEffect(() => {
     loadCategory();
@@ -111,4 +110,4 @@ function Navigation() {
   );
 }
 
-export default Navigation;
+export default memo(Navigation);

@@ -1,14 +1,16 @@
+import DefaultLayout from "../components/layout/DefaultLayout";
+import UserLayout from "../components/layout/UserLayout";
+import ShortHeaderLayout from "../components/layout/ShortHeaderLayout";
 import HomePage from "../pages/Home/Homepage";
 import AuthPage from "../pages/Auth/";
 import ProductDetail from "../pages/ProductDetail";
 import CheckOutPage from "../pages/Checkout/CheckOut";
 import InformationUserPage from "../pages/InformationUser/InformationUserPage";
-import DefaultLayout from "../components/layout/DefaultLayout";
-import UserLayout from "../components/layout/UserLayout";
 import MangeOrderPage from "../pages/Order";
-import AddressUser from "../pages/InformationUser/addressUser";
+import AddressUser from "../pages/InformationUser/FavoriteUser";
 import FilteredProductPage from "../pages/Home/FilteredProductPage";
 import ForgotPasswordPage from "../pages/Auth/ForgotPasswordPage";
+import NonHeaderLayout from "../components/layout/NonHeaderLayout";
 
 //Public
 const publicRoutes = [
@@ -24,8 +26,12 @@ const publicRoutes = [
     Layout: DefaultLayout,
   },
   { path: "/auth", component: AuthPage, Layout: null },
-  { path: "/products/:slug", component: ProductDetail, Layout: DefaultLayout },
-  { path: "/checkout", component: CheckOutPage, Layout: DefaultLayout },
+  {
+    path: "/products/:slug",
+    component: ProductDetail,
+    Layout: ShortHeaderLayout,
+  },
+  { path: "/checkout", component: CheckOutPage, Layout: NonHeaderLayout },
   { path: "/information", component: InformationUserPage, Layout: UserLayout },
   { path: "/orders", component: MangeOrderPage, Layout: UserLayout },
   { path: "/address", component: AddressUser, Layout: UserLayout },

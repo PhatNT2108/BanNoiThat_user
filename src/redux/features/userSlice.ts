@@ -7,6 +7,8 @@ export const emptyUserState: User = {
   email: "",
   birthday: "",
   isMale: "",
+  address: "",
+  phoneNumber: "",
 };
 
 export const userSlice = createSlice({

@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import ApiResponse from '../../../model/ApiResponse';
 import clientAPI from '../../../api/client-api/rest-client';
 import { useDispatch } from 'react-redux';
-import { setUser } from '../../../redux/features/userSlice';
+import { toast } from "react-toastify";
 
 const SignUp: React.FC = () => {
     const dispatch = useDispatch();
@@ -28,14 +28,12 @@ const SignUp: React.FC = () => {
             formData.append("Password", password);
 
             let data: ApiResponse = await clientAPI.service("auth/register").create(formData);
-            dispatch(setUser(data.result));
-            if (data.isSuccess) {
-                navigate("/login");
-            }
-            setErrConfirmPassword("Đăng ký thành công!");
+            toast.success("Đăng ký thành công!");
+            window.location.reload();
         }
         catch {
             setErrConfirmPassword("Thông tin không chính xác");
+            toast.error("Đăng ký không thành công!");
         }
     };
 

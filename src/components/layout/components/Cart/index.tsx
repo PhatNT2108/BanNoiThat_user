@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import clientAPI from '../../../../api/client-api/rest-client';
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,11 +22,22 @@ function Cart() {
   //Call Api
   const LoadData = async () => {
     try {
-      const data: ApiResponse = await clientAPI.service("carts").find(`email=${userData.email}`);
+      const data: ApiResponse = await clientAPI.service("carts").find();
       dispatch(setCart(data.result));
       setCartData(data.result);
     } catch {
       console.error("Error during system");
+    }
+  }
+
+  //Upsert với giỏ hàng
+  const UpsertProductToCart = async (cartItem: FormData) => {
+    try {
+      const data: ApiResponse = await clientAPI.service(`carts`).create(cartItem);
+      LoadData();
+    }
+    catch (error) {
+      console.error("Error during signup", error);
     }
   }
 
@@ -35,6 +46,14 @@ function Cart() {
     if (apiResponse.isSuccess) {
       LoadData();
     }
+  }
+
+  const triggerAddItemManual = (productItem_Id: string, quantity: string, isAddManual: boolean) => {
+    const data = new FormData();
+    data.append("productItem_Id", productItem_Id);
+    data.append("quantity", quantity);
+    data.append("isAddManual", isAddManual.toString());
+    UpsertProductToCart(data);
   }
 
   //None
@@ -77,14 +96,15 @@ function Cart() {
                       <img src={item.imageUrl} alt={item.nameOption} className="w-full h-full object-cover" />
                     </div>
                     <div className="flex-1">
-                      <h4 className="text-sm font-medium">{item.nameOption}</h4>
-                      <div className="flex items-center mt-1">
+                      <h4 className="text-lg font-medium">{item.nameOption}</h4>
+                      <div className="flex items-center mt-1 gap-2">
                         <input
-                          type="number"
                           value={item.quantity}
+                          type="number"
                           min="1"
-                          className="w-12 border border-gray-300 rounded text-center mr-2"
-                          readOnly
+                          max="100"
+                          onChange={(e) => { triggerAddItemManual(item.productItem_Id, e.target.value, false) }}
+                          className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none py-2 border rounded-md text-center"
                         />
                         <div>
                           <p className="text-orange-500 font-bold">{item.salePrice.toLocaleString()}đ</p>
@@ -121,4 +141,4 @@ function Cart() {
   );
 }
 
-export default Cart;
+export default memo(Cart);

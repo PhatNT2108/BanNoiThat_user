@@ -9,13 +9,17 @@ import { useSelector } from 'react-redux';
 import { getFromLocalStorage, saveInteraction } from '../../utils/HandleInteracted';
 import Tabs from './Components/Tabs';
 import ProductHome from '../../model/ProductHome';
-import ProductCard from '../Home/components/ProductCard';
+import ProductCard from '../Home/components/ProductCard/ProductCard';
+import QuantitySelector from '../../components/layout/components/QuantityPlusMinus/QuantityPlusMinus';
+import { toast } from "react-toastify";
 
 const ProductDetailPage: React.FC = () => {
     const { slug } = useParams();
     const [isLoading, setIsLoading] = useState(false);
     const [dataProduct, setDataProducts] = useState<ProductDetail>();
     const [currentItemSelected, setCurrentItemSelected] = useState<ProductItemResponse>();
+    const [currentImageSelected, setCurrentImageSelected] = useState<string>();
+    const [quantity, setQuantity] = useState(1);
     const userData: User = useSelector(
         (state: RootState) => state.users
     );
@@ -80,6 +84,8 @@ const ProductDetailPage: React.FC = () => {
     const AddProductToCart = async (cartItem: FormData) => {
         try {
             const data: ApiResponse = await clientAPI.service(`carts?email=${userData.email}`).create(cartItem);
+            toast.success("Đã thêm vào giỏ hàng!");
+
             window.location.reload();
         }
         catch (error) {
@@ -89,16 +95,22 @@ const ProductDetailPage: React.FC = () => {
 
     const triggerSelectItem = (item: ProductItemResponse) => {
         setCurrentItemSelected(() => item);
+        setCurrentImageSelected(() => item.imageUrl);
     }
 
     const triggerAddItemManual = () => {
         if (currentItemSelected?.id) {
             const data = new FormData();
             data.append("productItem_Id", currentItemSelected?.id);
-            data.append("quantity", "1");
+            data.append("quantity", quantity.toString());
             data.append("isAddManual", "true");
             AddProductToCart(data);
         }
+        setQuantity(1);
+    }
+
+    const triggerSelectCurrentImage = (image: string) => {
+        setCurrentImageSelected(() => image);
     }
 
     const trigger3D = () => {
@@ -113,7 +125,8 @@ const ProductDetailPage: React.FC = () => {
                     {additionalImages?.map((image, index) => (
                         <img
                             key={index}
-                            className="w-20 h-20 object-cover rounded-md border"
+                            onClick={() => triggerSelectCurrentImage(image)}
+                            className="w-20 h-20 object-cover rounded-md border hover:cursor-pointer hover:border-gray-500"
                             src={image || "https://placehold.co/600x400"}
                             alt={`Additional Image ${index}`}
                         />
@@ -125,10 +138,9 @@ const ProductDetailPage: React.FC = () => {
                     <div className="relative">
                         <img
                             className="w-[400px] h-[400px]  overflow-hidden object-fit rounded-md border"
-                            src={currentItemSelected?.imageUrl || "https://placehold.co/600x400"}
+                            src={currentImageSelected || "https://placehold.co/600x400"}
                             alt="Product Thumbnail"
                         />
-
                         {
                             currentItemSelected === undefined && <div className="absolute flex w-1/2 h-1/2 justify-center items-center rounded-full inset-0 m-auto text-lg text-white bg-gray-700 opacity-45 ">Hết hàng</div>
                         }
@@ -187,6 +199,12 @@ const ProductDetailPage: React.FC = () => {
                         </ul>
                     </div>
 
+                    {/* Quantity */}
+                    <div className="flex items-center mb-4">
+                        <h2 className="text-lg font-bold">Số lượng:&nbsp;</h2>
+                        <QuantitySelector quantity={quantity} setQuantity={setQuantity} />
+                    </div>
+
                     {/* Buttons */}
                     {
                         currentItemSelected !== undefined && (
@@ -197,9 +215,12 @@ const ProductDetailPage: React.FC = () => {
                                 <button className="font-sans uppercase border rounded-3xl border-gray-950 py-2 px-4 hover:bg-gray-400" onClick={triggerAddItemManual}>
                                     Thêm vào giỏ hàng
                                 </button>
-                                <button className="w-20 h-full font-semibold bg-gray-200 flex justify-center items-center hover:bg-gray-100 hover:cursor-pointer" onClick={trigger3D}>
-                                    3D
-                                </button>
+                                {
+                                    currentItemSelected.modelUrl && (<button className="w-max px-3 py-1 h-full font-semibold rounded-sm bg-gray-300 flex justify-center items-center hover:bg-gray-100 hover:cursor-pointer" onClick={trigger3D}>
+                                        3D
+                                    </button>)
+                                }
+
                             </div>
                         )}
                 </div>

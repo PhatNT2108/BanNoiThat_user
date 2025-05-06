@@ -26,23 +26,37 @@ interface Ward {
 
 interface OrderInfo {
   fullName: string;
+  email: string;
   shippingAddress: string;
   phoneNumber: string;
   paymentMethod: string;
 }
 
 const CheckOutMain = () => {
+  const userData: User = useSelector(
+    (state: RootState) => state.users
+  );
+
+  const navigate = useNavigate();
+
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [districts, setDistricts] = useState<District[]>([]);
   const [wards, setWards] = useState<Ward[]>([]);
   const [selectedProvince, setSelectedProvince] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedWard, setSelectedWard] = useState("");
-  const [orderInfo, setOrderInfo] = useState<OrderInfo>({ fullName: "", paymentMethod: "", shippingAddress: "", phoneNumber: "" });
-  const navigate = useNavigate();
-  const userData: User = useSelector(
-    (state: RootState) => state.users
-  );
+  const [orderInfo, setOrderInfo] = useState<OrderInfo>({ fullName: userData.fullName || "", paymentMethod: "vnpay", shippingAddress: "", phoneNumber: userData.phoneNumber || "", email: userData.email || "" });
+
+  const loadUserInfo = async () => {
+    try {
+      const data: ApiResponse = await clientAPI.service(`users/${userData.user_id}`).find();
+      setOrderInfo(data.result);
+    }
+    catch (error) {
+      console.error("Error loading user information:", error);
+    }
+  }
+
   // Fetch provinces
   useEffect(() => {
     const fetchProvinces = async () => {
@@ -96,6 +110,9 @@ const CheckOutMain = () => {
     fetchWards();
   }, [selectedDistrict]);
 
+  useEffect(() => {
+    loadUserInfo();
+  }, [])
 
   //Call Api
   const createOrder = async () => {
@@ -138,7 +155,7 @@ const CheckOutMain = () => {
         <input className="w-full p-2 border rounded" placeholder="Họ và tên" value={orderInfo.fullName} onChange={(e) => setOrderInfo((prev) => ({ ...prev, fullName: e.target.value }))
         } />
         <div className="grid grid-cols-2 gap-4">
-          <input className="w-full p-2 border rounded" placeholder="Email" />
+          <input className="w-full p-2 border rounded" placeholder="Email" value={orderInfo.email} />
           <input className="w-full p-2 border rounded" placeholder="Số điện thoại" value={orderInfo.phoneNumber} onChange={(e) => setOrderInfo((prev) => ({ ...prev, phoneNumber: e.target.value }))} />
         </div>
 

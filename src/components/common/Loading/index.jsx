@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 const Loading = () => {
   const spinnerStyle = {
     width: "40px",
@@ -28,4 +30,4 @@ const Loading = () => {
   );
 };
 
-export default Loading;
+export default memo(Loading);

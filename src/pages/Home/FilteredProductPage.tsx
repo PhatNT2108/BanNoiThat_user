@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import clientAPI from '../../api/client-api/rest-client';
 import ProductHome from '../../model/ProductHome';
 import ApiResponse from '../../model/ApiResponse';
 import PaginationDto from '../../model/PaginationDto';
 import Loading from '../../components/common/Loading';
-import ProductCard from './components/ProductCard';
+import ProductCard from './components/ProductCard/ProductCard';
 import PagingBar from '../../components/common/PagingBar';
 
 const FilteredProductPage: React.FC = () => {
@@ -13,9 +13,8 @@ const FilteredProductPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const stringFilter = searchParams.get("stringSearch") || "";
   var finalString = stringFilter || slug;
-  console.log(slug);
-  const pageCurrent = parseInt(searchParams.get("pageCurrent") || "1");
-  const pageSize = 9;
+  const [page, setPage] = useState(1);
+  const pageSize = 12;
 
   const [filteredProducts, setFilteredProducts] = useState<ProductHome[]>([]);
   const [paginationDto, setPaginationDto] = useState<PaginationDto>();
@@ -24,11 +23,18 @@ const FilteredProductPage: React.FC = () => {
   const loadFilteredProducts = async () => {
     try {
       setIsLoading(true);
-      // Adjust the endpoint as needed; here we use "products/filtered" for filtering
+
+      const pageCurrent = parseInt(searchParams.get("pageCurrent") || "1");
+
+      if (!finalString) {
+        finalString = "";
+      }
+
       const result = await clientAPI.service('products/').findPagedList<ApiResponse>(
         `pageSize=${pageSize}&pageCurrent=${pageCurrent}&stringSearch=${finalString}`
       );
 
+      setPage(pageCurrent);
       setFilteredProducts(result.data.result);
       setPaginationDto(result.pagination);
     } catch (error) {
@@ -40,14 +46,18 @@ const FilteredProductPage: React.FC = () => {
 
   useEffect(() => {
     loadFilteredProducts();
-  }, [pageCurrent, stringFilter, slug]);
+  }, [searchParams, stringFilter, slug]);
 
-  return isLoading ? (
-    <Loading />
-  ) : (
+  return (
     <div className="p-10">
-      <div className="flex justify-between px-4 text-3xl font-bold">
-        <span>Filtered Products</span>
+      <div className="flex gap-3 text-3xl font-bold">
+        <span>Bộ Lọc</span>
+        <select
+          className="appearance-none bg-gray-100 border border-gray-300 rounded-lg py-2 px-3 text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        >
+          <option value="option1">Tùy chọn 1</option>
+          <option value="option2">Tùy chọn 2</option>
+        </select>
       </div>
       <div className="grid grid-cols-4 gap-4">
         {filteredProducts.length > 0 ? (
@@ -65,4 +75,4 @@ const FilteredProductPage: React.FC = () => {
   );
 };
 
-export default FilteredProductPage;
+export default memo(FilteredProductPage);

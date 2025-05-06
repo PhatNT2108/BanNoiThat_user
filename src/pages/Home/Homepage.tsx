@@ -8,9 +8,9 @@ import PaginationDto from '../../model/PaginationDto';
 import { useParams, useSearchParams } from 'react-router-dom';
 import Loading from '../../components/common/Loading';
 import { getFromLocalStorage } from '../../utils/HandleInteracted';
-import ProductCard from './components/ProductCard';
+import ProductCard from './components/ProductCard/ProductCard';
 import './Home.css';
-import SectionCategories from '../../components/layout/components/SectionCategory';
+import SectionCategories from './components/SectionCategory';
 
 const Homepage: React.FC = () => {
 
@@ -85,13 +85,17 @@ const Homepage: React.FC = () => {
         LoadProductNew();
     }, []);
 
-    return isLoading ? (<Loading />) :
-        (<div className="">
+    const navigateToFilterPage = () => {
+        window.location.href = `/collections`;
+    }
+
+    return (
+        <div className="">
             {/*new product*/}
             <div className='p-10'>
                 <div className="headline flex justify-between items-center p-4 text-3xl font-bold ">
                     <span> Sản phẩm mới </span>
-                    <span className='hover:cursor-pointer text-sm text-green-300'> Xem thêm </span>
+                    <span className='hover:cursor-pointer text-sm text-green-300' onClick={() => navigateToFilterPage()}> Xem thêm </span>
                 </div>
                 <div className="grid grid-cols-4 grid-rows-1">
                     {dataNewProducts.length > 0 ? dataNewProducts.map((product, index) => (
@@ -108,7 +112,6 @@ const Homepage: React.FC = () => {
             <div className='p-10'>
                 <div className="headline flex justify-between items-center p-4 text-3xl font-bold ">
                     <span> Gợi ý cho bạn</span>
-                    <span className='hover:cursor-pointer text-sm text-green-300'> Xem thêm </span>
                 </div>
                 <div className="grid grid-cols-4">
                     {dataRecommendProducts.length > 0 ? dataRecommendProducts.map((product, index) => (

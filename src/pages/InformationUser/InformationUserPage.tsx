@@ -4,12 +4,18 @@ import ApiResponse from "../../model/ApiResponse";
 import User from "../../model/User";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
+import LocationSelector from "./LocationUserInput";
 
 function InformationUserPage() {
   const userData: User = useSelector((state: RootState) => state.users);
 
   const [isEditing, setIsEditing] = useState(false);
+  const [isEditAddress, setIsEditAddress] = useState(false);
   const [userInfo, setUserInfo] = useState<User | null>(null);
+  const [selectedProvince, setSelectedProvince] = useState("");
+  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [selectedWard, setSelectedWard] = useState("");
+  const [address, setAddress] = useState<string>("");
   const [error, setError] = useState<string>("");
 
   // Call API để load thông tin user
@@ -56,10 +62,16 @@ function InformationUserPage() {
   }, []);
 
   // Xử lý nút Edit/Save
-  const handleEditClick = () => {
+  const handleEditInfoClick = (isSave: boolean) => {
     setIsEditing(!isEditing);
-    if (isEditing) {
+    if (isSave) {
       updateInfoUser();
+    }
+  };
+
+  const handleEditAddressUserClick = (isSave: boolean) => {
+    setIsEditAddress(!isEditAddress);
+    if (isSave) {
     }
   };
 
@@ -72,12 +84,12 @@ function InformationUserPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white shadow-lg rounded-2xl p-6 w-1/2">
-        <span className="text-lg px-auto text-center p-2 block">Thông tin cá nhân</span>
+        <span className="font-bold text-lg px-auto text-center p-2 block">Thông tin cá nhân</span>
         <div className="flex flex-col items-center">
           <div className="text-center">
             {userInfo ? (
               isEditing ? (
-                <>
+                <div>
                   <input
                     type="text"
                     name="fullName"
@@ -109,10 +121,10 @@ function InformationUserPage() {
                     <option value="true">Male</option>
                     <option value="false">Female</option>
                   </select>
-                </>
+                </div>
               ) : (
-                <>
-                  <h2 className="text-2xl font-bold text-gray-800">
+                <div>
+                  <h2 className="text-xl text-gray-800">
                     {userInfo.fullName}
                   </h2>
                   <p className="text-gray-600 mt-1">{userInfo.email}</p>
@@ -122,21 +134,93 @@ function InformationUserPage() {
                   <p className="text-gray-600 mt-1">
                     Gender: {userInfo.isMale === "true" ? "Male" : "Female"}
                   </p>
-                </>
+                </div>
               )
             ) : (
               <p>Loading user information...</p>
             )}
           </div>
-          <button
-            onClick={handleEditClick}
-            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
-          >
-            {isEditing ? "Save" : "Edit"}
-          </button>
+          {
+            //Xử lý nút Edit/Save
+            userInfo && (
+              <div>
+                {isEditing ? (<div className="flex gap-2">
+                  <button
+                    onClick={() => handleEditInfoClick(true)}
+                    className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+                  >
+                    Save
+                  </button>
+                  <button
+                    onClick={() => handleEditInfoClick(false)}
+                    className="mt-4 bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition"
+                  >
+                    Cancel
+                  </button>
+                </div>)
+                  :
+                  (
+                    <button
+                      onClick={() => handleEditInfoClick(false)}
+                      className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+                    >
+                      Edit
+                    </button>
+                  )}
+              </div>
+            )
+          }
+
+          <div>
+            <span className="font-bold text-lg px-auto text-center p-2 block mt-3">Địa chỉ nhận hàng</span>
+            {
+              userInfo?.address ? (isEditAddress ? (<div className="mt-4 w-full">
+                <LocationSelector
+                  selectedProvince={selectedProvince || ""}
+                  selectedDistrict={selectedDistrict || ""}
+                  selectedWard={selectedWard || ""}
+                  shippingAddress={address || ""}
+                  setSelectedProvince={setSelectedProvince}
+                  setSelectedDistrict={setSelectedDistrict}
+                  setSelectedWard={setSelectedWard}
+                  setAddress={setAddress}
+                />
+              </div>) : (<div>Có thông tin</div>))
+                : (<div>Chưa có thông tin</div>)
+            }
+          </div>
+          {
+            userInfo?.address && (
+              <div>
+                {isEditAddress ? (<div className="flex gap-2">
+                  <button
+                    onClick={() => handleEditAddressUserClick(true)}
+                    className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+                  >
+                    Save
+                  </button>
+                  <button
+                    onClick={() => handleEditAddressUserClick(false)}
+                    className="mt-4 bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition"
+                  >
+                    Cancel
+                  </button>
+                </div>)
+                  :
+                  (
+                    <button
+                      onClick={() => handleEditAddressUserClick(false)}
+                      className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+                    >
+                      Edit
+                    </button>
+                  )}
+              </div>
+            )
+          }
         </div>
       </div>
-    </div>
+    </div >
   );
 }
 

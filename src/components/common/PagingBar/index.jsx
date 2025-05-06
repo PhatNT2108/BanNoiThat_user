@@ -1,15 +1,18 @@
-import React from "react";
-import { useSearchParams } from "react-router-dom";
+import React, { memo } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const PagingBar = ({ totalRecords, pageSize }) => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const currentPage = parseInt(searchParams.get("pageCurrent") || "1", 10);
   const totalPages = Math.ceil(totalRecords / pageSize);
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
-      setSearchParams({ pageCurrent: page.toString() });
+      searchParams.delete("pageCurrent");
+      searchParams.append("pageCurrent", page.toString());
+      navigate(`?${searchParams.toString()}`);
     }
   };
 
@@ -59,4 +62,4 @@ const PagingBar = ({ totalRecords, pageSize }) => {
   );
 };
 
-export default PagingBar;
+export default memo(PagingBar);
