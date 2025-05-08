@@ -15,8 +15,14 @@ const SectionCategories = () => {
   const [categories, setCategories] = useState<Category[]>([]);
 
   const loadCategories = async () => {
-    const data: ApiResponse = await clientAPI.service("categories/homepage").find();
-    setCategories(data.result);
+    try {
+      const data: ApiResponse = await clientAPI.service("categories/homepage").find();
+      setCategories(data.result);
+    }
+    catch (error) {
+      console.log("test", error);
+      console.error("Error loading categories:", error);
+    }
   }
 
   useEffect(() => {

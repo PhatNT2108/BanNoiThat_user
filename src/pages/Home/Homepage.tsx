@@ -48,7 +48,7 @@ const Homepage: React.FC = () => {
             setIsLoading(false);
         }
         catch (error) {
-            console.error("Error during signup", error);
+            console.log("Error during signup", error);
         }
     }
 
@@ -98,7 +98,7 @@ const Homepage: React.FC = () => {
                     <span className='hover:cursor-pointer text-sm text-green-300' onClick={() => navigateToFilterPage()}> Xem thêm </span>
                 </div>
                 <div className="grid grid-cols-4 grid-rows-1">
-                    {dataNewProducts.length > 0 ? dataNewProducts.map((product, index) => (
+                    {dataNewProducts?.length > 0 ? dataNewProducts?.map((product, index) => (
                         <div key={index} >
                             <ProductCard product={product} />
                         </div>
@@ -114,7 +114,7 @@ const Homepage: React.FC = () => {
                     <span> Gợi ý cho bạn</span>
                 </div>
                 <div className="grid grid-cols-4">
-                    {dataRecommendProducts.length > 0 ? dataRecommendProducts.map((product, index) => (
+                    {dataRecommendProducts?.length > 0 ? dataRecommendProducts?.map((product, index) => (
                         <div key={index} >
                             <ProductCard product={product} />
                         </div>

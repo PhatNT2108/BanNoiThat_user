@@ -88,7 +88,8 @@ const ProductDetailPage: React.FC = () => {
 
             window.location.reload();
         }
-        catch (error) {
+        catch (error: any) {
+            toast.error(error.response.data.errorMessages[0]);
             console.error("Error during signup", error);
         }
     }

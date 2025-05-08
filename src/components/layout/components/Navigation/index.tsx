@@ -18,7 +18,7 @@ function Navigation() {
       const response: ApiResponse = await clientAPI
         .service("Categories/client")
         .find();
-      response.result.map((category: CategoriesResponse) => {
+      response?.result?.map((category: CategoriesResponse) => {
         category.isShow = false;
       })
       setDataCategories(response.result);
@@ -34,7 +34,7 @@ function Navigation() {
       const response: ApiResponse = await clientAPI
         .service("brands")
         .find();
-      response.result.map((brand: BrandsResponse) => {
+      response?.result?.map((brand: BrandsResponse) => {
         brand.isShow = false;
       })
       setDataBrands(response.result);
