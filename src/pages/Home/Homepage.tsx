@@ -6,14 +6,14 @@ import ApiResponse from '../../model/ApiResponse';
 import PagingBar from '../../components/common/PagingBar';
 import PaginationDto from '../../model/PaginationDto';
 import { useParams, useSearchParams } from 'react-router-dom';
-import Loading from '../../components/common/Loading';
 import { getFromLocalStorage } from '../../utils/HandleInteracted';
 import ProductCard from './components/ProductCard/ProductCard';
-import './Home.css';
 import SectionCategories from './components/SectionCategory';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import './Home.css';
 
 const Homepage: React.FC = () => {
-
     const [searchParams] = useSearchParams();
     var stringSearch = searchParams.get("stringSearch") ? searchParams.get("stringSearch") : '';
 
@@ -66,7 +66,7 @@ const Homepage: React.FC = () => {
                 formData.append(`InteractedProductIds[${index}]`, productId);
             });
 
-            const result = await clientAPI.service("products").findPagedList<ApiResponse>(`pageSize=${4}&pageCurrent=${1}`);
+            const result = await clientAPI.service("products").findPagedList<ApiResponse>(`pageSize=${10}&pageCurrent=${1}`);
 
             setNewDataProducts(result.data.result);
             setPaginationDto(result.pagination);
@@ -92,28 +92,46 @@ const Homepage: React.FC = () => {
     return (
         <div className="">
             {/*new product*/}
-            <div className='p-10'>
-                <div className="headline flex justify-between items-center p-4 text-3xl font-bold ">
+            <div className='md:w-[80%] w-full md:p-10 p-2 mx-auto'>
+                <div className="flex justify-between items-center p-4 md:text-3xl text-xl font-bold ">
                     <span> Sản phẩm mới </span>
                     <span className='hover:cursor-pointer text-sm text-green-300' onClick={() => navigateToFilterPage()}> Xem thêm </span>
                 </div>
-                <div className="grid grid-cols-4 grid-rows-1">
-                    {dataNewProducts?.length > 0 ? dataNewProducts?.map((product, index) => (
-                        <div key={index} >
-                            <ProductCard product={product} />
-                        </div>
-                    )) : <div className="text-center text-lg">Không có sản phẩm nào</div>}
-                </div>
+                <Swiper
+                    spaceBetween={20} // Khoảng cách giữa các slide
+                    slidesPerView={4} // Số lượng card hiển thị
+                    loop={false} // Lặp lại slider
+                    pagination={{ clickable: true }} // Pagination (chấm tròn bên dưới)
+                    autoplay={{ delay: 3000 }} // Tự động lướt
+                    breakpoints={{
+                        0: {
+                            slidesPerView: 2, // Hiển thị 2 sản phẩm
+                        },
+                        768: {
+                            slidesPerView: 4, // Hiển thị 4 sản phẩm
+                        },
+                    }}
+                >
+                    {dataNewProducts?.length > 0 ? (
+                        dataNewProducts.map((product, index) => (
+                            <SwiperSlide key={index}>
+                                <ProductCard product={product} />
+                            </SwiperSlide>
+                        ))
+                    ) : (
+                        <div className="text-center text-lg">Không có sản phẩm nào</div>
+                    )}
+                </Swiper>
             </div>
 
             <SectionCategories />
 
             {/*recommend product*/}
-            <div className='p-10'>
-                <div className="headline flex justify-between items-center p-4 text-3xl font-bold ">
+            <div className='md:w-[80%] w-full md:p-10 p-2 mx-auto'>
+                <div className="flex justify-between items-center p-4 text-3xl font-bold ">
                     <span> Gợi ý cho bạn</span>
                 </div>
-                <div className="grid grid-cols-4">
+                <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-2">
                     {dataRecommendProducts?.length > 0 ? dataRecommendProducts?.map((product, index) => (
                         <div key={index} >
                             <ProductCard product={product} />

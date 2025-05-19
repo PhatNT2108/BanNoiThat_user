@@ -20,16 +20,10 @@
 .icon-user {
   cursor: pointer;
   position: relative;
-  display: inline-block;
-}
-
-.icon-user:hover {
-  position: relative;
-  display: inline-block;
 }
 
 .dropdown-menu-user {
-  display: none;
+  display: block;
   color: #c7cfc6;
   z-index: 100;
   width: 10rem;
@@ -39,9 +33,50 @@
   position: absolute;
   left: 50%;
   transform: translate(-50%, 0);
+  transition: all 0.3s;
+
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
 }
 
-.icon-user:hover .dropdown-menu-user {
-  cursor: pointer;
-  display: block;
+.open-menu-user {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+}
+
+@media (max-width: 40em) {
+  .dropdown-menu-user {
+    color: #000000;
+    z-index: 100;
+    background-color: #ffffff;
+    border-radius: 5px;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    transform: translate(0%, 5%);
+    transition: all 0.5s;
+
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: start;
+    gap: 0.5rem;
+    font-weight: 600;
+
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+  }
+
+  .open-menu-user {
+    opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
+  }
 }

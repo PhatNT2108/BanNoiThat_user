@@ -1,10 +1,10 @@
 import Footer from "../components/Footer";
-import HeaderShort from "../components/HeaderShort";
+import Header from "../components/Header";
 
 function ShortHeaderLayout({ children }) {
   return (
     <div className="relative ">
-      <HeaderShort />
+      <Header />
       <div className="flex">
         <div className="flex-1">{children}</div>
       </div>

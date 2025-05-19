@@ -4,3 +4,20 @@
   border: 1px solid #2f9e44;
   background-image: linear-gradient(to right, #a4e7b0, #2f9e44);
 }
+
+.product-slider {
+  display: flex;
+  overflow-x: auto; /* Cho phép cuộn ngang */
+  gap: 1rem; /* Khoảng cách giữa các card */
+  padding: 1rem;
+  scroll-behavior: smooth; /* Cuộn mượt */
+}
+
+.product-slider::-webkit-scrollbar {
+  height: 8px; /* Độ cao của thanh cuộn */
+}
+
+.product-slider::-webkit-scrollbar-thumb {
+  background: #888; /* Màu thanh cuộn */
+  border-radius: 4px; /* Bo tròn thanh cuộn */
+}

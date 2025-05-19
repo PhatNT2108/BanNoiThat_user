@@ -53,7 +53,6 @@ const ProductDetailPage: React.FC = () => {
 
     const LoadProductRecommend = async () => {
         try {
-            setIsLoading(true);
             let userInteractions = getFromLocalStorage("userInteractions") || {};
             let interactedProductIds = userInteractions["view"] || [];
 
@@ -65,7 +64,6 @@ const ProductDetailPage: React.FC = () => {
             const result = await clientAPI.service("products/recommend").findRecommend<ApiResponse>(`pageSize=${4}&pageCurrent=${1}`, formData);
 
             setRecommendDataProducts(result.data.result);
-            setIsLoading(false);
         }
         catch (error) {
             console.error("Error during signup", error);
@@ -120,37 +118,38 @@ const ProductDetailPage: React.FC = () => {
     }
 
     return (isLoading ? <div> Loading...</div > :
-        <div>
-            <div className="relative flex flex-row w-2/3 gap-4 p-4 mx-auto">
-                <div className="flex flex-col gap-2 z-50">
-                    {additionalImages?.map((image, index) => (
-                        <img
-                            key={index}
-                            onClick={() => triggerSelectCurrentImage(image)}
-                            className="w-20 h-20 object-cover rounded-md border hover:cursor-pointer hover:border-gray-500"
-                            src={image || "https://placehold.co/600x400"}
-                            alt={`Additional Image ${index}`}
-                        />
-                    ))}
-                </div>
+        <div className='w-full'>
+            <div className="relative flex sm:flex-row flex-col lg:w-3/4 w-full gap-4 p-4 mx-auto">
+                <div className='flex sm:flex-row flex-col-reverse mx-auto gap-2'>
+                    <div className="flex sm:flex-col flex-row gap-2 z-50 w-max">
+                        {additionalImages?.map((image, index) => (
+                            <img
+                                key={index}
+                                onClick={() => triggerSelectCurrentImage(image)}
+                                className="w-20 h-20 object-cover rounded-md border hover:cursor-pointer hover:border-gray-500"
+                                src={image || "https://placehold.co/600x400"}
+                                alt={`Additional Image ${index}`}
+                            />
+                        ))}
+                    </div>
 
-                {/* Left Section: Product Images */}
-                <div className="relative flex flex-col gap-2 z-10">
-                    <div className="relative">
-                        <img
-                            className="w-[400px] h-[400px]  overflow-hidden object-fit rounded-md border"
-                            src={currentImageSelected || "https://placehold.co/600x400"}
-                            alt="Product Thumbnail"
-                        />
-                        {
-                            currentItemSelected === undefined && <div className="absolute flex w-1/2 h-1/2 justify-center items-center rounded-full inset-0 m-auto text-lg text-white bg-gray-700 opacity-45 ">Hết hàng</div>
-                        }
+                    {/* Left Section: Product Images */}
+                    <div className="relative flex flex-col gap-2 z-10">
+                        <div className="relative">
+                            <img
+                                className="w-[400px] h-[400px]  overflow-hidden object-fit rounded-md border"
+                                src={currentImageSelected || "https://placehold.co/600x400"}
+                                alt="Product Thumbnail"
+                            />
+                            {
+                                currentItemSelected === undefined && <div className="absolute flex w-1/2 h-1/2 justify-center items-center rounded-full inset-0 m-auto text-lg text-white bg-gray-700 opacity-45 ">Hết hàng</div>
+                            }
+                        </div>
                     </div>
                 </div>
 
-                {/* Right Section: Product Details */}
+                {/* Product Details */}
                 <div className="flex-1">
-
                     <h1 className="text-2xl font-bold mb-2">{dataProduct?.name}</h1>
 
                     {/* Sku */}
@@ -168,23 +167,23 @@ const ProductDetailPage: React.FC = () => {
 
                     {/* Options */}
                     <h2 className="text-lg font-bold ">Phân loại:</h2>
-                    <div className="flex items-center gap-4 mb-4 p-3">
+                    <div className="flex items-center gap-4 mb-4 p-3 max-w">
                         {dataProduct?.productItems?.map((item, index) => {
                             return item.quantity > 0 ? (<div
                                 key={index}
                                 onClick={() => triggerSelectItem(item)}
-                                className={`p-2 border flex items-center justify-center cursor-pointer ${currentItemSelected?.id === item.id ? 'bg-black text-white rounded-md' : 'border-green-700 rounded-md'}`}
+                                className={`p-2 text-sm w-max border flex items-center  justify-center cursor-pointer ${currentItemSelected?.id === item.id ? 'bg-black text-white rounded-md' : 'border-green-700 rounded-md'}`}
                             >{item.nameOption}</div>
                             ) : (
                                 <div
                                     key={index}
-                                    className={`p-2 border flex items-center justify-center cursor-pointer bg-gray-300 rounded-md`}
+                                    className={`p-2 border h-full w-full flex items-center justify-center cursor-pointer bg-gray-300 rounded-md`}
                                 >{item.nameOption}</div>
                             )
                         })}
                     </div>
 
-                    {/* Product Details */}
+                    {/* Mô tả chung sản phẩm */}
                     <div className="flex items-center mb-2 ">
                         <h2 className="text-lg font-bold ">Thông tin chung:&nbsp;</h2>
                         <ul className="text-gray-700">
@@ -192,7 +191,7 @@ const ProductDetailPage: React.FC = () => {
                         </ul>
                     </div>
 
-                    {/* Product Details */}
+                    {/* Thương hiệu*/}
                     <div className="flex items-center mb-4">
                         <h2 className="text-lg font-bold">Thương thiệu:&nbsp;</h2>
                         <ul className=" text-gray-700">
@@ -209,7 +208,7 @@ const ProductDetailPage: React.FC = () => {
                     {/* Buttons */}
                     {
                         currentItemSelected !== undefined && (
-                            <div className="flex flex-row items-center rounded-3xl gap-4">
+                            <div className="flex flex-row items-center sm:justify-start justify-center rounded-3xl gap-4">
                                 <button className="font-semibold font-sans rounded-3xl bg-[#da684c] uppercase text-white py-2 px-4 hover:bg-[#f89075]">
                                     Mua ngay
                                 </button>

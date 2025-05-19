@@ -1,12 +1,12 @@
 import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
-import HeaderShort from "../components/HeaderShort";
 import ChatBox from "../Chatbox";
+import Header from "../components/Header";
 
 function UseLayout({ children }) {
   return (
     <div className="relative ">
-      <HeaderShort />
+      <Header />
       <div className="flex">
         <Sidebar />
         <div className="flex-1">{children}</div>

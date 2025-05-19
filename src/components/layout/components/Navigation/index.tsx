@@ -66,7 +66,7 @@ function Navigation() {
   ];
 
   return (
-    <nav className="flex flex-row justify-center  py-4 shadow-sm font-medium">
+    <nav className="flex flex-row justify-center py-4 shadow-sm font-medium">
       {/*Dynamic*/}
       <ul className="flex space-x-8">
         {menuItems.map((item) => (

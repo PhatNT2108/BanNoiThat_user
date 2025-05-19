@@ -48,3 +48,11 @@
   font-size: 2rem;
   text-align: center;
 }
+
+@media (max-width: 768px) {
+  .section-categories {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    height: auto;
+  }
+}
