@@ -19,6 +19,7 @@ const Login: React.FC = () => {
         try {
             let data: ApiResponse = await clientApi.service("auth/login").authentication(email, password);
             dispatch(setUser(data.result));
+            console.log(data);
             if (data.isSuccess) {
                 navigate("/");
             }

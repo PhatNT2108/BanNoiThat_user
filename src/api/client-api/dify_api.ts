@@ -108,6 +108,25 @@ class DifyApi {
       throw error;
     }
   }
+
+  async get<T>(query: any): Promise<T> {
+    try {
+      const key = "app-l5kgMeENgBaG5TThfN3ovsOp";
+
+      const url = query ? `/${this.path}?${query}` : `/${this.path}`;
+      const response = await this.axiosInstance.get<T>(url, {
+        withCredentials: false,
+        headers: {
+          Authorization: `Bearer ${key}`,
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching data", error);
+      throw error;
+    }
+  }
 }
 
 const difyAPI = new DifyApi().config("https://api.dify.ai/v1");

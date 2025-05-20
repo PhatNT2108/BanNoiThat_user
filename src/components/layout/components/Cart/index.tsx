@@ -59,7 +59,6 @@ function Cart() {
   //None
   useEffect(() => {
     if (userData.email) {
-      console.log(userData);
       LoadData();
     }
   }, [userData]);

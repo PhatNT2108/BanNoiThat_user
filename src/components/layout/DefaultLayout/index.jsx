@@ -4,8 +4,6 @@ import { memo } from "react";
 import ChatBox from "../Chatbox";
 
 function DefaultLayout({ children }) {
-  console.log("test rerender");
-
   return (
     <div className="relative ">
       <Header />
