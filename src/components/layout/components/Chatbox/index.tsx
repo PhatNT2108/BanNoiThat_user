@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { MessageCircle } from "lucide-react";
-import difyAPI from '../../../api/client-api/dify_api';
+import difyAPI from '../../../../api/client-api/dify_api';
 import { useDispatch, useSelector } from 'react-redux';
-import User from '../../../model/User';
-import { RootState } from '../../../redux/store';
-import MessageChatBox from './chatbox';
+import User from '../../../../model/User';
+import { RootState } from '../../../../redux/store';
+import MessageChatBox from './MessageChatBox';
 
 interface MessageHistory {
   id: string;
@@ -87,14 +87,10 @@ const ChatBox: React.FC = () => {
 
   useEffect(() => {
     toggleScroll();
-    console.log("Scroll to bottom");
   }, [messages, isOpen]);
 
   const toggleScroll = () => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    console.log("scrollTop:", messageEndRef.current?.scrollTop);
-    console.log("scrollHeight:", messageEndRef.current?.scrollHeight);
-    console.log("scrollClientHeight:", messageEndRef.current?.clientHeight);
   }
 
   const toggleChatBox = (): void => {

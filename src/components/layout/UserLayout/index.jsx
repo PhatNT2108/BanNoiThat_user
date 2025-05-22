@@ -1,6 +1,6 @@
 import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
-import ChatBox from "../Chatbox";
+import ChatBox from "../components/Chatbox";
 import Header from "../components/Header";
 
 function UseLayout({ children }) {

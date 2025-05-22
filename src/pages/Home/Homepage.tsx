@@ -95,10 +95,10 @@ const Homepage: React.FC = () => {
             <div className='md:w-[80%] w-full md:p-10 p-2 mx-auto'>
                 <div className="flex justify-between items-center p-4 md:text-3xl text-xl font-bold ">
                     <span> Sản phẩm mới </span>
-                    <span className='hover:cursor-pointer text-sm text-green-300' onClick={() => navigateToFilterPage()}> Xem thêm </span>
+                    <span className='hover:cursor-pointer text-lg text-black' onClick={() => navigateToFilterPage()}> Xem thêm </span>
                 </div>
                 <Swiper
-                    spaceBetween={20} // Khoảng cách giữa các slide
+                    spaceBetween={16} // Khoảng cách giữa các slide
                     slidesPerView={4} // Số lượng card hiển thị
                     loop={false} // Lặp lại slider
                     pagination={{ clickable: true }} // Pagination (chấm tròn bên dưới)
@@ -108,8 +108,14 @@ const Homepage: React.FC = () => {
                             slidesPerView: 2, // Hiển thị 2 sản phẩm
                         },
                         768: {
-                            slidesPerView: 4, // Hiển thị 4 sản phẩm
+                            slidesPerView: 2, // Hiển thị 4 sản phẩm
                         },
+                        1024: {
+                            slidesPerView: 3,
+                        },
+                        1280: {
+                            slidesPerView: 4,
+                        }
                     }}
                 >
                     {dataNewProducts?.length > 0 ? (

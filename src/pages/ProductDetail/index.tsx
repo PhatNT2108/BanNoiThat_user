@@ -183,14 +183,6 @@ const ProductDetailPage: React.FC = () => {
                         })}
                     </div>
 
-                    {/* Mô tả chung sản phẩm */}
-                    <div className="flex items-center mb-2 ">
-                        <h2 className="text-lg font-bold ">Thông tin chung:&nbsp;</h2>
-                        <ul className="text-gray-700">
-                            {dataProduct?.description}
-                        </ul>
-                    </div>
-
                     {/* Thương hiệu*/}
                     <div className="flex items-center mb-4">
                         <h2 className="text-lg font-bold">Thương thiệu:&nbsp;</h2>
@@ -220,7 +212,6 @@ const ProductDetailPage: React.FC = () => {
                                         3D
                                     </button>)
                                 }
-
                             </div>
                         )}
                 </div>

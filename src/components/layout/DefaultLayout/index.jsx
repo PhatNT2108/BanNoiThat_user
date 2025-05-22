@@ -1,7 +1,7 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { memo } from "react";
-import ChatBox from "../Chatbox";
+import ChatBox from "../components/Chatbox";
 
 function DefaultLayout({ children }) {
   return (

@@ -83,9 +83,15 @@ function Cart() {
       </button>
 
       {cartOpen && (
-        <div className="absolute right-0 mt-2 w-96 bg-white border border-gray-200 rounded-lg shadow-lg z-50" onMouseLeave={() => setCartOpen(false)}>
+        <div className="sm:absolute sm:right-0 fixed right-0 mt-2 sm:w-96 w-[100vw] bg-white border border-gray-200 rounded-lg shadow-lg z-50" onMouseLeave={() => setCartOpen(false)}>
           <div className="p-4">
-            <h3 className="font-bold mb-4">GIỎ HÀNG</h3>
+            <div className='flex flex-row justify-between items-center'>
+              <h3 className="font-bold">GIỎ HÀNG</h3>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6" onClick={toggleCart}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+              </svg>
+            </div>
+
 
             {cartData?.cartItems.length! > 0 ? (
               <div>
