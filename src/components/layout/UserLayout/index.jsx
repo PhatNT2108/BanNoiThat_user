@@ -2,11 +2,19 @@ import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
 import ChatBox from "../components/Chatbox";
 import Header from "../components/Header";
+import React, { createRef, useEffect, useRef } from "react";
 
-function UseLayout({ children }) {
+const UseLayout = ({ children }) => {
+  const goTop = useRef(null);
+
+  useEffect(() => {
+    goTop.current?.scrollIntoView({ behavior: "smooth" });
+  }, []);
+
   return (
-    <div className="relative ">
+    <div className="relative">
       <Header />
+      <div ref={goTop} />
       <div className="flex">
         <Sidebar />
         <div className="flex-1">{children}</div>
@@ -15,6 +23,6 @@ function UseLayout({ children }) {
       <Footer />
     </div>
   );
-}
+};
 
 export default UseLayout;
