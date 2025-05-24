@@ -7,6 +7,7 @@ import PaginationDto from '../../model/PaginationDto';
 import ProductCard from './components/ProductCard/ProductCard';
 import PagingBar from '../../components/common/PagingBar';
 import RadioButtonBox from '../../components/layout/components/RadioButtonBox';
+import ComboboxInput from '../../components/layout/components/ComboboxInput';
 
 interface PriceFilter {
   MinPrice: number;
@@ -20,6 +21,12 @@ interface ColorFiler {
   stringDescription: string;
   isChecked?: boolean;
   codeColor?: string;
+}
+
+interface Fields {
+  long: number;
+  width: number;
+  height: number;
 }
 
 var priceFilterSample: PriceFilter[] =
@@ -39,6 +46,12 @@ var colorSample: ColorFiler[] =
   { 'Color': 'pink', 'stringDescription': 'Hồng', isChecked: false, codeColor: '#FFC0CB' },
   ];
 
+var sizeSample: Fields = {
+  long: 0,
+  width: 0,
+  height: 0
+};
+
 const FilteredProductPage: React.FC = () => {
   const { slug } = useParams();
   const [searchParams] = useSearchParams();
@@ -50,6 +63,7 @@ const FilteredProductPage: React.FC = () => {
   const [filteredProducts, setFilteredProducts] = useState<ProductHome[]>([]);
   const [priceFilter, setPriceFilter] = useState<PriceFilter[]>(priceFilterSample);
   const [colorFiler, setColorFilter] = useState<ColorFiler[]>(colorSample);
+  const [sizeFilter, setSizeFilter] = useState<Fields>(sizeSample);
   const [paginationDto, setPaginationDto] = useState<PaginationDto>();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -61,6 +75,8 @@ const FilteredProductPage: React.FC = () => {
 
       var countIndexColor = 0;
       var queryColorFilter = "";
+
+      var querySizeFilter = "";
 
       const pageCurrent = parseInt(searchParams.get("pageCurrent") || "1");
 
@@ -82,8 +98,20 @@ const FilteredProductPage: React.FC = () => {
         }
       });
 
+      if (sizeFilter.long > 0) {
+        querySizeFilter += `&size.longSize=${sizeFilter.long}`;
+      }
+
+      if (sizeFilter.width > 0) {
+        querySizeFilter += `&size.widthSize=${sizeFilter.width}`;
+      }
+
+      if (sizeFilter.height > 0) {
+        querySizeFilter += `&size.heightSize=${sizeFilter.height}`;
+      }
+
       const result = await clientAPI.service('products/').findPagedList<ApiResponse>(
-        `pageSize=${pageSize}&pageCurrent=${pageCurrent}&stringSearch=${finalString}` + queryPriceFilter + queryColorFilter
+        `pageSize=${pageSize}&pageCurrent=${pageCurrent}&stringSearch=${finalString}` + queryPriceFilter + queryColorFilter + querySizeFilter
       );
 
       setPage(pageCurrent);
@@ -100,12 +128,15 @@ const FilteredProductPage: React.FC = () => {
     loadFilteredProducts();
   }, [searchParams, stringFilter, slug]);
 
-  console.log(colorFiler);
-
   return (
     <div className="mx-auto w-[80%] p-10 ">
-      <div className="flex justify-between gap-3 text-3xl font-bold">
-        <span>Bộ Lọc</span>
+      <div className="flex justify-between gap-3 text-3xl font-bold uppercase">
+        <span className='flex items-center gap-2'>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-10">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
+          </svg>
+          Bộ Lọc
+        </span>
         <RadioButtonBox titleString="Giá sản phẩm"
           filters={priceFilter} setFilters={setPriceFilter} />
         <RadioButtonBox titleString="Màu sắc" renderHeader={(filter) => <p
@@ -113,6 +144,7 @@ const FilteredProductPage: React.FC = () => {
           className="p-3 rounded-full border-solid border-2"
         />}
           filters={colorFiler} setFilters={setColorFilter} />
+        <ComboboxInput filters={sizeFilter} setFilters={setSizeFilter} />
         <button className='bg-blue-500 text-white px-4 py-2 rounded' onClick={loadFilteredProducts}>Lọc</button>
       </div>
       <div className="grid grid-cols-4 gap-4">
