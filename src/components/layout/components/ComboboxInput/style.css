@@ -9,7 +9,7 @@
   justify-content: space-between;
 
   text-transform: uppercase;
-  font-weight: 400;
+  font-weight: 500;
   border: solid 1px #8584848a;
   width: 100%;
   font-size: 0.6em;
@@ -22,7 +22,7 @@
   cursor: pointer;
 }
 
-.combobox-input-box {
+.combobox-input-content {
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -50,10 +50,11 @@
 .combobox-input {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 0.3em;
 
   text-transform: uppercase;
-  font-weight: 500;
+  font-weight: 300;
   border: solid 1px #8584848a;
   width: 100%;
   font-size: 0.4em;
@@ -62,7 +63,7 @@
   position: relative;
 }
 
-.combobox-input-label {
+.combobox-input-name {
   width: max-content;
   min-width: 2em;
 }

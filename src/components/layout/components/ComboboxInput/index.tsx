@@ -21,9 +21,9 @@ const MultiFieldComboBox: React.FC<CustomRendererProps> = ({ filters, setFilters
           <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
         </svg>
       </div>
-      <div className={`combobox-input-box ${isOpen ? "open-combobox-input-box" : ""}`} >
+      <div className={`combobox-input-content ${isOpen ? "open-combobox-input-box" : ""}`} >
         <div className="combobox-input">
-          <span className="combobox-input-label">Chiều dài : </span>
+          <span className="combobox-input-name">Chiều dài : </span>
           <input
             type="number"
             value={filters?.long}
@@ -33,7 +33,6 @@ const MultiFieldComboBox: React.FC<CustomRendererProps> = ({ filters, setFilters
           />
           <span>Cm</span>
         </div>
-
         <div className="combobox-input">
           <span className="combobox-input-label">Chiều rộng : </span>
           <input
@@ -45,7 +44,6 @@ const MultiFieldComboBox: React.FC<CustomRendererProps> = ({ filters, setFilters
           />
           <span>Cm</span>
         </div>
-
         <div className="combobox-input">
           <span className="combobox-input-label">Chiều cao : </span>
           <input
