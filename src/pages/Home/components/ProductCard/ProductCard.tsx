@@ -27,9 +27,9 @@ function ProductCard({ product }: Props) {
         />
       </div>
       <div className="flex flex-col justify-between ml-3 mb-2">
-        <h3 className="font-sans font-medium md:text-[1.1rem] ml-1 mt-1 min-h-[3.4rem]">{product.name}</h3>
+        <h3 className="font-sans font-medium md:text-[1.1rem] ml-1 mt-1 min-h-[3.4rem] ">{product.name}</h3>
         <div className="flex items-center flex-wrap">
-          <div className="text-[#2b8a3e] sm:pl-1">{product.salePrice.toLocaleString()}đ</div>
+          <div className="text-[#2b8a3e] sm:pl-1 px-1">{product.salePrice.toLocaleString()}đ</div>
           {product.price !== 0 && (
             <div className="md:text-sm text-[0.8rem] line-through text-gray-400 ml-1">
               {product.price.toLocaleString("vn")}đ

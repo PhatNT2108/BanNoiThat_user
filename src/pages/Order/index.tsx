@@ -10,7 +10,7 @@ const OrderPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const tabs = ["Pending", "Processing", "Shipping", "Returned", "Done", "Cancelled"];
+  const tabs = ["Processing", "Shipping", "Returned", "Done", "Cancelled"];
 
   const LoadOrders = async () => {
     setIsLoading(true);
@@ -39,6 +39,17 @@ const OrderPage = () => {
   );
 
   const triggerCancelOrder = async (orderId: string) => {
+    let formData = new FormData();
+    formData.append("orderStatus", "Cancelled");
+
+    const response: ApiResponse = await clientAPI.service("orders").patchEachProperty(orderId, 'orderStatus', formData);
+    if (response.isSuccess) {
+      LoadOrders();
+    }
+    window.location.reload();
+  }
+
+  const triggerShowInfoOrder = async (orderId: string) => {
     let formData = new FormData();
     formData.append("orderStatus", "Cancelled");
 
@@ -127,14 +138,20 @@ const OrderPage = () => {
                       </div>
                     </div>
                   ))}
-                  <div><span className="text-lg text-black font-bold">Địa chỉ nhận hàng: </span>{order.shippingAddress}</div>
+                  <div>
+                    <span className="text-lg text-black font-bold">Địa chỉ nhận hàng: </span>{order.shippingAddress}
+                    {
+                      activeTab === "Shipping" && (<div className="flex justify-end">
+                        <button className="bg-green-800 rounded-md px-2 py-1 text-white" onClick={() => triggerShowInfoOrder(order.id)}>Xem thông tin vẫn chuyển</button>
+                      </div>)
+                    }
+                  </div>
                 </div>
                 {
-                  activeTab === "Pending" && (<div className="flex justify-end">
+                  activeTab === "Processing" && (<div className="flex justify-end">
                     <button className="bg-red-600 rounded-md px-2 py-1 text-white" onClick={() => triggerCancelOrder(order.id)}>Hủy đơn</button>
                   </div>)
                 }
-
               </div>
             ))
           )}

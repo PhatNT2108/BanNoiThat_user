@@ -32,6 +32,7 @@ interface Fields {
 var priceFilterSample: PriceFilter[] =
   [{ 'MinPrice': 0, 'MaxPrice': 200000, 'stringDescription': '0đ - 200.000đ', isChecked: false },
   { 'MinPrice': 200000, 'MaxPrice': 500000, 'stringDescription': '200.000đ - 500.000đ', isChecked: false },
+  { 'MinPrice': 500000, 'MaxPrice': 1000000, 'stringDescription': '500.000đ - 1.000.000đ', isChecked: false },
   { 'MinPrice': 1000000, 'MaxPrice': 5000000, 'stringDescription': '1.000.000đ - 5.000.000đ', isChecked: false },
   { 'MinPrice': 5000000, 'MaxPrice': 10000000, 'stringDescription': '5.000.000đ - 10.000.000đ', isChecked: false },
   ];
@@ -114,6 +115,8 @@ const FilteredProductPage: React.FC = () => {
         `pageSize=${pageSize}&pageCurrent=${pageCurrent}&stringSearch=${finalString}` + queryPriceFilter + queryColorFilter + querySizeFilter
       );
 
+      console.log(`pageSize=${pageSize}&pageCurrent=${pageCurrent}&stringSearch=${finalString}` + queryPriceFilter + queryColorFilter + querySizeFilter);
+
       setPage(pageCurrent);
       setFilteredProducts(result.data.result);
       setPaginationDto(result.pagination);
@@ -127,8 +130,6 @@ const FilteredProductPage: React.FC = () => {
   useEffect(() => {
     loadFilteredProducts();
   }, [searchParams, stringFilter, slug]);
-
-  console.log(priceFilter);
 
   return (
     <div className="mx-auto md:w-[80%] w-[100%]">
