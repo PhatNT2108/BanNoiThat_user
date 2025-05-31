@@ -162,7 +162,7 @@ const FilteredProductPage: React.FC = () => {
             </div>
           ))
         ) : (
-          <div className="text-center text-lg col-span-4">No products found</div>
+          <div className="text-center text-lg col-span-4">Không sản phẩm theo yêu cầu nào được tìm thấy</div>
         )}
       </div>
       <PagingBar totalRecords={paginationDto?.TotalRecords} pageSize={pageSize} />
