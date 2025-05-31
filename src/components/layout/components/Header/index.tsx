@@ -27,6 +27,7 @@ const Header = () => {
 
   const triggerLogout = () => {
     localStorage.removeItem("userToken");
+    localStorage.removeItem("conversationId");
     dispatch(setUser(emptyUserState));
     window.location.reload();
   };
@@ -78,9 +79,8 @@ const Header = () => {
                       </svg>
                     </div>
                     <div
-                      className={`dropdown-menu-user ${
-                        isOpenUser ? "open-menu-user" : ""
-                      }`}
+                      className={`dropdown-menu-user ${isOpenUser ? "open-menu-user" : ""
+                        }`}
                     >
                       <div className="text-lg p-3 border-b-2 mx-auto">
                         {" "}
@@ -149,7 +149,7 @@ const Header = () => {
           {/* Right Section */}
           <div className="header-user-info">
             {userData.email ? (
-              <div className="flex flex-row item gap-4 hidden sm:flex">
+              <div className="flex flex-row gap-4 hidden sm:flex">
                 {/* Icon yêu thích */}
                 <div>
                   <svg
@@ -188,9 +188,8 @@ const Header = () => {
                     </svg>
                   </div>
                   <div
-                    className={`dropdown-menu-user relative ${
-                      isOpenUser ? "open-menu-user" : ""
-                    } z-10`}
+                    className={`dropdown-menu-user relative ${isOpenUser ? "open-menu-user" : ""
+                      } z-10`}
                   >
                     <Link
                       to="/information"

@@ -28,4 +28,7 @@ export interface ProductItemResponse {
   sku: string;
   imageUrl: string;
   modelUrl: string;
+  lengthSize: number;
+  widthSize: number;
+  heightSize: number;
 }

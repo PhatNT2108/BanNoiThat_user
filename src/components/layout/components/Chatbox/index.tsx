@@ -66,12 +66,48 @@ const ChatBox: React.FC = () => {
   };
 
   const loadMessages = async (conversationId: string) => {
-    const response: ResponseMessageHistory = await difyAPI
-      .service("messages")
-      .get(`user=${userData.user_id}&conversation_id=${conversationId} `);
-    for (const value of response.data) {
-      setMessages((pre) => [...pre, { text: value.query, sender: "user" }]);
-      setMessages((pre) => [...pre, { text: value.answer, sender: "bot" }]);
+    try {
+      const response: ResponseMessageHistory = await difyAPI
+        .service("messages")
+        .get(`user=${userData.user_id}&conversation_id=${conversationId} `);
+      for (const value of response.data) {
+        setMessages((pre) => [...pre, { text: value.query, sender: "user" }]);
+        setMessages((pre) => [...pre, { text: value.answer, sender: "bot" }]);
+      }
+    }
+    catch (error) {
+      console.error("Error sending message:", error);
+      setIsLoading(false);
+    }
+  };
+
+  const loadOpenerMessage = async () => {
+    try {
+      const response: any = await difyAPI
+        .service("parameters")
+        .get("");
+
+      let openingStatement = response?.opening_statement;
+      let suggestQuestion = response?.suggested_questions;
+
+      const htmlString = `
+        <div class="p-4">
+          <h2 class="text-xl font-semibold mb-4">${openingStatement}</h2>
+          <div class="space-y-2">
+            ${suggestQuestion
+          .map(
+            (q: any) => `<button class="block w-full text-left px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200">${q}</button>`
+          )
+          .join("")}
+          </div>
+        </div>`;
+
+      console.log("Opener");
+      setMessages((pre) => [...pre, { text: htmlString, sender: "bot" }]);
+    }
+    catch (error) {
+      console.error("Error sending message:", error);
+      setIsLoading(false);
     }
   };
 
@@ -85,7 +121,18 @@ const ChatBox: React.FC = () => {
     if (conversationId && userData.user_id) {
       loadMessages(conversationId);
     }
+
   }, [userData.user_id]);
+
+
+  useEffect(() => {
+    const conversationId = localStorage.getItem("conversationId");
+
+    if (!conversationId) {
+      loadOpenerMessage();
+    }
+  }, []);
+
 
   useEffect(() => {
     toggleScroll();

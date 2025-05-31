@@ -27,7 +27,6 @@ const Login: React.FC = () => {
         catch {
             setErrAccount("Thông tin không chính xác");
         }
-
     };
 
     const navigateForgotPassword = () => {

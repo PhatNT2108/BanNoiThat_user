@@ -221,10 +221,10 @@ const CheckOutMain = () => {
             <input type="radio" name="payment" value="cod" id="cod" onChange={(e) => setOrderInfo((prev) => ({ ...prev, paymentMethod: e.target.value }))} />
             <label htmlFor="cod">Thanh toán khi nhận hàng (COD)</label>
           </div>
-          <div className="flex items-center space-x-2">
+          {/* <div className="flex items-center space-x-2">
             <input type="radio" name="payment" value="momo" id="momo" onChange={(e) => setOrderInfo((prev) => ({ ...prev, paymentMethod: e.target.value }))} />
             <label htmlFor="momo">Ví MoMo</label>
-          </div>
+          </div> */}
           <div className="flex items-center space-x-2">
             <input type="radio" name="payment" value="vnpay" id="vnpay" onChange={(e) => setOrderInfo((prev) => ({ ...prev, paymentMethod: e.target.value }))} />
             <label htmlFor="vnpay">Thanh toán qua VNPAY</label>

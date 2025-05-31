@@ -11,6 +11,7 @@ import AddressUser from "../pages/InformationUser/FavoriteUser";
 import FilteredProductPage from "../pages/Home/FilteredProductPage";
 import ForgotPasswordPage from "../pages/Auth/ForgotPasswordPage";
 import NonHeaderLayout from "../components/layout/NonHeaderLayout";
+import PaymentSuccess from "../pages/Status/SuccessfulPay";
 
 //Public
 const publicRoutes = [
@@ -39,6 +40,11 @@ const publicRoutes = [
     path: "/forgot-password",
     component: ForgotPasswordPage,
     Layout: null,
+  },
+  {
+    path: "/payment-successful",
+    component: PaymentSuccess,
+    Layout: NonHeaderLayout,
   },
 ];
 

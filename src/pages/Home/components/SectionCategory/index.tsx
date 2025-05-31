@@ -47,7 +47,7 @@ const SectionCategories = () => {
           </div>
         ))
       }
-    </section >) : <div>None</div>
+    </section >) : <div>Không có danh mục</div>
   );
 }
 

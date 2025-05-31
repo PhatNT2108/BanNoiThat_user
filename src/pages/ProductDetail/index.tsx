@@ -26,6 +26,7 @@ const ProductDetailPage: React.FC = () => {
 
     const [additionalImages, setAdditionalImages] = useState<string[]>([]);
     const [dataRecommendProducts, setRecommendDataProducts] = useState<ProductHome[]>([]);
+    const [dataSameProductRecommend, setDataSameProductRecommend] = useState<ProductHome[]>([]);
 
     // Lấy chi tiết sản phẩm
     const LoadDetailProduct = async () => {
@@ -38,6 +39,8 @@ const ProductDetailPage: React.FC = () => {
 
                 const images = data.result.productItems.map((item: ProductItemResponse) => item.imageUrl);
                 setAdditionalImages(images);
+                setCurrentImageSelected(images);
+                console.log(images)
                 setIsLoading(false);
                 for (const productItem of data.result.productItems) {
                     if (productItem.quantity > 0) {
@@ -54,16 +57,29 @@ const ProductDetailPage: React.FC = () => {
     const LoadProductRecommend = async () => {
         try {
             let userInteractions = getFromLocalStorage("userInteractions") || {};
-            let interactedProductIds = userInteractions["view"] || [];
-
+            let interactedProductIds = (userInteractions["view"] || []).slice(0, 30);
             let formData = new FormData();
             interactedProductIds.forEach((productId: string, index: number) => {
-                formData.append(`InteractedProductIds[0]`, dataProduct?.id || "");
+                formData.append(`InteractedProductIds[${index}]`, productId);
             });
 
             const result = await clientAPI.service("products/recommend").findRecommend<ApiResponse>(`pageSize=${4}&pageCurrent=${1}`, formData);
 
             setRecommendDataProducts(result.data.result);
+        }
+        catch (error) {
+            console.error("Error during signup", error);
+        }
+    }
+
+    const LoadSameProductRecommend = async () => {
+        try {
+            let formData = new FormData();
+            formData.append(`InteractedProductIds[0]`, dataProduct?.id || "");
+
+            const result = await clientAPI.service("products/recommend").findRecommend<ApiResponse>(`pageSize=${4}&pageCurrent=${1}`, formData);
+
+            setDataSameProductRecommend(result.data.result);
         }
         catch (error) {
             console.error("Error during signup", error);
@@ -76,6 +92,7 @@ const ProductDetailPage: React.FC = () => {
 
     useEffect(() => {
         LoadProductRecommend(); // Sau đó mới gọi LoadProductRecommend
+        LoadSameProductRecommend();
     }, [dataProduct]);
 
     //Upsert với giỏ hàng
@@ -113,7 +130,7 @@ const ProductDetailPage: React.FC = () => {
     }
 
     const trigger3D = () => {
-        let url = 'http://localhost:5173/?productItemId=' + currentItemSelected?.id
+        let url = 'http://localhost:5501/?productItemId=' + currentItemSelected?.id
         window.location.href = url;
     }
 
@@ -191,6 +208,26 @@ const ProductDetailPage: React.FC = () => {
                         </ul>
                     </div>
 
+                    {/* Kích thước */}
+                    <div className="mb-4 flex flex-row gap-2">
+                        <h2 className="text-lg font-bold">Kích thước:</h2>
+                        <div className="ml-1 w-[20%]">
+                            <div className="flex justify-between">
+                                <p>- Chiều dài:</p>
+                                <p>{currentItemSelected?.lengthSize ? `${currentItemSelected.lengthSize} cm` : "N/A"}</p>
+                            </div>
+                            <div className="flex justify-between">
+                                <p>- Chiều rộng:</p>
+                                <p>{currentItemSelected?.widthSize ? `${currentItemSelected.widthSize} cm` : "N/A"}</p>
+                            </div>
+                            <div className="flex justify-between">
+                                <p>- Chiều cao:</p>
+                                <p>{currentItemSelected?.heightSize ? `${currentItemSelected.heightSize} cm` : "N/A"}</p>
+                            </div>
+                        </div>
+                    </div>
+
+
                     {/* Quantity */}
                     <div className="flex items-center mb-4">
                         <h2 className="text-lg font-bold">Số lượng:&nbsp;</h2>
@@ -224,11 +261,26 @@ const ProductDetailPage: React.FC = () => {
 
             {/*Gợi ý sản phẩm*/}
             <div className='p-10'>
-                <div className="flex justify-between px-4 text-3xl font-bold ">
+                <div className="flex justify-between px-4 text-3xl font-bold py-4">
                     <span> Sản phẩm liên quan </span>
-                    <span className='text-blue-500 text-sm'> Xem thêm </span>
+                    <span className='text-sm'> Xem thêm </span>
                 </div>
-                <div className="grid grid-cols-4">
+                <div className="grid sm:grid-cols-4 grid-cols-2 ">
+                    {dataSameProductRecommend.length > 0 ? dataSameProductRecommend.map((product, index) => (
+                        <div key={index} >
+                            <ProductCard product={product} />
+                        </div>
+                    )) : <div className="text-center text-lg">Không có sản phẩm nào</div>}
+                </div>
+            </div>
+
+            {/*Gợi ý sản phẩm*/}
+            <div className='p-10'>
+                <div className="flex justify-between px-4 text-3xl font-bold py-4">
+                    <span> Sản phẩm gợi ý cho bạn</span>
+                    <span className='text-sm'> Xem thêm </span>
+                </div>
+                <div className="grid sm:grid-cols-4 grid-cols-2">
                     {dataRecommendProducts.length > 0 ? dataRecommendProducts.map((product, index) => (
                         <div key={index} >
                             <ProductCard product={product} />

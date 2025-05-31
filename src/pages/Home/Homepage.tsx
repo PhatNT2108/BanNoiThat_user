@@ -24,7 +24,7 @@ const Homepage: React.FC = () => {
     const [dataNewProducts, setNewDataProducts] = useState<ProductHome[]>([]);
 
     const [paginationDto, setPaginationDto] = useState<PaginationDto>() || "";
-    const pageSize = 9;
+    const pageSize = 12;
 
     const [isLoading, setIsLoading] = useState(false);
 
@@ -35,8 +35,7 @@ const Homepage: React.FC = () => {
                 stringSearch = slug;
             }
             let userInteractions = getFromLocalStorage("userInteractions") || {};
-            let interactedProductIds = userInteractions["view"] || [];
-
+            let interactedProductIds = (userInteractions["view"] || []).slice(0, 30);
             let formData = new FormData();
             interactedProductIds.forEach((productId: string, index: number) => {
                 formData.append(`InteractedProductIds[${index}]`, productId);
