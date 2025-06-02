@@ -47,12 +47,14 @@
 
 .text-center-category {
   position: absolute;
-  top: 75%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   color: white;
   font-size: 2rem;
   text-align: center;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
 }
 
 @media (max-width: 768px) {
