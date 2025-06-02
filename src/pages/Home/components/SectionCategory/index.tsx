@@ -16,7 +16,7 @@ const SectionCategories = () => {
 
   const loadCategories = async () => {
     try {
-      const data: ApiResponse = await clientAPI.service("categories/homepage").find();
+      const data: ApiResponse = await clientAPI.service("categories/client").find();
       setCategories(data.result);
     }
     catch (error) {
