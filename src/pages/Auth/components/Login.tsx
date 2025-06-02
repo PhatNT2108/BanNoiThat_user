@@ -15,20 +15,18 @@ const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [errAccount, setErrAccount] = useState("");
 
-    const handleLogin = async () => {
-        try {
-            let data: ApiResponse = await clientApi.service("auth/login").authentication(email, password);
-            dispatch(setUser(data.result));
-            console.log(data);
-            if (data.isSuccess) {
-                navigate("/");
-            }
-        }
-        catch {
-            setErrAccount("Thông tin không chính xác");
-        }
-
-    };
+  const handleLogin = async () => {
+    try {
+      let data: ApiResponse = await clientApi.service("auth/login").authentication(email, password);
+      dispatch(setUser(data.result));
+      if (data.isSuccess) {
+        navigate("/");
+      }
+    }
+    catch {
+      setErrAccount("Thông tin không chính xác");
+    }
+  };
 
   const navigateForgotPassword = () => {
     navigate("/forgot-password");

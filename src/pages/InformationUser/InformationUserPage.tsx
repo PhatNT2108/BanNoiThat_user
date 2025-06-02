@@ -6,6 +6,21 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import LocationSelector from "./LocationUserInput";
 
+interface Province {
+  code: string;
+  name: string;
+}
+
+interface District {
+  code: string;
+  name: string;
+}
+
+interface Ward {
+  code: string;
+  name: string;
+}
+
 function InformationUserPage() {
   const userData: User = useSelector((state: RootState) => state.users);
 
@@ -15,11 +30,16 @@ function InformationUserPage() {
   const [selectedProvince, setSelectedProvince] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedWard, setSelectedWard] = useState("");
+
+  const [provinces, setProvinces] = useState<Province[]>([]);
+  const [districts, setDistricts] = useState<District[]>([]);
+  const [wards, setWards] = useState<Ward[]>([]);
+
   const [address, setAddress] = useState<string>("");
   const [error, setError] = useState<string>("");
 
   // Call API để load thông tin user
-  const loadForm = async () => {
+  const loadInfoUser = async () => {
     try {
       const response: ApiResponse = await clientAPI.service(`users/${userData.user_id}`).find();
       if (response.isSuccess) {
@@ -32,7 +52,7 @@ function InformationUserPage() {
   };
 
   // Call API để cập nhật thông tin user
-  const updateInfoUser = async () => {
+  const updateInfoUser = async (isOnlyUpdateInfo: string) => {
     if (!userInfo) return;
 
     if (!userInfo.birthday) {
@@ -46,6 +66,15 @@ function InformationUserPage() {
     formData.append("fullName", userInfo.fullName);
     formData.append("birthday", new Date(userInfo.birthday).toISOString());
     formData.append("isMale", userInfo.isMale);
+    formData.append("phoneNumber", userInfo.phoneNumber);
+    formData.append("isOnlyUpdateInfo", isOnlyUpdateInfo);
+
+    formData.append("shippingAddress", address);
+    formData.append("province", provinces.find(province => province.code == selectedProvince)?.name || "");
+    formData.append("district", districts.find(district => district.code == selectedDistrict)?.name || "");
+    formData.append("ward", wards.find(wards => wards.code == selectedWard)?.name || "");
+
+    console.log(provinces.find(province => province.code == selectedProvince)?.name)
 
     const response: ApiResponse = await clientAPI
       .service("users")
@@ -53,25 +82,26 @@ function InformationUserPage() {
 
     if (response.isSuccess) {
       setUserInfo(response.result);
-      loadForm();
+      loadInfoUser();
     }
   };
 
   React.useEffect(() => {
-    loadForm();
+    loadInfoUser();
   }, []);
 
   // Xử lý nút Edit/Save
   const handleEditInfoClick = (isSave: boolean) => {
     setIsEditing(!isEditing);
     if (isSave) {
-      updateInfoUser();
+      updateInfoUser("true");
     }
   };
 
   const handleEditAddressUserClick = (isSave: boolean) => {
     setIsEditAddress(!isEditAddress);
     if (isSave) {
+      updateInfoUser("false");
     }
   };
 
@@ -86,6 +116,7 @@ function InformationUserPage() {
       <div className="bg-white shadow-lg rounded-2xl p-6 w-1/2">
         <span className="font-bold text-lg px-auto text-center p-2 block">Thông tin cá nhân</span>
         <div className="flex flex-col items-center">
+          {/* Xử lý user info */}
           <div className="text-center">
             {userInfo ? (
               isEditing ? (
@@ -111,15 +142,22 @@ function InformationUserPage() {
                     onChange={handleChange}
                     className="border border-gray-300 rounded px-2 py-1 w-full mb-2"
                   />
+                  <input
+                    type="number"
+                    name="phoneNumber"
+                    value={userInfo.phoneNumber}
+                    onChange={handleChange}
+                    className="border border-gray-300 rounded px-2 py-1 w-full mb-2"
+                  />
                   {error && <p className="text-red-500 text-sm">{error}</p>}
                   <select
                     name="isMale"
-                    value={userInfo.isMale}
+                    value={userInfo.isMale.toString()}
                     onChange={handleChange}
                     className="border border-gray-300 rounded px-2 py-1 w-full mb-2"
                   >
-                    <option value="true">Male</option>
-                    <option value="false">Female</option>
+                    <option value="true">Nam</option>
+                    <option value="false">Nữ</option>
                   </select>
                 </div>
               ) : (
@@ -129,10 +167,10 @@ function InformationUserPage() {
                   </h2>
                   <p className="text-gray-600 mt-1">{userInfo.email}</p>
                   <p className="text-gray-600 mt-1">
-                    Birthday: {userInfo.birthday ? userInfo.birthday.substring(0, 10) : "N/A"}
+                    Ngày sinh: {userInfo.birthday ? userInfo.birthday.substring(0, 10) : "N/A"}
                   </p>
                   <p className="text-gray-600 mt-1">
-                    Gender: {userInfo.isMale === "true" ? "Male" : "Female"}
+                    Giới tính: {userInfo.isMale ? "Nam" : "Nữ"}
                   </p>
                 </div>
               )
@@ -164,17 +202,19 @@ function InformationUserPage() {
                       onClick={() => handleEditInfoClick(false)}
                       className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
                     >
-                      Edit
+                      Chỉnh sửa thông tin cá nhân
                     </button>
                   )}
               </div>
             )
           }
 
+
+          {/* Xử lý address */}
           <div>
             <span className="font-bold text-lg px-auto text-center p-2 block mt-3">Địa chỉ nhận hàng</span>
             {
-              userInfo?.address ? (isEditAddress ? (<div className="mt-4 w-full">
+              userInfo ? (isEditAddress ? (<div className="mt-4 w-full">
                 <LocationSelector
                   selectedProvince={selectedProvince || ""}
                   selectedDistrict={selectedDistrict || ""}
@@ -183,14 +223,17 @@ function InformationUserPage() {
                   setSelectedProvince={setSelectedProvince}
                   setSelectedDistrict={setSelectedDistrict}
                   setSelectedWard={setSelectedWard}
+                  setProvincesOut={setProvinces}
+                  setDistrictsOut={setDistricts}
+                  setWardsOut={setWards}
                   setAddress={setAddress}
                 />
-              </div>) : (<div>Có thông tin</div>))
+              </div>) : (<div>{userInfo?.address}</div>))
                 : (<div>Chưa có thông tin</div>)
             }
           </div>
           {
-            userInfo?.address && (
+            userInfo && (
               <div>
                 {isEditAddress ? (<div className="flex gap-2">
                   <button
@@ -212,7 +255,7 @@ function InformationUserPage() {
                       onClick={() => handleEditAddressUserClick(false)}
                       className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
                     >
-                      Edit
+                      Chỉnh sửa địa chỉ
                     </button>
                   )}
               </div>

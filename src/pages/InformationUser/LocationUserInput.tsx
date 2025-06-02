@@ -24,6 +24,11 @@ interface LocationSelectorProps {
   setSelectedProvince: React.Dispatch<React.SetStateAction<string>>;
   setSelectedDistrict: React.Dispatch<React.SetStateAction<string>>;
   setSelectedWard: React.Dispatch<React.SetStateAction<string>>;
+
+  setProvincesOut: React.Dispatch<React.SetStateAction<Province[]>>;
+  setDistrictsOut: React.Dispatch<React.SetStateAction<District[]>>;
+  setWardsOut: React.Dispatch<React.SetStateAction<Ward[]>>;
+
   setAddress: React.Dispatch<React.SetStateAction<string>>;
 }
 
@@ -35,6 +40,9 @@ const LocationSelector: React.FC<LocationSelectorProps> = ({
   setSelectedProvince,
   setSelectedDistrict,
   setSelectedWard,
+  setProvincesOut,
+  setDistrictsOut,
+  setWardsOut,
   setAddress,
 }) => {
 
@@ -47,6 +55,7 @@ const LocationSelector: React.FC<LocationSelectorProps> = ({
       try {
         const response = await axios.get("https://provinces.open-api.vn/api/p");
         setProvinces(response.data);
+        setProvincesOut(response.data)
       } catch (error) {
         console.error("Error fetching provinces:", error);
       }
@@ -63,6 +72,7 @@ const LocationSelector: React.FC<LocationSelectorProps> = ({
             (district: any) => String(district.province_code) === String(selectedProvince)
           );
           setDistricts(filteredDistricts);
+          setDistrictsOut(filteredDistricts)
         } catch (error) {
           console.error("Error fetching districts:", error);
         }
@@ -82,6 +92,7 @@ const LocationSelector: React.FC<LocationSelectorProps> = ({
             (ward: any) => String(ward.district_code) === String(selectedDistrict)
           );
           setWards(filteredWards);
+          setWardsOut(filteredWards);
         } catch (error) {
           console.error("Error fetching wards:", error);
         }

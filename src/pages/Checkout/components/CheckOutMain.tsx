@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import User from "../../../model/User";
 import { useNavigate } from "react-router-dom";
+import { Coupon } from "../../../model/Coupon";
 
 interface Province {
   code: string;
@@ -36,6 +37,9 @@ const CheckOutMain = () => {
   const userData: User = useSelector(
     (state: RootState) => state.users
   );
+  const couponData: Coupon[] = useSelector(
+    (state: RootState) => state.coupons
+  );
 
   const navigate = useNavigate();
 
@@ -50,12 +54,67 @@ const CheckOutMain = () => {
   const loadUserInfo = async () => {
     try {
       const data: ApiResponse = await clientAPI.service(`users/${userData.user_id}`).find();
-      setOrderInfo(data.result);
+      console.log(data?.result);
+      const sliced = data?.result?.address.split("-");
+      setAddress(sliced[0], sliced[1], sliced[2]);
+
+      setOrderInfo((prevState) => ({
+        ...prevState, // Giữ nguyên các thuộc tính cũ
+        phoneNumber: data?.result.phoneNumber,
+        shippingAddress: sliced[3] || "", // Cập nhật thuộc tính shippingAddress
+      }));
     }
     catch (error) {
       console.error("Error loading user information:", error);
     }
   }
+
+  const setAddress = async (province: string, district: string, ward: string) => {
+    try {
+      const dataProvinces = await axios.get("https://provinces.open-api.vn/api/p");
+      const dataDistrict = await axios.get("https://provinces.open-api.vn/api/d/");
+      const dataWard = await axios.get("https://provinces.open-api.vn/api/w/");
+
+      // Lọc tỉnh theo `name`
+      const filteredProvince = dataProvinces.data.find(
+        (item: { name: string }) => item.name === province
+      );
+
+      if (!filteredProvince) {
+        console.error("Province not found");
+        return;
+      }
+
+      // Lọc quận/huyện theo `district` (nếu cần)
+      const filteredDistrict = dataDistrict.data.find(
+        (item: { name: string; province_code: number }) =>
+          item.name === district && item.province_code === filteredProvince.code
+      );
+
+      if (!filteredDistrict) {
+        console.error("District not found");
+        return;
+      }
+
+      // Lọc xã/phường theo `ward` (nếu cần)
+      const filteredWard = dataWard.data.find(
+        (item: { name: string; district_code: number }) =>
+          item.name === ward && item.district_code === filteredDistrict.code
+      );
+
+      if (!filteredWard) {
+        console.error("Ward not found");
+        return;
+      }
+
+      setSelectedProvince(filteredProvince?.code);
+      setSelectedDistrict(filteredDistrict?.code);
+      setSelectedWard(filteredWard?.code);
+    } catch (error) {
+      console.error("Error fetching address data:", error);
+    }
+  };
+
 
   // Fetch provinces
   useEffect(() => {
@@ -116,6 +175,7 @@ const CheckOutMain = () => {
 
   //Call Api
   const createOrder = async () => {
+
     var formOrder = new FormData();
     formOrder.append("fullName", orderInfo.fullName);
     formOrder.append("phoneNumber", orderInfo.phoneNumber);
@@ -124,6 +184,9 @@ const CheckOutMain = () => {
     formOrder.append("province", provinces.find(province => province.code == selectedProvince)?.name || "");
     formOrder.append("district", districts.find(district => district.code == selectedDistrict)?.name || "");
     formOrder.append("ward", wards.find(wards => wards.code == selectedWard)?.name || "");
+    couponData.map((item, index) => {
+      formOrder.append(`CouponCodes[${index}]`, item.codeCoupon);
+    })
 
     try {
       const response: ApiResponse = await clientAPI.service(`Payment`).create(formOrder);
@@ -152,11 +215,11 @@ const CheckOutMain = () => {
       {/*Thông tin giao hàng*/}
       <h1 className="text-2xl font-bold mb-4">Thông tin giao hàng</h1>
       <div className="border rounded shadow p-4 space-y-4">
-        <input className="w-full p-2 border rounded" placeholder="Họ và tên" value={orderInfo.fullName} onChange={(e) => setOrderInfo((prev) => ({ ...prev, fullName: e.target.value }))
+        <input className="w-full p-2 border rounded" placeholder="Họ và tên" value={orderInfo?.fullName} onChange={(e) => setOrderInfo((prev) => ({ ...prev, fullName: e.target.value }))
         } />
         <div className="grid grid-cols-2 gap-4">
-          <input className="w-full p-2 border rounded" placeholder="Email" value={orderInfo.email} />
-          <input className="w-full p-2 border rounded" placeholder="Số điện thoại" value={orderInfo.phoneNumber} onChange={(e) => setOrderInfo((prev) => ({ ...prev, phoneNumber: e.target.value }))} />
+          <input className="w-full p-2 border rounded" placeholder="Email" value={orderInfo?.email} />
+          <input className="w-full p-2 border rounded" placeholder="Số điện thoại" value={orderInfo?.phoneNumber} onChange={(e) => setOrderInfo((prev) => ({ ...prev, phoneNumber: e.target.value }))} />
         </div>
 
         {/*get api Tỉnh thành*/}
