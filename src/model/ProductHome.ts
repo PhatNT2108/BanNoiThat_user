@@ -3,6 +3,7 @@ export default interface ProductHome {
   name: string;
   slug: string;
   thumbnailUrl: string;
+  thumbnailUrlSecond: string;
   price: number;
   salePrice: number;
 }

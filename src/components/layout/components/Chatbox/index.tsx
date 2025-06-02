@@ -53,13 +53,9 @@ const ChatBox: React.FC = () => {
           localStorage.setItem("conversationId", response.conversation_id);
         }
 
-        const answerBlocks = parseAnswerToBlocks(response.answer);
         setMessages((pre) => [
           ...pre,
-          ...answerBlocks.map((block) => ({
-            text: block,
-            sender: "bot" as const,
-          })),
+          { text: response.answer, sender: "bot" },
         ]);
         setIsLoading(false);
         toggleScroll();
@@ -70,47 +66,42 @@ const ChatBox: React.FC = () => {
     }
   };
 
-  const parseAnswerToBlocks = (htmlString: string): string[] => {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(`<div>${htmlString}</div>`, "text/html");
+  // const parseAnswerToBlocks = (htmlString: string): string[] => {
+  //   const parser = new DOMParser();
+  //   const doc = parser.parseFromString(`<div>${htmlString}</div>`, "text/html");
+  //   console.log(htmlString)
 
-    const divs = doc.querySelector("div")?.children;
-    const blocks: string[] = [];
+  //   const divs = doc.querySelector("div")?.children;
+  //   const blocks: string[] = [];
 
-    if (!divs || divs.length === 0) {
-      const cleanedHtml = htmlString.trim();
-      if (cleanedHtml) {
-        blocks.push(cleanedHtml);
-      }
-      return blocks;
-    }
+  //   if (!divs || divs.length === 0) {
+  //     const cleanedHtml = htmlString.trim();
+  //     if (cleanedHtml) {
+  //       blocks.push(cleanedHtml);
+  //     }
+  //     return blocks;
+  //   }
 
-    Array.from(divs).forEach((element) => {
-      if (element.tagName.toLowerCase() === "div") {
-        blocks.push(element.outerHTML);
-      }
-    });
+  //   Array.from(divs).forEach((element) => {
+  //     if (element.tagName.toLowerCase() === "div") {
+  //       blocks.push(element.outerHTML);
+  //     }
+  //   });
 
-    return blocks;
-  };
+  //   return blocks;
+  // };
 
   const loadMessages = async (conversationId: string) => {
     try {
       const response: ResponseMessageHistory = await difyAPI
         .service("messages")
         .get(`user=${userData.user_id}&conversation_id=${conversationId} `);
-      const newMessages: Message[] = [];
 
       for (const value of response.data) {
-        newMessages.push({ text: value.query, sender: "user" });
-
-        const answerBlocks = parseAnswerToBlocks(value.answer);
-        for (const block of answerBlocks) {
-          newMessages.push({ text: block, sender: "bot" });
-        }
+        setMessages((pre) => [...pre, { text: value.query, sender: "user" }]);
+        setMessages((pre) => [...pre, { text: value.answer, sender: "bot" }]);
       }
 
-      setMessages((pre) => [...pre, ...newMessages]);
     } catch (error) {
       console.error("Error sending message:", error);
       setIsLoading(false);
@@ -129,11 +120,11 @@ const ChatBox: React.FC = () => {
           <h2 class="text-xl font-semibold mb-4">${openingStatement}</h2>
           <div class="space-y-2">
             ${suggestQuestion
-              .map(
-                (q: any) =>
-                  `<button class="block w-full text-left px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200">${q}</button>`
-              )
-              .join("")}
+          .map(
+            (q: any) =>
+              `<button class="block w-full text-left px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200">${q}</button>`
+          )
+          .join("")}
           </div>
         </div>`;
 
@@ -154,11 +145,10 @@ const ChatBox: React.FC = () => {
 
   useEffect(() => {
     const conversationId = localStorage.getItem("conversationId");
-    if (conversationId && userData.user_id && !hasLoadedMessages) {
+    if (conversationId && userData.user_id) {
       loadMessages(conversationId);
-      setHasLoadedMessages(true);
     }
-  }, [userData.user_id, hasLoadedMessages]);
+  }, [userData.user_id]);
   useEffect(() => {
     const conversationId = localStorage.getItem("conversationId");
 

@@ -49,8 +49,7 @@ const ProductDetailPage: React.FC = () => {
           (item: ProductItemResponse) => item.imageUrl
         );
         setAdditionalImages(images);
-        setCurrentImageSelected(images);
-        console.log(images);
+        setCurrentImageSelected(images[0]);
         setIsLoading(false);
         for (const productItem of data.result.productItems) {
           if (productItem.quantity > 0) {
@@ -207,11 +206,10 @@ const ProductDetailPage: React.FC = () => {
                 <div
                   key={index}
                   onClick={() => triggerSelectItem(item)}
-                  className={`p-2 text-sm w-max border flex items-center  justify-center cursor-pointer ${
-                    currentItemSelected?.id === item.id
-                      ? "bg-black text-white rounded-md"
-                      : "border-green-700 rounded-md"
-                  }`}
+                  className={`p-2 text-sm w-max border flex items-center  justify-center cursor-pointer ${currentItemSelected?.id === item.id
+                    ? "bg-black text-white rounded-md"
+                    : "border-green-700 rounded-md"
+                    }`}
                 >
                   {item.nameOption}
                 </div>
@@ -237,8 +235,8 @@ const ProductDetailPage: React.FC = () => {
             <h2 className="text-lg font-bold">Kích thước:</h2>
             <p>
               {currentItemSelected?.lengthSize &&
-              currentItemSelected?.widthSize &&
-              currentItemSelected?.heightSize
+                currentItemSelected?.widthSize &&
+                currentItemSelected?.heightSize
                 ? `${currentItemSelected.lengthSize} x ${currentItemSelected.widthSize} x ${currentItemSelected.heightSize} cm`
                 : "N/A"}
             </p>

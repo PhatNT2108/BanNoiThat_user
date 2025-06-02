@@ -22,14 +22,12 @@ const MessageChatBox: React.FC<MessageChatBoxProps> = ({
       {messages.map((msg, index) => (
         <div
           key={index}
-          className={`flex ${
-            msg.sender === "user" ? "justify-end" : "justify-start"
-          }`}
+          className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"
+            }`}
         >
           <div
-            className={`p-2 mb-2 rounded-lg inline-block max-w-[80%] ${
-              msg.sender === "user" ? "bg-blue-100" : "bg-gray-100"
-            }`}
+            className={`p-2 mb-2 rounded-lg inline-block max-w-[80%] ${msg.sender === "user" ? "bg-blue-100" : "bg-gray-100"
+              }`}
             dangerouslySetInnerHTML={{ __html: msg.text }}
           />
         </div>
@@ -41,7 +39,6 @@ const MessageChatBox: React.FC<MessageChatBoxProps> = ({
           <span className="w-3 h-3 bg-blue-500 rounded-full animate-bounce [animation-delay:400ms]"></span>
         </div>
       )}
-
       <div ref={messageEndRef} className="p-1" />
     </div>
   );

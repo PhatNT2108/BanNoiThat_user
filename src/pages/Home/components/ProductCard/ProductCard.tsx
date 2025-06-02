@@ -19,13 +19,19 @@ function ProductCard({ product }: Props) {
       className="card-product relative md:m-2 m-1 box-border min-w-[11.3em] max-h-[18rem]"
       onClick={() => navigateProductDetail(product.slug)}
     >
-      <div className=" h-48 overflow-hidden">
+      <div className="relative h-48 overflow-hidden group">
         <img
           src={product.thumbnailUrl || "https://placehold.co/600x400"}
           alt={product.name}
-          className="w-full h-full object-cover transition-opacity duration-500 ease-in-out hover:opacity-0"
+          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ease-in-out opacity-100 group-hover:opacity-0"
+        />
+        <img
+          src={product.thumbnailUrlSecond || "https://placehold.co/600x400"}
+          alt={product.name}
+          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ease-in-out opacity-0 group-hover:opacity-100"
         />
       </div>
+
       <div className="flex flex-col justify-between ml-3 mb-2">
         <h3 className="font-sans font-medium md:text-[1.1rem] ml-1 mt-1 min-h-[3.4rem] ">{product.name}</h3>
         <div className="flex items-center flex-wrap">
