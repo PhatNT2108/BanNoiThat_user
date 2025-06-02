@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import clientAPI from "../../api/client-api/rest-client";
 import ApiResponse from "../../model/ApiResponse";
 import User from "../../model/User";
@@ -6,27 +6,22 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import LocationSelector from "./LocationUserInput";
 
-interface Province {
-  code: string;
-  name: string;
-}
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import EmailIcon from "@mui/icons-material/Email";
+import PhoneIcon from "@mui/icons-material/Phone";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import WcIcon from "@mui/icons-material/Wc";
 
-interface District {
-  code: string;
-  name: string;
-}
-
-interface Ward {
-  code: string;
-  name: string;
-}
+interface Province { code: string; name: string; }
+interface District { code: string; name: string; }
+interface Ward { code: string; name: string; }
 
 function InformationUserPage() {
   const userData: User = useSelector((state: RootState) => state.users);
-
   const [isEditing, setIsEditing] = useState(false);
   const [isEditAddress, setIsEditAddress] = useState(false);
   const [userInfo, setUserInfo] = useState<User | null>(null);
+
   const [selectedProvince, setSelectedProvince] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedWard, setSelectedWard] = useState("");
@@ -38,232 +33,174 @@ function InformationUserPage() {
   const [address, setAddress] = useState<string>("");
   const [error, setError] = useState<string>("");
 
-  // Call API để load thông tin user
   const loadInfoUser = async () => {
     try {
       const response: ApiResponse = await clientAPI.service(`users/${userData.user_id}`).find();
-      if (response.isSuccess) {
-        setUserInfo(response.result);
-      }
+      if (response.isSuccess) setUserInfo(response.result);
     } catch {
       console.error("Error loading user information");
     }
-
   };
 
-  // Call API để cập nhật thông tin user
   const updateInfoUser = async (isOnlyUpdateInfo: string) => {
     if (!userInfo) return;
-
     if (!userInfo.birthday) {
-      setError("Please select a valid date of birth.");
+      setError("Vui lòng chọn ngày sinh hợp lệ.");
       return;
     }
 
-    setError(""); // Xóa thông báo lỗi nếu hợp lệ
-
+    setError("");
     const formData = new FormData();
     formData.append("fullName", userInfo.fullName);
     formData.append("birthday", new Date(userInfo.birthday).toISOString());
     formData.append("isMale", userInfo.isMale);
     formData.append("phoneNumber", userInfo.phoneNumber);
     formData.append("isOnlyUpdateInfo", isOnlyUpdateInfo);
-
     formData.append("shippingAddress", address);
-    formData.append("province", provinces.find(province => province.code == selectedProvince)?.name || "");
-    formData.append("district", districts.find(district => district.code == selectedDistrict)?.name || "");
-    formData.append("ward", wards.find(wards => wards.code == selectedWard)?.name || "");
+    formData.append("province", provinces.find(p => p.code === selectedProvince)?.name || "");
+    formData.append("district", districts.find(d => d.code === selectedDistrict)?.name || "");
+    formData.append("ward", wards.find(w => w.code === selectedWard)?.name || "");
 
-    console.log(provinces.find(province => province.code == selectedProvince)?.name)
-
-    const response: ApiResponse = await clientAPI
-      .service("users")
-      .put(userData.user_id, formData);
-
+    const response: ApiResponse = await clientAPI.service("users").put(userData.user_id, formData);
     if (response.isSuccess) {
       setUserInfo(response.result);
       loadInfoUser();
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     loadInfoUser();
   }, []);
 
-  // Xử lý nút Edit/Save
   const handleEditInfoClick = (isSave: boolean) => {
+    if (isSave) updateInfoUser("true");
     setIsEditing(!isEditing);
-    if (isSave) {
-      updateInfoUser("true");
-    }
   };
 
   const handleEditAddressUserClick = (isSave: boolean) => {
+    if (isSave) updateInfoUser("false");
     setIsEditAddress(!isEditAddress);
-    if (isSave) {
-      updateInfoUser("false");
-    }
   };
 
-  // Xử lý thay đổi thông tin user
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setUserInfo((prev) => (prev ? { ...prev, [name]: value } : prev));
+    setUserInfo((prev) => prev ? { ...prev, [name]: value } : prev);
   };
+
+  const Label = ({ icon, text }: { icon: React.ReactNode; text: string }) => (
+    <label className="flex items-center text-sm font-medium text-gray-700 gap-2 mb-1">
+      {icon} {text}
+    </label>
+  );
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white shadow-lg rounded-2xl p-6 w-1/2">
-        <span className="font-bold text-lg px-auto text-center p-2 block">Thông tin cá nhân</span>
-        <div className="flex flex-col items-center">
-          {/* Xử lý user info */}
-          <div className="text-center">
-            {userInfo ? (
-              isEditing ? (
-                <div>
-                  <input
-                    type="text"
-                    name="fullName"
-                    value={userInfo.fullName || ""}
-                    onChange={handleChange}
-                    className="border border-gray-300 rounded px-2 py-1 w-full mb-2"
-                  />
-                  <input
-                    type="email"
-                    name="email"
-                    value={userInfo.email || ""}
-                    disabled={true}
-                    className="border border-gray-300 rounded px-2 py-1 w-full mb-2"
-                  />
-                  <input
-                    type="date"
-                    name="birthday"
-                    value={userInfo.birthday}
-                    onChange={handleChange}
-                    className="border border-gray-300 rounded px-2 py-1 w-full mb-2"
-                  />
-                  <input
-                    type="number"
-                    name="phoneNumber"
-                    value={userInfo.phoneNumber}
-                    onChange={handleChange}
-                    className="border border-gray-300 rounded px-2 py-1 w-full mb-2"
-                  />
-                  {error && <p className="text-red-500 text-sm">{error}</p>}
-                  <select
-                    name="isMale"
-                    value={userInfo.isMale.toString()}
-                    onChange={handleChange}
-                    className="border border-gray-300 rounded px-2 py-1 w-full mb-2"
-                  >
-                    <option value="true">Nam</option>
-                    <option value="false">Nữ</option>
-                  </select>
-                </div>
+    <div className="min-h-screen bg-gradient-to-r from-indigo-100 to-blue-100 py-12 px-4 flex items-center justify-center">
+      <div className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-3xl">
+        <h2 className="text-3xl font-extrabold text-center text-blue-700 mb-8">Thông tin cá nhân</h2>
+
+        {userInfo ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <Label icon={<AccountCircleIcon color="primary" />} text="Họ và tên" />
+              {isEditing ? (
+                <input name="fullName" value={userInfo.fullName || ""} onChange={handleChange}
+                  className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" />
               ) : (
-                <div>
-                  <h2 className="text-xl text-gray-800">
-                    {userInfo.fullName}
-                  </h2>
-                  <p className="text-gray-600 mt-1">{userInfo.email}</p>
-                  <p className="text-gray-600 mt-1">
-                    Ngày sinh: {userInfo.birthday ? userInfo.birthday.substring(0, 10) : "N/A"}
-                  </p>
-                  <p className="text-gray-600 mt-1">
-                    Giới tính: {userInfo.isMale ? "Nam" : "Nữ"}
-                  </p>
-                </div>
-              )
-            ) : (
-              <p>Loading user information...</p>
-            )}
-          </div>
-          {
-            //Xử lý nút Edit/Save
-            userInfo && (
-              <div>
-                {isEditing ? (<div className="flex gap-2">
-                  <button
-                    onClick={() => handleEditInfoClick(true)}
-                    className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
-                  >
-                    Save
-                  </button>
-                  <button
-                    onClick={() => handleEditInfoClick(false)}
-                    className="mt-4 bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition"
-                  >
-                    Cancel
-                  </button>
-                </div>)
-                  :
-                  (
-                    <button
-                      onClick={() => handleEditInfoClick(false)}
-                      className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
-                    >
-                      Chỉnh sửa thông tin cá nhân
-                    </button>
-                  )}
-              </div>
-            )
-          }
+                <p className="text-gray-800">{userInfo.fullName}</p>
+              )}
+            </div>
 
+            <div>
+              <Label icon={<EmailIcon color="action" />} text="Email" />
+              <input type="email" name="email" value={userInfo.email || ""} disabled
+                className="w-full border bg-gray-100 text-gray-600 rounded-lg px-3 py-2" />
+            </div>
 
-          {/* Xử lý address */}
-          <div>
-            <span className="font-bold text-lg px-auto text-center p-2 block mt-3">Địa chỉ nhận hàng</span>
-            {
-              userInfo ? (isEditAddress ? (<div className="mt-4 w-full">
-                <LocationSelector
-                  selectedProvince={selectedProvince || ""}
-                  selectedDistrict={selectedDistrict || ""}
-                  selectedWard={selectedWard || ""}
-                  shippingAddress={address || ""}
-                  setSelectedProvince={setSelectedProvince}
-                  setSelectedDistrict={setSelectedDistrict}
-                  setSelectedWard={setSelectedWard}
-                  setProvincesOut={setProvinces}
-                  setDistrictsOut={setDistricts}
-                  setWardsOut={setWards}
-                  setAddress={setAddress}
-                />
-              </div>) : (<div>{userInfo?.address}</div>))
-                : (<div>Chưa có thông tin</div>)
-            }
+            <div>
+              <Label icon={<CalendarMonthIcon color="secondary" />} text="Ngày sinh" />
+              {isEditing ? (
+                <input type="date" name="birthday" value={userInfo.birthday}
+                  onChange={handleChange} className="w-full border rounded-lg px-3 py-2" />
+              ) : (
+                <p className="text-gray-800">{userInfo.birthday?.substring(0, 10)}</p>
+              )}
+            </div>
+
+            <div>
+              <Label icon={<WcIcon color="primary" />} text="Giới tính" />
+              {isEditing ? (
+                <select name="isMale" value={userInfo.isMale.toString()} onChange={handleChange}
+                  className="w-full border rounded-lg px-3 py-2">
+                  <option value="true">Nam</option>
+                  <option value="false">Nữ</option>
+                </select>
+              ) : (
+                <p className="text-gray-800">{userInfo.isMale ? "Nam" : "Nữ"}</p>
+              )}
+            </div>
+
+            <div>
+              <Label icon={<PhoneIcon color="success" />} text="Số điện thoại" />
+              {isEditing ? (
+                <input type="number" name="phoneNumber" value={userInfo.phoneNumber}
+                  onChange={handleChange}
+                  className="w-full border rounded-lg px-3 py-2" />
+              ) : (
+                <p className="text-gray-800">{userInfo.phoneNumber}</p>
+              )}
+            </div>
           </div>
-          {
-            userInfo && (
-              <div>
-                {isEditAddress ? (<div className="flex gap-2">
-                  <button
-                    onClick={() => handleEditAddressUserClick(true)}
-                    className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
-                  >
-                    Save
-                  </button>
-                  <button
-                    onClick={() => handleEditAddressUserClick(false)}
-                    className="mt-4 bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition"
-                  >
-                    Cancel
-                  </button>
-                </div>)
-                  :
-                  (
-                    <button
-                      onClick={() => handleEditAddressUserClick(false)}
-                      className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
-                    >
-                      Chỉnh sửa địa chỉ
-                    </button>
-                  )}
-              </div>
-            )
-          }
+        ) : <p>Đang tải thông tin người dùng...</p>}
+
+        <div className="flex justify-end gap-4 mt-6">
+          {isEditing ? (
+            <>
+              <button onClick={() => handleEditInfoClick(true)}
+                className="bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-lg shadow">Lưu</button>
+              <button onClick={() => handleEditInfoClick(false)}
+                className="bg-gray-400 hover:bg-gray-500 text-white px-5 py-2 rounded-lg shadow">Hủy</button>
+            </>
+          ) : (
+            <button onClick={() => handleEditInfoClick(false)}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow">Chỉnh sửa thông tin</button>
+          )}
+        </div>
+
+        <hr className="my-8" />
+        <h3 className="text-xl font-semibold text-blue-700 mb-3">Địa chỉ nhận hàng</h3>
+        {isEditAddress ? (
+          <LocationSelector
+            selectedProvince={selectedProvince}
+            selectedDistrict={selectedDistrict}
+            selectedWard={selectedWard}
+            shippingAddress={address}
+            setSelectedProvince={setSelectedProvince}
+            setSelectedDistrict={setSelectedDistrict}
+            setSelectedWard={setSelectedWard}
+            setProvincesOut={setProvinces}
+            setDistrictsOut={setDistricts}
+            setWardsOut={setWards}
+            setAddress={setAddress}
+          />
+        ) : (
+          <div className="text-gray-800">{userInfo?.address || "Chưa có địa chỉ nhận hàng."}</div>
+        )}
+
+        <div className="flex justify-end gap-4 mt-6">
+          {isEditAddress ? (
+            <>
+              <button onClick={() => handleEditAddressUserClick(true)}
+                className="bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-lg shadow">Lưu địa chỉ</button>
+              <button onClick={() => handleEditAddressUserClick(false)}
+                className="bg-gray-400 hover:bg-gray-500 text-white px-5 py-2 rounded-lg shadow">Hủy</button>
+            </>
+          ) : (
+            <button onClick={() => handleEditAddressUserClick(false)}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow">Chỉnh sửa địa chỉ</button>
+          )}
         </div>
       </div>
-    </div >
+    </div>
   );
 }
 
