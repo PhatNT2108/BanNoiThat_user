@@ -4,13 +4,21 @@ import clientAPI from "../../../../api/client-api/rest-client";
 import ApiResponse from "../../../../model/ApiResponse";
 import CategoriesResponse from "../../../../model/CategoriesResponse";
 import { memo, useEffect, useState } from "react";
-import { Brand } from "../../../../model/ProductDetail";
 import NavItem from "./components/CategoriesNav";
 import BrandsResponse from "../../../../model/BrandsResponse";
+
+export interface SaleProgram {
+  id: string;
+  name: string;
+  slug: string;
+  children: any[] | null;
+  isShow: boolean;
+}
 
 function Navigation() {
   const [dataCategories, setDataCategories] = useState<CategoriesResponse[]>([]);
   const [dataBrands, setDataBrands] = useState<BrandsResponse[]>([]);
+  const [salePrograms, setSalePrograms] = useState<SaleProgram[]>([]);
   const [loading, setLoading] = useState(true);
 
   const loadCategory = async () => {
@@ -45,9 +53,27 @@ function Navigation() {
     }
   };
 
+  const loadSalePrograms = async () => {
+    try {
+      const response: ApiResponse = await clientAPI
+        .service("saleprogram/homepage")
+        .find();
+      response?.result?.map((saleProgram: SaleProgram) => {
+        saleProgram.isShow = false;
+      })
+      console.log(response.result);
+      setSalePrograms(response.result);
+    } catch (error) {
+      console.error("Failed to load brands", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     loadCategory();
     loadBrands();
+    loadSalePrograms();
   }, []);
 
   const menuItems = [
@@ -60,6 +86,12 @@ function Navigation() {
     {
       label: "Thương hiệu",
       href: "/brands",
+      hasDropdown: true,
+      data: dataCategories,
+    },
+    {
+      label: "Khuyến mãi",
+      href: "/saleprograms",
       hasDropdown: true,
       data: dataCategories,
     }
@@ -79,13 +111,14 @@ function Navigation() {
             </div>
             {(
               //Parent
-              <div className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 font-bold">
+              <div className="absolute left-0 mt-2 w-max bg-white rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 font-bold">
                 {loading ? (
                   <div className="p-4 text-gray-500">Đang tải...</div>
                 ) : (
                   <ul className="p-2 space-y-2">
                     {item.href === "/categories" && (<NavItem items={dataCategories} setState={setDataCategories} />)}
                     {item.href === "/brands" && (<NavItem items={dataBrands} setState={setDataBrands} />)}
+                    {item.href === "/saleprograms" && (<NavItem items={salePrograms} setState={setSalePrograms} />)}
                   </ul>
                 )}
               </div>
@@ -93,18 +126,11 @@ function Navigation() {
           </li>
         ))}
 
-        {/* Static */}
-        <li>
-          <Link to="/showroom" className="text-[#d7f0db] font-bold hover:text-[#d7f0db]">
-            Showroom
-          </Link>
-        </li>
         <li>
           <Link to="/about-us" className="text-[#d7f0db] font-bold hover:text-[#d7f0db]">
             About Us
           </Link>
         </li>
-
       </ul>
     </nav >
   );

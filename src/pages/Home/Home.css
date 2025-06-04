@@ -21,3 +21,63 @@
   background: #888; /* Màu thanh cuộn */
   border-radius: 4px; /* Bo tròn thanh cuộn */
 }
+
+/* Navigation Swiper */
+.swiper-button-next,
+.swiper-button-prev {
+  color: #ffffff; /* Màu của nút */
+  background-color: rgba(0, 0, 0, 0.5); /* Nền nút */
+  border-radius: 50%; /* Bo tròn */
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  top: 50%;
+  z-index: inherit;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  transform: translateY(-50%);
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  background-color: rgba(0, 0, 0, 0.8); /* Hiệu ứng hover */
+}
+
+.swiper-button-next {
+  right: 10px; /* Cách cạnh phải */
+}
+
+.swiper-button-prev {
+  left: 10px; /* Cách cạnh trái */
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  position: absolute;
+  top: 50%; /* Đưa nút vào giữa chiều cao slider */
+  transform: translateY(-50%); /* Căn giữa theo trục Y */
+  z-index: 10; /* Đảm bảo nút nằm trên các phần tử khác */
+  width: 40px;
+  height: 40px;
+  background-color: rgba(0, 0, 0, 0.5); /* Màu nền */
+  border-radius: 40%; /* Bo tròn nút */
+  display: flex;
+  justify-content: center; /* Căn giữa nội dung theo chiều ngang */
+  align-items: center; /* Căn giữa nội dung theo chiều dọc */
+  color: #fff; /* Màu chữ */
+  cursor: pointer;
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 16px;
+  font-weight: bold;
+  content: ""; /* Xóa nội dung mặc định */
+}
+
+.swiper-button-next::after {
+  content: "→"; /* Ký hiệu mũi tên phải */
+}
+
+.swiper-button-prev::after {
+  content: "←"; /* Ký hiệu mũi tên trái */
+}

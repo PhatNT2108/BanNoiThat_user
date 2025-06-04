@@ -6,4 +6,5 @@ export default interface ProductHome {
   thumbnailUrlSecond: string;
   price: number;
   salePrice: number;
+  isHaveModel3D: boolean;
 }

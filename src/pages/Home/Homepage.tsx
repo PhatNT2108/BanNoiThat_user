@@ -10,6 +10,7 @@ import { getFromLocalStorage } from '../../utils/HandleInteracted';
 import ProductCard from './components/ProductCard/ProductCard';
 import SectionCategories from './components/SectionCategory';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 import './Home.css';
 
@@ -92,7 +93,7 @@ const Homepage: React.FC = () => {
     return (
         <div className="">
             {/*new product*/}
-            <div className='md:w-[80%] w-full md:p-10 p-2 mx-auto'>
+            <div className='relative md:w-[80%] w-full md:p-10 p-2 mx-auto'>
                 <div className="flex justify-between items-center p-4 md:text-3xl text-xl font-bold ">
                     <span> Sản phẩm mới </span>
                     <span className='hover:cursor-pointer text-lg text-black' onClick={() => navigateToFilterPage()}> Xem thêm </span>
@@ -103,6 +104,8 @@ const Homepage: React.FC = () => {
                     loop={false} // Lặp lại slider
                     pagination={{ clickable: true }} // Pagination (chấm tròn bên dưới)
                     autoplay={{ delay: 3000 }} // Tự động lướt
+                    modules={[Navigation]} // Sử dụng module Navigation
+                    navigation={true}
                     breakpoints={{
                         0: {
                             slidesPerView: 2, // Hiển thị 2 sản phẩm
@@ -146,7 +149,7 @@ const Homepage: React.FC = () => {
                 </div>
             </div>
             <PagingBar totalRecords={paginationDto?.TotalRecords} pageSize={pageSize} />
-        </div>);
+        </div >);
 };
 
 export default Homepage;

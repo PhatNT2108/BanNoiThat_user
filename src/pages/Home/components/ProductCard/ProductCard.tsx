@@ -43,10 +43,18 @@ function ProductCard({ product }: Props) {
           )}
         </div>
       </div>
-      {product.salePrice !== 0 && (<div className="absolute top-1 left-1 flex justify-center items-center text-[16px] w-10 h-10 rounded-full text-white bg-[#c92a2a]">
-        {((1 - product.salePrice / product.price) * 100).toFixed(0)}%
-      </div>)
-      }
+      <div className="absolute top-1 left-1 flex flex-col gap-1">
+        {product.salePrice !== 0 && (<div className="flex justify-center items-center text-[16px] w-10 h-10 rounded-full text-white bg-[#c92a2a]">
+          {((1 - product.salePrice / product.price) * 100).toFixed(0)}%
+        </div>)}
+        {product.isHaveModel3D && (<button
+          className="w-max px-3 py-1 h-full font-semibold rounded-sm bg-gray-300 flex justify-center items-center "
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+          </svg>
+        </button>)}
+      </div>
     </div >
   );
 }

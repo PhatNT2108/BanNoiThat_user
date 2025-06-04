@@ -29,7 +29,7 @@ const NavItem: React.FC<Props> = ({ items, setState }) => {
 
 
   return (
-    <ul className="p-2 space-y-2">
+    <ul className="p-2 space-y-2 w-max">
       {
         items.map((item: ItemCategory, index: number) => (
           <li key={index} className="relative">
@@ -44,7 +44,7 @@ const NavItem: React.FC<Props> = ({ items, setState }) => {
             {
               //Children
               item.children && item.children.length > 0 && (
-                <div className={`absolute left-full top-0 ml w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 ${item.isShow ? 'visible opacity-100' : 'invisible'} transition-all duration-300 z-50`}
+                <div className={`absolute left-full top-0 ml w-max bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 ${item.isShow ? 'visible opacity-100' : 'invisible'} transition-all duration-300 z-50`}
                   onMouseEnter={() => (triggerShow(item.id || "", true))}>
                   <ul className="p-2 space-y-2">
                     {item.children.map((child: any) => (
