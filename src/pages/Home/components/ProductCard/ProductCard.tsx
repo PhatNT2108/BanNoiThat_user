@@ -23,7 +23,7 @@ function ProductCard({ product }: Props) {
         <img
           src={product.thumbnailUrl || "https://placehold.co/600x400"}
           alt={product.name}
-          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ease-in-out opacity-100 group-hover:opacity-0"
+          className="absolute inset-0 w-full h-full object-contain transition-opacity duration-500 ease-in-out opacity-100 group-hover:opacity-0"
         />
         <img
           src={product.thumbnailUrlSecond || "https://placehold.co/600x400"}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ItemCheckOut from "./ItemCheckOut";
 import { CartResponse } from "../../../model/CartResponse";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,10 +8,27 @@ import ApiResponse from "../../../model/ApiResponse";
 import { Coupon } from "../../../model/Coupon";
 import { setCoupon } from "../../../redux/features/couponSlice";
 
+interface ShippingFeeResponse {
+  total: number;
+  serviceFee: number;
+  insuranceFee: number;
+  pickStationFee: number;
+  couponValue: number;
+  r2sFee: number;
+  returnAgain: number;
+  documentReturn: number;
+  doubleCheck: number;
+  codFee: number;
+  pickRemoteAreasFee: number;
+  deliverRemoteAreasFee: number;
+  codFailedFee: number;
+}
+
+
 const CheckOutBill: React.FC = () => {
-  const [priceShip, setPriceShip] = React.useState(0);
   const [codeCoupon, setCodeCoupon] = useState("");
   const [currentMessageCoupon, setCurrentMessageCoupon] = useState("");
+  const [feeShipping, setFeeShipping] = useState<ShippingFeeResponse>();
   const cartData: CartResponse = useSelector(
     (state: RootState) => state.carts
   );
@@ -36,10 +53,27 @@ const CheckOutBill: React.FC = () => {
     }
   }
 
+  const loadPriceShippingEstimate = async () => {
+    try {
+      const query = cartData.cartItems
+        .map((item, index) => `listProductItem[${index}]=${item.productItem_Id}`)
+        .join('&');
+
+      var data: ApiResponse = await clientAPI.service("payment/shipping-fee").find(`${query}`);
+      setFeeShipping(data.result);
+    }
+    catch (e) {
+      console.log(e);
+    }
+  }
+
   const triggerAddCoupon = () => {
-    console.log("trigger ")
     loadCoupon(codeCoupon);
   }
+
+  useEffect(() => {
+    loadPriceShippingEstimate();
+  }, [])
 
   return (
     <div className="max-w-md mx-auto bg-white rounded shadow">
@@ -106,7 +140,9 @@ const CheckOutBill: React.FC = () => {
           </p>        </div>
         <div className="flex justify-between py-1.5">
           <p className="text-sm text-gray-600">Phí vận chuyển</p>
-          <p className="text-sm text-blue-500">Miễn phí</p>
+          <p className="text-sm text-blue-500">
+            {feeShipping?.total && feeShipping.total !== 0 ? `${feeShipping.total.toLocaleString("vi-VN")}` : "Miễn phí"}
+          </p>
         </div>
 
         <div className="flex justify-between py-3 border-t mt-2">
@@ -115,7 +151,7 @@ const CheckOutBill: React.FC = () => {
             <p className="text-lg font-medium">
               {(
                 cartData.cartItems.reduce((total, cartItem) => total + cartItem.salePrice, 0) +
-                priceShip -
+                feeShipping?.total! -
                 couponData.reduce((totalDiscount, coupon) => totalDiscount + coupon.amountDiscount, 0)
               ).toLocaleString("vi-VN")} ₫
             </p>

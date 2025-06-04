@@ -115,7 +115,6 @@ const CheckOutMain = () => {
     }
   };
 
-
   // Fetch provinces
   useEffect(() => {
     const fetchProvinces = async () => {

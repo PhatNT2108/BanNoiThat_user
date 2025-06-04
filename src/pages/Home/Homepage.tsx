@@ -145,7 +145,7 @@ const Homepage: React.FC = () => {
                         <div key={index} >
                             <ProductCard product={product} />
                         </div>
-                    )) : <div className="text-center text-lg">Không có sản phẩm nào</div>}
+                    )) : <div className="text-center text-lg mx-auto">Không có sản phẩm nào</div>}
                 </div>
             </div>
             <PagingBar totalRecords={paginationDto?.TotalRecords} pageSize={pageSize} />
