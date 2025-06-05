@@ -238,7 +238,7 @@ const ProductDetailPage: React.FC = () => {
               ) : (
                 <div
                   key={index}
-                  className={`p-2 border h-full w-full flex items-center justify-center cursor-pointer bg-gray-300 rounded-md`}
+                  className={`p-2 border w-max flex items-center justify-center bg-gray-300 rounded-md`}
                 >
                   {item.nameOption}
                 </div>
