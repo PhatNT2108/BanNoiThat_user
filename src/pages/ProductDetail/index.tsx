@@ -15,6 +15,7 @@ import ProductHome from "../../model/ProductHome";
 import ProductCard from "../Home/components/ProductCard/ProductCard";
 import QuantitySelector from "../../components/layout/components/QuantityPlusMinus/QuantityPlusMinus";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const ProductDetailPage: React.FC = () => {
   const { slug } = useParams();
@@ -24,6 +25,7 @@ const ProductDetailPage: React.FC = () => {
     useState<ProductItemResponse>();
   const [currentImageSelected, setCurrentImageSelected] = useState<string>();
   const [quantity, setQuantity] = useState(1);
+  const navigate = useNavigate(); // Sử dụng trực tiếp
   const userData: User = useSelector((state: RootState) => state.users);
 
   const [additionalImages, setAdditionalImages] = useState<string[]>([]);
@@ -146,6 +148,21 @@ const ProductDetailPage: React.FC = () => {
     window.location.href = url;
   };
 
+  const triggerBuyNow = () => {
+    if (!currentItemSelected) return; // phòng trường hợp chưa chọn sản phẩm
+
+    const params = new URLSearchParams({
+      id: currentItemSelected.id,
+      quantity: quantity.toString(),
+      name: dataProduct?.name || "",
+      nameOption: currentItemSelected.nameOption || "",
+      imageUrl: currentItemSelected.imageUrl || "",
+      price: currentItemSelected.price?.toString() || "0",
+      salePrice: currentItemSelected.salePrice?.toString() || "0",
+    });
+
+    navigate(`/checkout?${params.toString()}`);
+  };
   return isLoading ? (
     <div> Loading...</div>
   ) : (
@@ -213,9 +230,9 @@ const ProductDetailPage: React.FC = () => {
                 >
                   {item.nameOption}
                   {item.modelUrl && (
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
-                      </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+                    </svg>
                   )}
                 </div>
               ) : (
@@ -256,7 +273,8 @@ const ProductDetailPage: React.FC = () => {
           {/* Buttons */}
           {currentItemSelected !== undefined && (
             <div className="flex flex-row items-center sm:justify-start justify-center rounded-3xl gap-4">
-              <button className="font-semibold font-sans rounded-3xl bg-[#da684c] uppercase text-white py-2 px-4 hover:bg-[#f89075]">
+              <button className="font-semibold font-sans rounded-3xl bg-[#da684c] uppercase text-white py-2 px-4 hover:bg-[#f89075]"
+                onClick={triggerBuyNow}>
                 Mua ngay
               </button>
               <button

@@ -5,7 +5,7 @@ import ApiResponse from "../../../model/ApiResponse";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import User from "../../../model/User";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Coupon } from "../../../model/Coupon";
 
 interface Province {
@@ -50,6 +50,8 @@ const CheckOutMain = () => {
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedWard, setSelectedWard] = useState("");
   const [orderInfo, setOrderInfo] = useState<OrderInfo>({ fullName: userData.fullName || "", paymentMethod: "vnpay", shippingAddress: "", phoneNumber: userData.phoneNumber || "", email: userData.email || "" });
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
 
   const loadUserInfo = async () => {
     try {
@@ -186,6 +188,14 @@ const CheckOutMain = () => {
     couponData.map((item, index) => {
       formOrder.append(`CouponCodes[${index}]`, item.codeCoupon);
     })
+
+    const productItemId = queryParams.get("id");
+    const quantity = queryParams.get("quantity");
+
+    if (productItemId && quantity) {
+      formOrder.append("ProductItemId", productItemId);
+      formOrder.append("Quantity", quantity);
+    }
 
     try {
       const response: ApiResponse = await clientAPI.service(`Payment`).create(formOrder);
