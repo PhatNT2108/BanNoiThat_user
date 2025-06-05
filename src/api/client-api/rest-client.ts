@@ -283,6 +283,29 @@ class RestClient {
     }
   }
 
+  // Cập nhật dữ liệu
+  async post<T>(objectId: string, data: any): Promise<T> {
+    try {
+      const isFormData = data instanceof FormData;
+      const response = await this.axiosInstance.put<T>(
+        `/${this.path}/${objectId}`,
+        data,
+        {
+          headers: {
+            "Content-Type": isFormData
+              ? "multipart/form-data"
+              : "application/json",
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error updating data", error);
+      throw error;
+    }
+  }
+
   // Xóa dữ liệu theo ID
   async remove<T>(objectId: string): Promise<T> {
     try {

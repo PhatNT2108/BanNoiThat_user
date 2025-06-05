@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import clientAPI from '../../api/client-api/rest-client';
+import ApiResponse from '../../model/ApiResponse';
 
 // filepath: d:\HocKy\2024-2025\Kỳ 2\KLTN\BanNoiThat_user\src\pages\Auth\ForgotPasswordPage.tsx
 
@@ -18,7 +20,10 @@ const ForgotPasswordPage: React.FC = () => {
       if (!email.includes('@')) {
         setError('Vui lòng nhập email hợp lệ.');
       } else {
-        setSuccessMsg('Hướng dẫn đặt lại mật khẩu đã được gửi tới email của bạn.');
+        var data: ApiResponse = await clientAPI.service("auth/forgot-password").find(`email=${email}`);
+        if (data.isSuccess) {
+          setSuccessMsg('Hướng dẫn đặt lại mật khẩu đã được gửi tới email của bạn.');
+        }
       }
     } catch {
       setError('Error .');
