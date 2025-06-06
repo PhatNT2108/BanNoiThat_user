@@ -13,6 +13,7 @@ import ForgotPasswordPage from "../pages/Auth/ForgotPasswordPage";
 import NonHeaderLayout from "../components/layout/NonHeaderLayout";
 import PaymentSuccess from "../pages/Status/SuccessfulPay";
 import ResetPassword from "../pages/Auth/ResetPasswordPage";
+import ResetPasswordForm from "../pages/InformationUser/ChangePasswordPage";
 
 //Public
 const publicRoutes = [
@@ -36,6 +37,11 @@ const publicRoutes = [
   { path: "/checkout", component: CheckOutPage, Layout: NonHeaderLayout },
   { path: "/information", component: InformationUserPage, Layout: UserLayout },
   { path: "/orders", component: MangeOrderPage, Layout: UserLayout },
+  {
+    path: "/change-password",
+    component: ResetPasswordForm,
+    Layout: UserLayout,
+  },
   { path: "/address", component: AddressUser, Layout: UserLayout },
   {
     path: "/forgot-password",
