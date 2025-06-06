@@ -11,7 +11,7 @@ function DefaultLayout({ children }) {
   }, []);
 
   return (
-    <div className="relative ">
+    <div className="relative w-full">
       <Header />
       <div ref={goTop} />
       <div className="py-3">{children}</div>

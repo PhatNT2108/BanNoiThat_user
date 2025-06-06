@@ -98,109 +98,109 @@ function Cart() {
         </span>
       </button>
 
-      {cartOpen && (
-        <div
-          className="sm:absolute sm:right-0 fixed right-0 mt-2 sm:w-96 w-[100vw] bg-white border border-gray-200 rounded-lg shadow-lg z-50"
-          onMouseLeave={() => setCartOpen(false)}
-        >
-          <div className="p-4">
-            <div className="flex flex-row justify-between items-center">
-              <h3 className="font-bold">GIỎ HÀNG</h3>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-6"
-                onClick={toggleCart}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18 18 6M6 6l12 12"
-                />
-              </svg>
-            </div>
+      <div
+        className={`sm:absolute sm:w-96 sm:left-0 fixed left-0 mt-2 w-[100vw] bg-white border border-gray-200 rounded-lg shadow-lg z-50
+    transform sm:translate-x-[-50%] transition-all duration-300 ease-in-out transform-origin-top-left
+    ${cartOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-90 pointer-events-none'}`}
+        onMouseLeave={() => setCartOpen(false)}
+      >
+        <div className="p-4">
+          <div className="flex flex-row justify-between items-center">
+            <h3 className="font-bold">GIỎ HÀNG</h3>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="size-6 hover:cursor-pointer"
+              onClick={toggleCart}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18 18 6M6 6l12 12"
+              />
+            </svg>
+          </div>
 
-            {cartData?.cartItems.length! > 0 ? (
-              <div>
-                {cartData?.cartItems.map((item, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center border-b border-gray-200 pb-4 mb-4"
-                  >
-                    <div className="w-24 h-24 bg-gray-100 mr-4">
-                      <img
-                        src={item.imageUrl}
-                        alt={item.nameOption}
-                        className="w-full h-full object-cover"
+          {cartData?.cartItems.length! > 0 ? (
+            <div>
+              {cartData?.cartItems.map((item, index) => (
+                <div
+                  key={index}
+                  className="flex items-center border-b border-gray-200 pb-4 mb-4"
+                >
+                  <div className="w-24 h-24 bg-gray-100 mr-4">
+                    <img
+                      src={item.imageUrl}
+                      alt={item.nameOption}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="text-lg font-medium">{item.nameOption}</h4>
+                    <div className="flex items-center mt-1 gap-2">
+                      <input
+                        value={item.quantity}
+                        type="number"
+                        min="1"
+                        max="100"
+                        onChange={(e) => {
+                          triggerAddItemManual(
+                            item.productItem_Id,
+                            e.target.value,
+                            false
+                          );
+                        }}
+                        className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none py-2 border rounded-md text-center"
                       />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="text-lg font-medium">{item.nameOption}</h4>
-                      <div className="flex items-center mt-1 gap-2">
-                        <input
-                          value={item.quantity}
-                          type="number"
-                          min="1"
-                          max="100"
-                          onChange={(e) => {
-                            triggerAddItemManual(
-                              item.productItem_Id,
-                              e.target.value,
-                              false
-                            );
-                          }}
-                          className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none py-2 border rounded-md text-center"
-                        />
-                        <div>
-                          <p className="text-orange-500 font-bold">
-                            {item.salePrice.toLocaleString()}đ
-                          </p>
-                          <p className="text-gray-500 text-xs line-through">
-                            {item.price.toLocaleString()}đ
-                          </p>
-                        </div>
+                      <div>
+                        <p className="text-orange-500 font-bold">
+                          {item.salePrice.toLocaleString()}đ
+                        </p>
+                        <p className="text-gray-500 text-xs line-through">
+                          {item.price.toLocaleString()}đ
+                        </p>
                       </div>
                     </div>
-                    <button
-                      className="text-gray-400 hover:text-gray-600"
-                      onClick={() => deleteCartItem(cartData?.id!, item.id!)}
-                    >
-                      ✕
-                    </button>
                   </div>
-                ))}
-
-                <div className="flex justify-between items-center mb-4">
-                  <span className="font-medium">TỔNG TIỀN:</span>
-                  <span className="text-orange-500 font-bold">
-                    {cartData?.cartItems
-                      .reduce((total, item) => {
-                        return (total + item.salePrice) * item.quantity;
-                      }, 0)
-                      .toLocaleString()}
-                    đ
-                  </span>
-                </div>
-
-                <div className="flex space-x-2">
-                  <Link
-                    to="/checkOut"
-                    className="flex-1 py-2 bg-blue-700 text-white text-center rounded font-medium"
-                    onClick={navigateCheckout}
+                  <button
+                    className="text-gray-400 hover:text-gray-600"
+                    onClick={() => deleteCartItem(cartData?.id!, item.id!)}
                   >
-                    THANH TOÁN
-                  </Link>
+                    ✕
+                  </button>
                 </div>
+              ))}
+
+              <div className="flex justify-between items-center mb-4">
+                <span className="font-medium">TỔNG TIỀN:</span>
+                <span className="text-orange-500 font-bold">
+                  {cartData?.cartItems
+                    .reduce((total, item) => {
+                      return (total + item.salePrice) * item.quantity;
+                    }, 0)
+                    .toLocaleString()}
+                  đ
+                </span>
               </div>
-            ) : (
-              <p className="text-gray-700">Giỏ hàng của bạn đang trống.</p>
-            )}
-          </div>
+
+              <div className="flex space-x-2">
+                <Link
+                  to="/checkOut"
+                  className="flex-1 py-2 bg-teal-700 text-white text-center rounded font-medium"
+                  onClick={navigateCheckout}
+                >
+                  THANH TOÁN
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <p className="text-gray-700">Giỏ hàng của bạn đang trống.</p>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }

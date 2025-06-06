@@ -66,31 +66,6 @@ const ChatBox: React.FC = () => {
     }
   };
 
-  // const parseAnswerToBlocks = (htmlString: string): string[] => {
-  //   const parser = new DOMParser();
-  //   const doc = parser.parseFromString(`<div>${htmlString}</div>`, "text/html");
-  //   console.log(htmlString)
-
-  //   const divs = doc.querySelector("div")?.children;
-  //   const blocks: string[] = [];
-
-  //   if (!divs || divs.length === 0) {
-  //     const cleanedHtml = htmlString.trim();
-  //     if (cleanedHtml) {
-  //       blocks.push(cleanedHtml);
-  //     }
-  //     return blocks;
-  //   }
-
-  //   Array.from(divs).forEach((element) => {
-  //     if (element.tagName.toLowerCase() === "div") {
-  //       blocks.push(element.outerHTML);
-  //     }
-  //   });
-
-  //   return blocks;
-  // };
-
   const loadMessages = async (conversationId: string) => {
     try {
       const response: ResponseMessageHistory = await difyAPI
