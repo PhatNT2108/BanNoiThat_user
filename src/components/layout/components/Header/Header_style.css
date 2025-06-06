@@ -80,3 +80,11 @@
     visibility: visible;
   }
 }
+
+.navigate-section-header {
+  background-color: #000000af;
+  margin: auto;
+  padding: 0.5rem;
+  width: max-content;
+  border-radius: 3px;
+}

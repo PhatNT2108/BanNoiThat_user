@@ -29,13 +29,13 @@ const NavItem: React.FC<Props> = ({ items, setState }) => {
 
 
   return (
-    <ul className="p-2 space-y-2 w-max">
+    <ul className="p-2 space-y-3 w-max">
       {
         items.map((item: ItemCategory, index: number) => (
           <li key={index} className="relative">
             <Link
               to={`/collections/${item.slug || "#"}`}
-              className="text-gray-700 font-mono hover:text-green-700 flex items-center"
+              className="text-gray-700 hover:text-green-700 text-sm flex items-center font-bold"
               onMouseEnter={() => (triggerShow(item.id || "", true))}
               onMouseLeave={() => (triggerShow(item.id || "", false))}
             >
@@ -44,14 +44,14 @@ const NavItem: React.FC<Props> = ({ items, setState }) => {
             {
               //Children
               item.children && item.children.length > 0 && (
-                <div className={`absolute left-full top-0 ml w-max bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 ${item.isShow ? 'visible opacity-100' : 'invisible'} transition-all duration-300 z-50`}
+                <div className={`absolute left-full top-0 ml min-w-[10rem] w-max bg-white border border-gray-200 rounded-xl shadow-lg opacity-0 ${item.isShow ? 'visible opacity-100' : 'invisible'} transition-all duration-300 z-50`}
                   onMouseEnter={() => (triggerShow(item.id || "", true))}>
-                  <ul className="p-2 space-y-2">
+                  <ul className="p-2 space-y-3">
                     {item.children.map((child: any) => (
                       <li key={child.id || child.name}>
                         <Link
                           to={`/collections/${child.slug || "#"}`}
-                          className="text-gray-700 hover:text-green-700"
+                          className="text-gray-700 hover:text-green-700  text-sm"
                         >
                           {child.name}
                         </Link>

@@ -98,13 +98,13 @@ function Navigation() {
   ];
 
   return (
-    <nav className="flex flex-row justify-center py-4 shadow-sm font-medium">
+    <nav className="flex flex-row justify-center py-4 shadow-sm font-medium font-bold">
       {/*Dynamic*/}
       <ul className="flex space-x-8">
         {menuItems.map((item) => (
           <li key={item.label} className="relative group background">
             <div
-              className="text-[#d7f0db] hover:text-[#87d194] flex items-center font-bold"
+              className="text-[#d7f0db] hover:text-[#87d194] flex items-center"
             >
               {item.label}
               {item.hasDropdown && <ChevronDown className="w-4 h-4 ml-1" />}
@@ -127,7 +127,7 @@ function Navigation() {
         ))}
 
         <li>
-          <Link to="/about-us" className="text-[#d7f0db] font-bold hover:text-[#d7f0db]">
+          <Link to="/about-us" className="text-[#d7f0db] hover:text-[#d7f0db]">
             About Us
           </Link>
         </li>

@@ -238,7 +238,9 @@ const Header = () => {
             )}
           </div>
         </div>
-        <Navigation />
+        <div className="navigate-section-header">
+          <Navigation />
+        </div>
       </div>
     </header>
   );
