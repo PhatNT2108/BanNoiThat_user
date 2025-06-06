@@ -5,7 +5,7 @@ import { OrderResponse } from "../../model/OrderResponse.";
 import { format } from "date-fns";
 
 const OrderPage = () => {
-  const [activeTab, setActiveTab] = useState("Pending");
+  const [activeTab, setActiveTab] = useState("Processing");
   const [dataOrders, setDataOrders] = useState<OrderResponse[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -114,7 +114,7 @@ const OrderPage = () => {
                     </div></div>
                   <div className="flex items-center">
                     <span className="text-gray-700 text-sm">Ngày đặt hàng:&nbsp;</span>
-                    <div className="text-green-500">
+                    <div className="text-black underline">
                       {order?.orderPaidTime
                         ? format(new Date(order?.orderPaidTime), "dd/MM/yyyy")
                         : "Chưa có thông tin"}
@@ -124,7 +124,7 @@ const OrderPage = () => {
                 </div>
                 <div className="flex flex-col bg-gray-100 gap-4 p-3">
                   {order.orderItems.map((orderItem, indexOr) => (
-                    <div key={indexOr} className="flex border border-y-black justify-around gap-4">
+                    <div key={indexOr} className="flex border border-t-gray-400 justify-around gap-4">
                       <img
                         src={orderItem.imageItemUrl || "https://placehold.co/600x400"}
                         className="w-16 h-16 m-2 object-cover rounded-md"
@@ -133,23 +133,33 @@ const OrderPage = () => {
                         <div className="text-lg">{orderItem.nameItem}</div>
                         <div>x{orderItem.quantity}</div>
                       </div>
-                      <div className="flex-1 text-orange-700 mt-2 text-right px-3">
-                        {orderItem.price} đ
+                      <div className="flex-1 text-black mt-2 text-right px-3">
+                        {Number(orderItem.price).toLocaleString('vi-VN')} đ
                       </div>
                     </div>
                   ))}
-                  <div>
-                    <span className="text-lg text-black font-bold">Địa chỉ nhận hàng: </span>{order.shippingAddress}
-                    {
-                      activeTab === "Shipping" && (<div className="flex justify-end">
-                        <button className="bg-green-800 rounded-md px-2 py-1 text-white" onClick={() => triggerShowInfoOrder(order.id)}>Xem thông tin vẫn chuyển</button>
-                      </div>)
-                    }
+                  <div className="flex flex-row justify-between">
+                    <div>
+                      <span className="text-lg text-black font-bold">Địa chỉ nhận hàng: </span>{order.shippingAddress}
+                    </div>
+                    <div>
+                      <span className="text-sm text-black">Thành tiền: </span>
+                      <span style={{ display: 'inline-flex', alignItems: 'baseline' }}>
+                        <span className="text-lg text-orange-600 font-bold">
+                          đ {Number(order.totalPrice).toLocaleString('vi-VN')}
+                        </span>
+                      </span>
+                    </div>
                   </div>
                 </div>
                 {
                   activeTab === "Processing" && (<div className="flex justify-end">
                     <button className="bg-red-600 rounded-md px-2 py-1 text-white" onClick={() => triggerCancelOrder(order.id)}>Hủy đơn</button>
+                  </div>)
+                }
+                {
+                  activeTab === "Shipping" && (<div className="flex justify-end">
+                    <button className="bg-green-800 rounded-md px-2 py-1 text-white" onClick={() => triggerShowInfoOrder(order.id)}>Xem thông tin vẫn chuyển</button>
                   </div>)
                 }
               </div>

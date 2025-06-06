@@ -32,7 +32,7 @@ const RadioButtonBox: React.FC<CustomRendererProps> = ({ titleString, renderHead
       <div className={`radio-box-content ${isOpen ? "open-radio-box-content" : ""}`}>
         {filters.map((filter: any, index: number) => (
           <label className="radio-box-item" key={index}>
-            <span className="radio-box-label flex gap-2" >
+            <span className="radio-box-label flex gap-2 " >
               <p>{filter.stringDescription || filter}</p>
               <div>
                 {renderHeader && renderHeader(filter)}

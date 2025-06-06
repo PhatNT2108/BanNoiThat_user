@@ -132,14 +132,16 @@ const FilteredProductPage: React.FC = () => {
   }, [searchParams, stringFilter, slug]);
 
   return (
-    <div className="mx-auto md:w-[80%] w-[100%]">
+    <div className="mx-auto md:w-[70%] w-[100%] text-sm">
       <div className="flex sm:flex-row flex-col justify-between items-center flex-wrap  gap-2 text-3xl font-bold uppercase">
 
-        <span className='flex justify-center gap-2'>
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-10">
+        <span className='flex justify-center items-center p-3 mb-6 gap-4'>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
           </svg>
-          Bộ Lọc
+          <p className="font-light">
+            Bộ Lọc
+          </p>
         </span>
 
         <div className='flex lg:flex-row flex-col items-center gap-2'>
@@ -152,8 +154,13 @@ const FilteredProductPage: React.FC = () => {
             filters={colorFiler} setFilters={setColorFilter} />
           <ComboboxInput filters={sizeFilter} setFilters={setSizeFilter} />
         </div>
+        <button
+          className="text-base text-black bg-white border border-black uppercase px-4 py-2 rounded-md shadow-sm hover:bg-black hover:text-white transition-all duration-300 ease-in-out"
+          onClick={loadFilteredProducts}
+        >
+          Lọc
+        </button>
 
-        <button className='bg-green-700 text-white px-4 py-2 rounded' onClick={loadFilteredProducts}>Lọc</button>
       </div>
       <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-4">
         {filteredProducts.length > 0 ? (
