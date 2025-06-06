@@ -31,4 +31,11 @@ export interface ProductItemResponse {
   lengthSize: number;
   widthSize: number;
   heightSize: number;
+  saleProgram: SaleProgram;
+}
+
+export interface SaleProgram {
+  id: string;
+  name: string;
+  slug: string;
 }

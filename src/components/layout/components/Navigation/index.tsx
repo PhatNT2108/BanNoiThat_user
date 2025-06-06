@@ -90,7 +90,7 @@ function Navigation() {
       data: dataCategories,
     },
     {
-      label: "Khuyến mãi",
+      label: "Khuyến mãi %",
       href: "/saleprograms",
       hasDropdown: true,
       data: dataCategories,

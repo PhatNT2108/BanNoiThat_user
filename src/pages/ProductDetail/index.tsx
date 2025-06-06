@@ -194,6 +194,11 @@ const ProductDetailPage: React.FC = () => {
                   Hết hàng
                 </div>
               )}
+              {currentItemSelected?.saleProgram?.name && (
+                <span className="absolute top-2 right-2 bg-red-500 text-white text-xs font-semibold uppercase px-2 py-1 rounded shadow">
+                  {currentItemSelected.saleProgram.name}
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -208,7 +213,7 @@ const ProductDetailPage: React.FC = () => {
           </div>
 
           {/* Price */}
-          <div className="text-xl text-green-700 font-semibold mb-4">
+          <div className="text-xl text-green-700 font-semibold mb-4 flex gap-2 items-center">
             {currentItemSelected?.salePrice.toLocaleString()} &#8363;
             <span className="text-gray-500 line-through text-sm ml-2">
               {currentItemSelected?.price.toLocaleString()} &#8363;

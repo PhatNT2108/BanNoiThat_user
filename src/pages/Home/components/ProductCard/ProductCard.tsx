@@ -44,7 +44,7 @@ function ProductCard({ product }: Props) {
         </div>
       </div>
       <div className="absolute top-1 left-1 flex flex-col gap-1">
-        {product.salePrice !== 0 && (<div className="flex justify-center items-center text-[16px] w-10 h-10 rounded-full text-white bg-[#c92a2a]">
+        {product.salePrice !== product.price && (<div className="flex justify-center items-center text-[16px] w-10 h-10 rounded-full text-white bg-[#c92a2a]">
           {((1 - product.salePrice / product.price) * 100).toFixed(0)}%
         </div>)}
         {product.isHaveModel3D && (<button
