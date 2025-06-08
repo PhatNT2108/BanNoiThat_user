@@ -4,6 +4,7 @@ export default interface ProductHome {
   slug: string;
   thumbnailUrl: string;
   thumbnailUrlSecond: string;
+  totalSoldQuantity: number;
   price: number;
   salePrice: number;
   isHaveModel3D: boolean;

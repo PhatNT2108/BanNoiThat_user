@@ -98,7 +98,7 @@ function Navigation() {
   ];
 
   return (
-    <nav className="flex flex-row justify-center py-4 shadow-sm font-medium font-bold">
+    <nav className="flex flex-row justify-center py-4 px-4 shadow-sm font-bold">
       {/*Dynamic*/}
       <ul className="flex space-x-8">
         {menuItems.map((item) => (

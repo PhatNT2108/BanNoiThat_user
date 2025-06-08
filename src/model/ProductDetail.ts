@@ -32,6 +32,7 @@ export interface ProductItemResponse {
   widthSize: number;
   heightSize: number;
   saleProgram: SaleProgram;
+  soldQuantity: number;
 }
 
 export interface SaleProgram {

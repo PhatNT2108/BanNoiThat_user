@@ -198,6 +198,7 @@ class RestClient {
             ? "multipart/form-data"
             : "application/json",
         },
+        withCredentials: true,
       });
       paginationDto = JSON.parse(response.headers["x-pagination"]);
       return { data: response.data, pagination: paginationDto };
@@ -325,7 +326,5 @@ class RestClient {
   }
 }
 
-// Khởi tạo clientAPI với baseURL là localhost:7000
-// const clientAPI = new RestClient().config("http://161.248.146.74:4000/api");
-const clientAPI = new RestClient().config("https://localhost:7000/api");
+const clientAPI = new RestClient().config(process.env.REACT_APP_BACKEND ?? "");
 export default clientAPI;

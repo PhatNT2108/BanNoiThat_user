@@ -6,16 +6,16 @@ import ApiResponse from "../../model/ApiResponse";
 import User from "../../model/User";
 import { RootState } from "../../redux/store";
 import { useSelector } from "react-redux";
-import {
-  getFromLocalStorage,
-  saveInteraction,
-} from "../../utils/HandleInteracted";
 import Tabs from "./Components/Tabs";
 import ProductHome from "../../model/ProductHome";
 import ProductCard from "../Home/components/ProductCard/ProductCard";
 import QuantitySelector from "../../components/layout/components/QuantityPlusMinus/QuantityPlusMinus";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import {
+  addProductToCookie,
+  getRecentProducts
+} from "../../utils/HandleCookieInteract";
 
 const ProductDetailPage: React.FC = () => {
   const { slug } = useParams();
@@ -45,7 +45,7 @@ const ProductDetailPage: React.FC = () => {
         .find();
       setDataProducts(() => data.result);
       if (data) {
-        saveInteraction("view", data.result.id);
+        addProductToCookie(data?.result.id);
 
         const images = data.result.productItems.map(
           (item: ProductItemResponse) => item.imageUrl
@@ -67,12 +67,8 @@ const ProductDetailPage: React.FC = () => {
 
   const LoadProductRecommend = async () => {
     try {
-      let userInteractions = getFromLocalStorage("userInteractions") || {};
-      let interactedProductIds = (userInteractions["view"] || []).slice(0, 30);
       let formData = new FormData();
-      interactedProductIds.forEach((productId: string, index: number) => {
-        formData.append(`InteractedProductIds[${index}]`, productId);
-      });
+      formData.append(`IsSpecial`, "false");
 
       const result = await clientAPI
         .service("products/recommend")
@@ -87,7 +83,8 @@ const ProductDetailPage: React.FC = () => {
   const LoadSameProductRecommend = async () => {
     try {
       let formData = new FormData();
-      formData.append(`InteractedProductIds[0]`, dataProduct?.id || "");
+      formData.append(`IsSpecial`, "true");
+      formData.append(`InteractedProductId`, dataProduct?.id || "");
 
       const result = await clientAPI
         .service("products/recommend")
@@ -104,8 +101,10 @@ const ProductDetailPage: React.FC = () => {
   }, [slug]);
 
   useEffect(() => {
-    LoadProductRecommend(); // Sau đó mới gọi LoadProductRecommend
-    LoadSameProductRecommend();
+    if (dataProduct?.id) {
+      LoadProductRecommend(); // Sau đó mới gọi LoadProductRecommend
+      LoadSameProductRecommend();
+    }
   }, [dataProduct]);
 
   //Upsert với giỏ hàng
@@ -144,7 +143,7 @@ const ProductDetailPage: React.FC = () => {
   };
 
   const trigger3D = () => {
-    let url = "http://localhost:5501/?productItemId=" + currentItemSelected?.id;
+    let url = `${process.env.REACT_APP_MODEL3D}?productItemId=` + currentItemSelected?.id;
     window.location.href = url;
   };
 
@@ -159,6 +158,7 @@ const ProductDetailPage: React.FC = () => {
       imageUrl: currentItemSelected.imageUrl || "",
       price: currentItemSelected.price?.toString() || "0",
       salePrice: currentItemSelected.salePrice?.toString() || "0",
+      soldQuantity: currentItemSelected.soldQuantity?.toString() || "0",
     });
 
     navigate(`/checkout?${params.toString()}`);
@@ -167,7 +167,7 @@ const ProductDetailPage: React.FC = () => {
     <div> Loading...</div>
   ) : (
     <div className="w-full">
-      <div className="relative flex sm:flex-row flex-col lg:w-3/4 w-full gap-4 p-4 mx-auto">
+      <div className="relative flex sm:flex-row flex-col lg:w-3/4 w-full gap-2 p-4 mx-auto">
         <div className="flex sm:flex-row flex-col-reverse mx-auto gap-2">
           <div className="flex sm:flex-col flex-row gap-2 z-50 w-max">
             {additionalImages?.map((image, index) => (
@@ -204,17 +204,27 @@ const ProductDetailPage: React.FC = () => {
         </div>
 
         {/* Product Details */}
-        <div className="flex-1">
+        <div className="flex-1 max-w-[50%]">
           <h1 className="text-2xl font-bold mb-2">{dataProduct?.name}</h1>
 
-          {/* Sku */}
-          <div className="text-sm text-gray-500 font-semibold mb-4">
-            SKU: {currentItemSelected?.sku}
+          {/* Thông tin phụ */}
+          <div className="flex gap-5">
+            <div className="text-sm text-gray-500 font-semibold mb-4">
+              SKU: {currentItemSelected?.sku}
+            </div>
+            <div className="text-sm text-gray-500 font-semibold mb-4">
+              Đã bán: <span className="font-bold text-black">{currentItemSelected?.soldQuantity}</span>
+            </div>
           </div>
 
           {/* Price */}
-          <div className="text-xl text-green-700 font-semibold mb-4 flex gap-2 items-center">
+          <div className="bg-gray-100 text-xl w-max p-2 text-red-700 font-semibold mb-4 flex gap-2 items-center">
             {currentItemSelected?.salePrice.toLocaleString()} &#8363;
+            {currentItemSelected?.saleProgram?.name && (
+              <span className=" text-white text-xs font-semibold uppercase">
+                <img src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/productdetailspage/a67394e0bf3ee5f4d181.svg"></img>
+              </span>
+            )}
             <span className="text-gray-500 line-through text-sm ml-2">
               {currentItemSelected?.price.toLocaleString()} &#8363;
             </span>
@@ -333,7 +343,7 @@ const ProductDetailPage: React.FC = () => {
       {/*Gợi ý sản phẩm*/}
       <div className="p-10">
         <div className="flex justify-between px-4 text-3xl font-bold py-4">
-          <span> Sản phẩm gợi ý cho bạn</span>
+          <span> Gợi ý cho bạn</span>
           <span className="text-sm"> Xem thêm </span>
         </div>
         <div className="grid sm:grid-cols-4 grid-cols-2">

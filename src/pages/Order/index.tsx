@@ -3,6 +3,7 @@ import clientAPI from "../../api/client-api/rest-client";
 import ApiResponse from "../../model/ApiResponse";
 import { OrderResponse } from "../../model/OrderResponse.";
 import { format } from "date-fns";
+import { toast } from "react-toastify";
 
 const OrderPage = () => {
   const [activeTab, setActiveTab] = useState("Processing");
@@ -50,14 +51,13 @@ const OrderPage = () => {
   }
 
   const triggerShowInfoOrder = async (orderId: string) => {
-    let formData = new FormData();
-    formData.append("orderStatus", "Cancelled");
+    try {
+      var data: ApiResponse = await clientAPI.service(`orders/${orderId}`).find();
 
-    const response: ApiResponse = await clientAPI.service("orders").patchEachProperty(orderId, 'orderStatus', formData);
-    if (response.isSuccess) {
-      LoadOrders();
+      toast.success(`Đơn vị vận chuyển: ${data.result?.transferService} Mã vận đơn: ${data.result?.addressCode}`);
+    } catch (e) {
+
     }
-    window.location.reload();
   }
 
   return (
