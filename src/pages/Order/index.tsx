@@ -4,12 +4,14 @@ import ApiResponse from "../../model/ApiResponse";
 import { OrderResponse } from "../../model/OrderResponse.";
 import { format } from "date-fns";
 import { toast } from "react-toastify";
+import ReviewDialog from "./Components/DialogComponent";
 
 const OrderPage = () => {
   const [activeTab, setActiveTab] = useState("Processing");
   const [dataOrders, setDataOrders] = useState<OrderResponse[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const tabs = ["Processing", "Shipping", "Returned", "Done", "Cancelled"];
 
@@ -122,9 +124,9 @@ const OrderPage = () => {
 
                   </div>
                 </div>
-                <div className="flex flex-col bg-gray-100 gap-4 p-3">
+                <div className=" flex flex-col bg-gray-100 gap-4 p-3">
                   {order.orderItems.map((orderItem, indexOr) => (
-                    <div key={indexOr} className="flex border border-t-gray-400 justify-around gap-4">
+                    <div key={indexOr} className="relative flex border border-t-gray-400 justify-around gap-4">
                       <img
                         src={orderItem.imageItemUrl || "https://placehold.co/600x400"}
                         className="w-16 h-16 m-2 object-cover rounded-md"
@@ -136,6 +138,28 @@ const OrderPage = () => {
                       <div className="flex-1 text-black mt-2 text-right px-3">
                         {Number(orderItem.price).toLocaleString('vi-VN')} đ
                       </div>
+                      {
+                        activeTab === "Done" && orderItem.isComment === false && (<div className="absolute bottom-0 right-0">
+                          <button
+                            className="px-4 py-2 bg-yellow-500 text-white rounded"
+                            onClick={() => setIsDialogOpen(true)}
+                          >
+                            Đánh giá
+                          </button>
+
+                          {isDialogOpen && (
+                            <ReviewDialog
+                              productId={orderItem.productItem_Id}
+                              name={orderItem.nameItem}
+                              orderItemId={orderItem.id}
+                              onClose={() => setIsDialogOpen(false)}
+                              onSuccess={() => {
+                                console.log("Đánh giá thành công");
+                              }}
+                            />
+                          )}
+                        </div>)
+                      }
                     </div>
                   ))}
                   <div className="flex flex-row justify-between">

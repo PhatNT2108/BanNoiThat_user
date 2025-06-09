@@ -15,4 +15,5 @@ export interface OrderItemResponse {
   quantity: number;
   price: string;
   productItem_Id: string;
+  isComment: boolean;
 }

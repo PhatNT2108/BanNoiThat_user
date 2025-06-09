@@ -97,12 +97,11 @@ const ChatBox: React.FC = () => {
             ${suggestQuestion
           .map(
             (q: any) =>
-              `<button class="block w-full text-left px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200">${q}</button>`
+              `<button class="block w-full text-left px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200")}>${q}</button>`
           )
           .join("")}
           </div>
         </div>`;
-
       setMessages((pre) => [...pre, { text: htmlString, sender: "bot" }]);
     } catch (error) {
       console.error("Error sending message:", error);
@@ -115,8 +114,6 @@ const ChatBox: React.FC = () => {
     loadOpenerMessage();
     localStorage.removeItem("conversationId");
   };
-
-  const [hasLoadedMessages, setHasLoadedMessages] = useState(false);
 
   useEffect(() => {
     const conversationId = localStorage.getItem("conversationId");

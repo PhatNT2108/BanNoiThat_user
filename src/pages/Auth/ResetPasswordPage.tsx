@@ -63,7 +63,7 @@ function ResetPassword() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-white">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-3xl font-bold mb-6 text-center text-red-600">Reset Password</h2>
+        <h2 className="text-3xl font-bold mb-6 text-center text-red-600">Đặt lại mật khẩu</h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
             <label htmlFor="newPassword" className="sr-only">
@@ -74,7 +74,7 @@ function ResetPassword() {
                 type="password"
                 name="newPassword"
                 id="newPassword"
-                placeholder="Enter New Password"
+                placeholder="Nhập mật khẩu mới"
                 value={userInput.newPassword}
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 pl-10 border rounded-md focus:ring focus:ring-red-300 focus:outline-none"
@@ -91,7 +91,7 @@ function ResetPassword() {
                 type="password"
                 name="confirmNewPassword"
                 id="confirmNewPassword"
-                placeholder="Confirm New Password"
+                placeholder="Nhập lại mật khẩu"
                 value={userInput.confirmNewPassword}
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 pl-10 border rounded-md focus:ring focus:ring-red-300 focus:outline-none"
@@ -105,7 +105,7 @@ function ResetPassword() {
             className="bg-red-500 hover:bg-red-600 text-white py-2 rounded-md font-semibold transition"
             disabled={loading}
           >
-            {loading ? "Resetting..." : "Reset Password"}
+            {loading ? "Vui lòng đợi!" : "Xác nhận"}
           </button>
         </form>
       </div>

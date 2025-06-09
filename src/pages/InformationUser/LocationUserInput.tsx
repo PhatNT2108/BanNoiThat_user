@@ -24,11 +24,9 @@ interface LocationSelectorProps {
   setSelectedProvince: React.Dispatch<React.SetStateAction<string>>;
   setSelectedDistrict: React.Dispatch<React.SetStateAction<string>>;
   setSelectedWard: React.Dispatch<React.SetStateAction<string>>;
-
   setProvincesOut: React.Dispatch<React.SetStateAction<Province[]>>;
   setDistrictsOut: React.Dispatch<React.SetStateAction<District[]>>;
   setWardsOut: React.Dispatch<React.SetStateAction<Ward[]>>;
-
   setAddress: React.Dispatch<React.SetStateAction<string>>;
 }
 

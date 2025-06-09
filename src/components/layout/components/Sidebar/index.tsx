@@ -19,11 +19,6 @@ function Sidebar() {
             </Link>
           </li>
           <li>
-            <Link to="/address" className="block p-2 text-gray-700 rounded hover:bg-gray-200">
-              Yêu thích
-            </Link>
-          </li>
-          <li>
             <Link to="/change-password" className="block p-2 text-gray-700 rounded hover:bg-gray-200">
               Đổi mật khẩu
             </Link>

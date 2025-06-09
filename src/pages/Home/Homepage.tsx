@@ -69,7 +69,6 @@ const Homepage: React.FC = () => {
             const result = await clientAPI.service("products").findPagedList<ApiResponse>(`pageSize=${10}&pageCurrent=${1}`);
 
             setNewDataProducts(result.data.result);
-            console.log(result.data.result);
             setPaginationDto(result.pagination);
             setIsLoading(false);
         }

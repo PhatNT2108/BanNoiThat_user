@@ -61,7 +61,6 @@ function Navigation() {
       response?.result?.map((saleProgram: SaleProgram) => {
         saleProgram.isShow = false;
       })
-      console.log(response.result);
       setSalePrograms(response.result);
     } catch (error) {
       console.error("Failed to load brands", error);
