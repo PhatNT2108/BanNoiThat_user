@@ -57,9 +57,9 @@ function InformationUserPage() {
     formData.append("phoneNumber", userInfo.phoneNumber);
     formData.append("isOnlyUpdateInfo", isOnlyUpdateInfo);
     formData.append("shippingAddress", address);
-    formData.append("province", provinces.find(p => p.code === selectedProvince)?.name || "");
-    formData.append("district", districts.find(d => d.code === selectedDistrict)?.name || "");
-    formData.append("ward", wards.find(w => w.code === selectedWard)?.name || "");
+    formData.append("province", provinces.find(p => p.code == selectedProvince)?.name || "");
+    formData.append("district", districts.find(d => d.code == selectedDistrict)?.name || "");
+    formData.append("ward", wards.find(w => w.code == selectedWard)?.name || "");
 
     const response: ApiResponse = await clientAPI.service("users").put(userData.user_id, formData);
     if (response.isSuccess) {

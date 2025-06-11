@@ -38,13 +38,23 @@ var priceFilterSample: PriceFilter[] =
   ];
 
 var colorSample: ColorFiler[] =
-  [{ 'Color': 'red', 'stringDescription': 'Đỏ', isChecked: false, codeColor: '#FF0000' },
-  { 'Color': 'yellow', 'stringDescription': 'Vàng', isChecked: false, codeColor: '#FFFF00' },
-  { 'Color': 'blue', 'stringDescription': 'Xanh', isChecked: false, codeColor: '#0000FF' },
-  { 'Color': 'green', 'stringDescription': 'Xanh lá', isChecked: false, codeColor: '#008000' },
-  { 'Color': 'black', 'stringDescription': 'Đen', isChecked: false, codeColor: '#000000' },
-  { 'Color': 'white', 'stringDescription': 'Trắng', isChecked: false, codeColor: '#FFFFFF' },
-  { 'Color': 'pink', 'stringDescription': 'Hồng', isChecked: false, codeColor: '#FFC0CB' },
+  [
+    { 'Color': 'black', 'stringDescription': 'Đen', isChecked: false, codeColor: '#000000' },
+    { 'Color': 'white', 'stringDescription': 'Trắng', isChecked: false, codeColor: '#FFFFFF' },
+    {
+      'Color': 'red', 'stringDescription': 'Đỏ', isChecked: false, codeColor: '#CC3333'
+    },
+    { 'Color': 'blue', 'stringDescription': 'Xanh biển', isChecked: false, codeColor: '#00CCFF' },
+    { 'Color': 'green', 'stringDescription': 'Xanh lá', isChecked: false, codeColor: '#008000' },
+    { 'Color': 'yellow', 'stringDescription': 'Vàng', isChecked: false, codeColor: '#FFFF00' },
+    {
+      'Color': 'brown', 'stringDescription': 'Nâu', isChecked: false, codeColor: '#663300'
+    },
+    {
+      'Color': 'beige', 'stringDescription': 'Be', isChecked: false, codeColor: '#F5F5DC'
+    },
+    { 'Color': 'pink', 'stringDescription': 'Hồng', isChecked: false, codeColor: '#FFC0CB' },
+    { 'Color': 'gray', 'stringDescription': 'Xám', isChecked: false, codeColor: '#D3D3D3' },
   ];
 
 var sizeSample: Fields = {

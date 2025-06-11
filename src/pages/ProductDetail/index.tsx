@@ -168,29 +168,35 @@ const ProductDetailPage: React.FC = () => {
   ) : (
     <div className="w-full">
       <div className="relative flex sm:flex-row flex-col lg:w-3/4 w-full gap-2 p-4 mx-auto">
+
         <div className="flex sm:flex-row flex-col-reverse mx-auto gap-2">
-          <div className="flex sm:flex-col flex-row gap-2 z-50 w-max">
-            {additionalImages?.map((image, index) => (
-              <img
-                key={index}
-                onClick={() => triggerSelectCurrentImage(image)}
-                className="w-20 h-20 object-cover rounded-md border hover:cursor-pointer hover:border-gray-500"
-                src={image || "https://placehold.co/600x400"}
-                alt={`Additional Image ${index}`}
-              />
-            ))}
+          {/* Additional Images Section */}
+          <div className="flex sm:flex-col flex-row gap-2 z-50 w-max max-h-[25em] overflow-y-auto">
+            {additionalImages?.length > 0 ? (
+              additionalImages.map((image, index) => (
+                <img
+                  key={index}
+                  onClick={() => triggerSelectCurrentImage(image)}
+                  className="w-20 h-20 object-cover rounded-md border hover:cursor-pointer hover:border-gray-500"
+                  src={image || "https://placehold.co/600x400"}
+                  alt={`Additional Image ${index}`}
+                />
+              ))
+            ) : (
+              <span className="text-gray-500">No additional images available</span>
+            )}
           </div>
 
-          {/* Left Section: Product Images */}
+          {/* Main Image Section */}
           <div className="relative flex flex-col gap-2 z-10">
             <div className="relative">
               <img
-                className="w-[400px] h-[400px]  overflow-hidden object-fit rounded-md border"
+                className="w-[400px] h-[400px] object-contain rounded-md border"
                 src={currentImageSelected || "https://placehold.co/600x400"}
                 alt="Product Thumbnail"
               />
               {currentItemSelected === undefined && (
-                <div className="absolute flex w-1/2 h-1/2 justify-center items-center rounded-full inset-0 m-auto text-lg text-white bg-gray-700 opacity-45 ">
+                <div className="absolute flex w-1/2 h-1/2 justify-center items-center rounded-full inset-0 m-auto text-lg text-white bg-gray-700 opacity-50">
                   Hết hàng
                 </div>
               )}
@@ -202,6 +208,7 @@ const ProductDetailPage: React.FC = () => {
             </div>
           </div>
         </div>
+
 
         {/* Product Details */}
         <div className="flex-1 max-w-[50%]">
@@ -232,7 +239,7 @@ const ProductDetailPage: React.FC = () => {
 
           {/* Options */}
           <h2 className="text-lg font-bold ">Phân loại:</h2>
-          <div className="flex items-center gap-4 mb-4 p-3 max-w">
+          <div className="flex flex-wrap items-center gap-4 mb-4 p-3 max-w">
             {dataProduct?.productItems?.map((item, index) => {
               return item.quantity > 0 ? (
                 <div

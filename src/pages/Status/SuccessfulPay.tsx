@@ -1,6 +1,9 @@
+import User from "../../model/User";
+import { RootState } from "../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+
 const PaymentSuccess = () => {
-  const orderId = "ORD123456"; // ID đơn hàng giả lập
-  const email = "user@example.com"; // Email giả lập
+  const userData: User = useSelector((state: RootState) => state.users);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
@@ -14,10 +17,7 @@ const PaymentSuccess = () => {
         </p>
         <div className="mt-4">
           <p className="text-gray-800">
-            <strong>Mã đơn hàng:</strong> {orderId}
-          </p>
-          <p className="text-gray-800">
-            <strong>Email:</strong> {email}
+            <strong>Email:</strong> {userData.email}
           </p>
         </div>
         <button

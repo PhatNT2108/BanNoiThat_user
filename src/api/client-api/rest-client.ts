@@ -235,15 +235,11 @@ class RestClient {
     }
   }
 
-  async patchEachProperty<T>(
-    objectId: string,
-    property: string,
-    data: any
-  ): Promise<T> {
+  async patchEachProperty<T>(objectId: string, data?: any): Promise<T> {
     try {
       const isFormData = data instanceof FormData;
       const response = await this.axiosInstance.patch<T>(
-        `/${this.path}/${objectId}/${property}`,
+        `/${this.path}/${objectId}`,
         data,
         {
           headers: {

@@ -49,6 +49,8 @@ function Cart() {
     }
   };
 
+  console.log(cartData);
+
   const triggerAddItemManual = (
     productItem_Id: string,
     quantity: string,
@@ -179,7 +181,7 @@ function Cart() {
                 <span className="text-orange-500 font-bold">
                   {cartData?.cartItems
                     .reduce((total, item) => {
-                      return (total + item.salePrice) * item.quantity;
+                      return total + (item.salePrice * item.quantity); // <-- SỬA LẠI THÀNH CÔNG THỨC NÀY
                     }, 0)
                     .toLocaleString()}
                   đ

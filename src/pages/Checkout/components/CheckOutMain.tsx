@@ -7,6 +7,7 @@ import { RootState } from "../../../redux/store";
 import User from "../../../model/User";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Coupon } from "../../../model/Coupon";
+import { toast } from "react-toastify";
 
 interface Province {
   code: string;
@@ -176,6 +177,10 @@ const CheckOutMain = () => {
 
   //Call Api
   const createOrder = async () => {
+    console.log(orderInfo);
+    if (!(orderInfo.paymentMethod === "vnpay" || orderInfo.paymentMethod === "cod")) {
+      toast.warning("Vui lòng chọn phương thức thanh toán");
+    }
 
     var formOrder = new FormData();
     formOrder.append("fullName", orderInfo.fullName);
@@ -201,10 +206,6 @@ const CheckOutMain = () => {
       const response: ApiResponse = await clientAPI.service(`Payment`).create(formOrder);
       if (response.isSuccess && orderInfo.paymentMethod === "cod") {
         navigate("/");
-        console.log("Create order success");
-      }
-      else if (response.isSuccess && orderInfo.paymentMethod === "momo") {
-        window.location.href = response.result;
         console.log("Create order success");
       }
       else if (response.isSuccess && orderInfo.paymentMethod === "vnpay") {
@@ -293,13 +294,18 @@ const CheckOutMain = () => {
             <input type="radio" name="payment" value="cod" id="cod" onChange={(e) => setOrderInfo((prev) => ({ ...prev, paymentMethod: e.target.value }))} />
             <label htmlFor="cod">Thanh toán khi nhận hàng (COD)</label>
           </div>
-          {/* <div className="flex items-center space-x-2">
-            <input type="radio" name="payment" value="momo" id="momo" onChange={(e) => setOrderInfo((prev) => ({ ...prev, paymentMethod: e.target.value }))} />
-            <label htmlFor="momo">Ví MoMo</label>
-          </div> */}
           <div className="flex items-center space-x-2">
             <input type="radio" name="payment" value="vnpay" id="vnpay" onChange={(e) => setOrderInfo((prev) => ({ ...prev, paymentMethod: e.target.value }))} />
-            <label htmlFor="vnpay">Thanh toán qua VNPAY</label>
+            <div className="flex items-center space-x-2">
+              <label htmlFor="vnpay" className="cursor-pointer text-gray-700">
+                Thanh toán qua VNPAY
+              </label>
+              <img
+                src="https://cdn.brandfetch.io/idV02t6WJs/theme/dark/logo.svg?c=1dxbfHSJFAPEGdCLU4o5B"
+                alt="VNPAY Logo"
+                className="w-10 h-10"
+              />
+            </div>
           </div>
         </div>
       </div>

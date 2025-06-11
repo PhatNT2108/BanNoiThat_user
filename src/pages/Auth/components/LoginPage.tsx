@@ -4,6 +4,9 @@ import { Link, useNavigate } from "react-router-dom";
 import clientApi from "../../../api/client-api/rest-client";
 import ApiResponse from "../../../model/ApiResponse";
 import { setUser } from "../../../redux/features/userSlice";
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import { GoogleLogin } from '@react-oauth/google';
+import { env } from "process";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -18,6 +21,7 @@ const Login: React.FC = () => {
   const handleLogin = async () => {
     try {
       let data: ApiResponse = await clientApi.service("auth/login").authentication(email, password);
+
       dispatch(setUser(data.result));
       if (data.isSuccess) {
         navigate("/");
@@ -28,9 +32,21 @@ const Login: React.FC = () => {
     }
   };
 
-  const navigateForgotPassword = () => {
-    navigate("/forgot-password");
-  };
+  const handleSuccessLoginGoogle = async (response: any) => {
+    try {
+      const formData = new FormData();
+      formData.append("TokenId", response?.credential);
+      let data: ApiResponse = await clientApi.service("auth/login-google").create(formData);
+      localStorage.setItem("userToken", data?.result?.token);
+
+      dispatch(setUser(data.result));
+      if (data.isSuccess) {
+        navigate("/");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <div className="min-h flex items-center justify-center">
@@ -120,17 +136,14 @@ const Login: React.FC = () => {
 
           {/* Đăng nhập bằng Google */}
           <div className="mt-2">
-            <p className="text-center text-gray-600">Hoặc đăng nhập bằng:</p>
-            <button
-              type="button"
-              className="w-full mt-2 p-2 border rounded-lg flex items-center justify-center gap-2"
-            >
-              <img
-                src="https://cdn.cdnlogo.com/logos/g/35/google-icon.svg"
-                alt="Google"
-                className="w-6 h-6"
+            <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID || ""}>
+              <GoogleLogin
+                onSuccess={handleSuccessLoginGoogle}
+                onError={() => {
+                  console.log('Login Failed');
+                }}
               />
-            </button>
+            </GoogleOAuthProvider>
           </div>
 
           {/* Chuyển đến trang đăng ký */}
@@ -142,7 +155,7 @@ const Login: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 

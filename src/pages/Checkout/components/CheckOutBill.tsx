@@ -50,7 +50,7 @@ const CheckOutBill: React.FC = () => {
   const loadPriceShippingEstimate = async () => {
     try {
       const query = selectedItems
-        .map((item, index) => `listProductItem[${index}]=${item.id}`)
+        .map((item, index) => `listProductItem[${index}]=${item.productItem_Id}&&quantity[${index}]=${item.quantity}`)
         .join("&");
 
       const data: ApiResponse = await clientAPI.service("payment/shipping-fee").find(`${query}`);
@@ -88,9 +88,9 @@ const CheckOutBill: React.FC = () => {
           <p className="text-sm">-{discount.toLocaleString("vi-VN")} ₫</p>
         </div>
         <div className="flex justify-between py-1.5">
-          <p className="text-sm text-gray-600">Phí vận chuyển</p>
+          <p className="text-sm text-gray-600">Phí vận chuyển ước tính</p>
           <p className="text-sm text-blue-500">
-            {feeShipping?.total && feeShipping.total !== 0 ? `${feeShipping.total.toLocaleString("vi-VN")} ₫` : "Miễn phí"}
+            {feeShipping?.total && feeShipping.total !== 0 ? `${feeShipping.total.toLocaleString("vi-VN")} ₫` : "Chưa có phí cụ thể "}
           </p>
         </div>
         <div className="flex justify-between py-3 border-t mt-2">

@@ -70,7 +70,8 @@ const LocationSelector: React.FC<LocationSelectorProps> = ({
             (district: any) => String(district.province_code) === String(selectedProvince)
           );
           setDistricts(filteredDistricts);
-          setDistrictsOut(filteredDistricts)
+          setDistrictsOut(filteredDistricts);
+
         } catch (error) {
           console.error("Error fetching districts:", error);
         }

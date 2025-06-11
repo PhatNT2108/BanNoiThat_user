@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import axios from "axios";
 import clientAPI from "../../../api/client-api/rest-client";
+import ApiResponse from "../../../model/ApiResponse";
+import { toast } from "react-toastify";
 
 interface ReviewDialogProps {
   productId: string;
@@ -40,10 +41,9 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({ productId, orderItemId, nam
       formData.append("Rate", rate.toString());
       formData.append("orderItemId", orderItemId);
 
-      await clientAPI.service("reviews").create(formData);
-      await axios.post(`/product/${productId}`, formData);
+      var data: ApiResponse = await clientAPI.service("reviews").create(formData);
 
-      alert("Đánh giá đã được gửi thành công!");
+      toast.success("Đánh giá thành công");
       onSuccess();
       onClose();
     } catch (error) {

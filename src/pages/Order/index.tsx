@@ -5,6 +5,7 @@ import { OrderResponse } from "../../model/OrderResponse.";
 import { format } from "date-fns";
 import { toast } from "react-toastify";
 import ReviewDialog from "./Components/DialogComponent";
+import Swal from "sweetalert2";
 
 const OrderPage = () => {
   const [activeTab, setActiveTab] = useState("Processing");
@@ -42,16 +43,34 @@ const OrderPage = () => {
   );
 
   const triggerCancelOrder = async (orderId: string) => {
-    let formData = new FormData();
-    formData.append("orderStatus", "Cancelled");
+    const result = await Swal.fire({
+      title: "Xác nhận hủy đơn hàng",
+      text: "Bạn có chắc chắn muốn hủy đơn hàng này không?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Hủy đơn",
+      cancelButtonText: "Quay lại",
+    });
 
-    const response: ApiResponse = await clientAPI.service("orders").patchEachProperty(orderId, 'orderStatus', formData);
-    if (response.isSuccess) {
-      LoadOrders();
+    if (result.isConfirmed) {
+      try {
+        const response: ApiResponse = await clientAPI
+          .service("orders/cancelOrder")
+          .patchEachProperty(orderId);
+
+        if (response.isSuccess) {
+          Swal.fire("Đã hủy!", "Đơn hàng của bạn đã được hủy.", "success");
+          LoadOrders();
+        } else {
+          Swal.fire("Lỗi!", "Không thể hủy đơn hàng. Vui lòng thử lại.", "error");
+        }
+      } catch (error) {
+        Swal.fire("Lỗi!", "Không thể kết nối đến máy chủ.", "error");
+      }
     }
-    window.location.reload();
-  }
-
+  };
   const triggerShowInfoOrder = async (orderId: string) => {
     try {
       var data: ApiResponse = await clientAPI.service(`orders/${orderId}`).find();
@@ -139,7 +158,7 @@ const OrderPage = () => {
                         {Number(orderItem.price).toLocaleString('vi-VN')} đ
                       </div>
                       {
-                        activeTab === "Done" && orderItem.isComment === false && (<div className="absolute bottom-0 right-0">
+                        activeTab === "Done" && orderItem.isComment === false && (<div className="absolute bottom-1 right-1">
                           <button
                             className="px-4 py-2 bg-yellow-500 text-white rounded"
                             onClick={() => setIsDialogOpen(true)}
