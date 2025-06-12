@@ -1,7 +1,0 @@
-services:
-  bannoithat-user:
-    build:
-      context: .
-    container_name: bannoithat-user
-    ports:
-      - "3000:80" # map 80 in container => 3000 in local

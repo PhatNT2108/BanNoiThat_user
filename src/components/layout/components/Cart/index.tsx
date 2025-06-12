@@ -49,7 +49,7 @@ function Cart() {
     }
   };
 
-  console.log(cartData);
+  //Thêm vào giỏ hàng
 
   const triggerAddItemManual = (
     productItem_Id: string,

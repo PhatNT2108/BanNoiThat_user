@@ -115,10 +115,10 @@ const ProductDetailPage: React.FC = () => {
         .create(cartItem);
       toast.success("Đã thêm vào giỏ hàng!");
 
-      window.location.reload();
+
     } catch (error: any) {
-      toast.error(error.response.data.errorMessages[0]);
-      console.error("Error during signup", error);
+      const errorMessage = error.response?.data?.errorMessages?.[0] ?? "Đã xảy ra lỗi";
+      console.error(errorMessage);
     }
   };
 

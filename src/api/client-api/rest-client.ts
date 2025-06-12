@@ -1,5 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 import PaginationDto from "../../model/PaginationDto";
+import { toast } from "react-toastify";
 
 class RestClient {
   private axiosInstance: AxiosInstance;
@@ -15,8 +16,9 @@ class RestClient {
         "Access-Control-Allow-Origin": "*",
       },
     });
+  }
 
-    // Thêm interceptor để tự động thêm Authorization vào headers
+  private applyInterceptors(): void {
     this.axiosInstance.interceptors.request.use((config) => {
       const token = localStorage.getItem("userToken");
       if (token) {
@@ -24,26 +26,29 @@ class RestClient {
       }
       return config;
     });
-
-    // Thêm interceptor để xử lý lỗi
     this.axiosInstance.interceptors.response.use(
-      (response) => {
-        return response;
-      },
+      (response) => response,
       (error) => {
-        if (typeof error.response === "undefined") {
-          console.log("network error");
-          window.location.href = "/error-page";
+        switch (error.response.status) {
+          case 401:
+            toast.warning("Vui lòng đăng nhập!");
+            if (window.location.pathname !== "/auth") {
+              setTimeout(() => {
+                window.location.href = "/auth";
+              }, 2000);
+            }
+            break;
+          case 500:
+            const errorMessage =
+              error.response?.data?.errorMessages?.[0] ?? "Đã xảy ra lỗi";
+            toast.error(errorMessage);
+            break;
+          default:
+            toast.error(`Lỗi xảy ra: ${error.response.status}`);
+            break;
         }
-        if (error.response.status === 401) {
-          // Authorization error
-          window.location.href = "/signin";
-        } else if (error.response.status === 500) {
-          // Server error
-          window.location.href = "/500-error";
-        } else {
-          return Promise.reject(error);
-        }
+
+        return Promise.reject(error);
       }
     );
   }
@@ -56,6 +61,8 @@ class RestClient {
       withCredentials: true,
       headers,
     });
+
+    this.applyInterceptors();
 
     return this;
   }
