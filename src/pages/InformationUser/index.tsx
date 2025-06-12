@@ -34,6 +34,7 @@ function InformationUserPage() {
   const [error, setError] = useState<string>("");
 
   const loadInfoUser = async () => {
+    console.log(userData);
     try {
       const response: ApiResponse = await clientAPI.service(`users/${userData.user_id}`).find();
       if (response.isSuccess) setUserInfo(response.result);
@@ -69,8 +70,10 @@ function InformationUserPage() {
   };
 
   useEffect(() => {
-    loadInfoUser();
-  }, []);
+    if (userData) {
+      loadInfoUser();
+    }
+  }, [userData]);
 
   const handleEditInfoClick = (isSave: boolean) => {
     if (isSave) updateInfoUser("true");
@@ -92,6 +95,7 @@ function InformationUserPage() {
       {icon} {text}
     </label>
   );
+
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-indigo-100 to-blue-100 py-12 px-4 flex items-center justify-center">
@@ -129,7 +133,7 @@ function InformationUserPage() {
             <div>
               <Label icon={<WcIcon color="primary" />} text="Giới tính" />
               {isEditing ? (
-                <select name="isMale" value={userInfo.isMale.toString()} onChange={handleChange}
+                <select name="isMale" value={userInfo?.isMale?.toString()} onChange={handleChange}
                   className="w-full border rounded-lg px-3 py-2">
                   <option value="true">Nam</option>
                   <option value="false">Nữ</option>

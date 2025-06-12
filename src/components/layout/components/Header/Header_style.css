@@ -80,11 +80,27 @@
     visibility: visible;
   }
 }
-
 .navigate-section-header {
   background-color: #000000af;
   margin: auto;
   padding: 0.5rem;
   width: max-content;
   border-radius: 3px;
+}
+
+@media (max-width: 768px) {
+  .navigate-section-header {
+    font-size: 0.9em;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+    padding: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .navigate-section-header {
+    padding: 1.5rem;
+    border-radius: 5px; /* Tăng bo tròn cho phù hợp thẩm mỹ mobile */
+  }
 }

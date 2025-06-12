@@ -57,7 +57,7 @@ const CheckOutMain = () => {
   const loadUserInfo = async () => {
     try {
       const data: ApiResponse = await clientAPI.service(`users/${userData.user_id}`).find();
-      console.log(data?.result);
+
       const sliced = data?.result?.address.split("-");
       setAddress(sliced[0], sliced[1], sliced[2]);
 
@@ -173,7 +173,7 @@ const CheckOutMain = () => {
 
   useEffect(() => {
     loadUserInfo();
-  }, [])
+  }, [userData])
 
   //Call Api
   const createOrder = async () => {
@@ -220,6 +220,8 @@ const CheckOutMain = () => {
     }
   };
 
+  console.log(orderInfo);
+
   return (
     <div className="max-w-2xl mx-auto p-6">
       {/*Thông tin giao hàng*/}
@@ -228,7 +230,12 @@ const CheckOutMain = () => {
         <input className="w-full p-2 border rounded" placeholder="Họ và tên" value={orderInfo?.fullName} onChange={(e) => setOrderInfo((prev) => ({ ...prev, fullName: e.target.value }))
         } />
         <div className="grid grid-cols-2 gap-4">
-          <input className="w-full p-2 border rounded" placeholder="Email" value={orderInfo?.email} />
+          <input
+            className="w-full p-2 border rounded"
+            placeholder="Email"
+            value={orderInfo?.email}
+            onChange={(e) => setOrderInfo((prev) => ({ ...prev, email: e.target.value }))}
+          />
           <input className="w-full p-2 border rounded" placeholder="Số điện thoại" value={orderInfo?.phoneNumber} onChange={(e) => setOrderInfo((prev) => ({ ...prev, phoneNumber: e.target.value }))} />
         </div>
 
@@ -288,27 +295,36 @@ const CheckOutMain = () => {
 
       {/*Phương thức thanh toán*/}
       <h2 className="text-xl font-bold mt-6 mb-2">Phương thức thanh toán</h2>
+
       <div className="border rounded shadow p-4">
         <div className="space-y-2">
           <div className="flex items-center space-x-2">
-            <input type="radio" name="payment" value="cod" id="cod" onChange={(e) => setOrderInfo((prev) => ({ ...prev, paymentMethod: e.target.value }))} />
+            <input
+              type="radio"
+              name="payment"
+              id="cod"
+              value="cod"
+              checked={orderInfo.paymentMethod === "cod"}
+              onChange={(e) =>
+                setOrderInfo((prev) => ({ ...prev, paymentMethod: e.target.value }))
+              }
+            />
             <label htmlFor="cod">Thanh toán khi nhận hàng (COD)</label>
           </div>
           <div className="flex items-center space-x-2">
-            <input type="radio" name="payment" value="vnpay" id="vnpay" onChange={(e) => setOrderInfo((prev) => ({ ...prev, paymentMethod: e.target.value }))} />
-            <div className="flex items-center space-x-2">
-              <label htmlFor="vnpay" className="cursor-pointer text-gray-700">
-                Thanh toán qua VNPAY
-              </label>
-              <img
-                src="https://cdn.brandfetch.io/idV02t6WJs/theme/dark/logo.svg?c=1dxbfHSJFAPEGdCLU4o5B"
-                alt="VNPAY Logo"
-                className="w-10 h-10"
-              />
-            </div>
+            <input
+              type="radio"
+              name="payment"
+              id="vnpay"
+              value="vnpay"
+              checked={orderInfo.paymentMethod === "vnpay"}
+              onChange={() => setOrderInfo((prev) => ({ ...prev, paymentMethod: "vnpay" }))}
+            />
+            <label htmlFor="vnpay">Thanh toán qua VNPAY</label>
           </div>
         </div>
       </div>
+
 
       <div className="flex justify-end mt-6">
         <button className="border rounded p-2 bg-green-700 text-white" onClick={createOrder}>Hoàn tất đơn hàng</button>

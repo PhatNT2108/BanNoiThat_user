@@ -114,7 +114,7 @@ function Navigation() {
                 {loading ? (
                   <div className="p-4 text-gray-500">Đang tải...</div>
                 ) : (
-                  <ul className="p-2 space-y-2">
+                  <ul className="p-2 space-y-1">
                     {item.href === "/categories" && (<NavItem items={dataCategories} setState={setDataCategories} />)}
                     {item.href === "/brands" && (<NavItem items={dataBrands} setState={setDataBrands} />)}
                     {item.href === "/saleprograms" && (<NavItem items={salePrograms} setState={setSalePrograms} />)}
@@ -126,7 +126,7 @@ function Navigation() {
         ))}
 
         <li>
-          <Link to="/about-us" className="text-[#d7f0db] hover:text-[#d7f0db]">
+          <Link to="https://www.facebook.com/tran.tuananh.676457/" className="text-[#d7f0db] hover:text-[#d7f0db]">
             About Us
           </Link>
         </li>

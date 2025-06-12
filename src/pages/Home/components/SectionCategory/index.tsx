@@ -47,7 +47,7 @@ const SectionCategories = () => {
           </div>
         ))
       }
-    </section >) : <div>Không có danh mục</div>
+    </section >) : <div className="mx-auto">Không có danh mục</div>
   );
 }
 

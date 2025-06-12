@@ -149,9 +149,9 @@ const Login: React.FC = () => {
           {/* Chuyển đến trang đăng ký */}
           <div className="text-center mt-4">
             <span className="text-gray-600">Bạn chưa có tài khoản? </span>
-            <Link to="/register" className="text-red-700 hover:underline">
+            <div className="text-red-700 hover:underline">
               Hãy đăng ký ngay
-            </Link>
+            </div>
           </div>
         </div>
       </div>

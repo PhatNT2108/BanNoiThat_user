@@ -5,7 +5,7 @@ import HomePage from "../pages/Home/Homepage";
 import AuthPage from "../pages/Auth/";
 import ProductDetail from "../pages/ProductDetail";
 import CheckOutPage from "../pages/Checkout";
-import InformationUserPage from "../pages/InformationUser/InformationUserPage";
+import InformationUserPage from "../pages/InformationUser";
 import MangeOrderPage from "../pages/Order";
 import AddressUser from "../pages/InformationUser/FavoriteUser";
 import FilteredProductPage from "../pages/Home/FilteredProductPage";

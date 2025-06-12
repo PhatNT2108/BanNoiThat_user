@@ -211,7 +211,7 @@ const ProductDetailPage: React.FC = () => {
 
 
         {/* Product Details */}
-        <div className="flex-1 max-w-[50%]">
+        <div className="flex-1 sm:max-w-[50%] max-w-[90%]">
           <h1 className="text-2xl font-bold mb-2">{dataProduct?.name}</h1>
 
           {/* Thông tin phụ */}
@@ -321,7 +321,7 @@ const ProductDetailPage: React.FC = () => {
       </div>
 
       {/*Tabs*/}
-      <div className="w-1/2 mx-auto">
+      <div className="sm:w-1/2 w-[90%] mx-auto">
         <Tabs
           description={dataProduct?.description || ""}
           product_id={dataProduct?.id || null}
@@ -329,12 +329,12 @@ const ProductDetailPage: React.FC = () => {
       </div>
 
       {/*Gợi ý sản phẩm*/}
-      <div className="p-10">
-        <div className="flex justify-between px-4 text-3xl font-bold py-4">
+      <div className="sm:p-10 p-5">
+        <div className="flex justify-between px-4 text-3xl font-bold ">
           <span> Sản phẩm liên quan </span>
-          <span className="text-sm"> Xem thêm </span>
+          {/* <span className="text-sm"> Xem thêm </span> */}
         </div>
-        <div className="grid sm:grid-cols-4 grid-cols-2 ">
+        <div className="grid sm:grid-cols-4 grid-cols-2 gap-4">
           {dataSameProductRecommend.length > 0 ? (
             dataSameProductRecommend.map((product, index) => (
               <div key={index}>
@@ -348,12 +348,12 @@ const ProductDetailPage: React.FC = () => {
       </div>
 
       {/*Gợi ý sản phẩm*/}
-      <div className="p-10">
+      <div className="sm:p-10 p-5">
         <div className="flex justify-between px-4 text-3xl font-bold py-4">
           <span> Gợi ý cho bạn</span>
-          <span className="text-sm"> Xem thêm </span>
+          {/* <span className="text-sm"> Xem thêm </span> */}
         </div>
-        <div className="grid sm:grid-cols-4 grid-cols-2">
+        <div className="grid sm:grid-cols-4 grid-cols-2 gap-4">
           {dataRecommendProducts.length > 0 ? (
             dataRecommendProducts.map((product, index) => (
               <div key={index}>

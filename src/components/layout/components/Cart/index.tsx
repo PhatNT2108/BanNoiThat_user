@@ -190,7 +190,7 @@ function Cart() {
 
               <div className="flex space-x-2">
                 <Link
-                  to="/checkOut"
+                  to="/checkout"
                   className="flex-1 py-2 bg-teal-700 text-white text-center rounded font-medium"
                   onClick={navigateCheckout}
                 >

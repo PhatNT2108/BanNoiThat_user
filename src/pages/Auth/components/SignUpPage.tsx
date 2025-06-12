@@ -59,7 +59,7 @@ const SignUp: React.FC = () => {
       window.location.reload();
     } catch (error) {
       setErrConfirmPassword("Thông tin không chính xác!");
-      toast.error("Đăng ký không thành công!");
+      console.warn("Đăng ký không thành công!");
     } finally {
       setLoading(false);
     }
@@ -191,7 +191,7 @@ const SignUp: React.FC = () => {
             {loading ? "Đang đăng ký..." : "Đăng ký"}
           </button>
 
-          {/* Đăng ký bằng Google */}
+          {/* Đăng ký bằng Google
           <div className="mt-4">
             <p className="text-center text-gray-600">Hoặc đăng ký bằng:</p>
             <button
@@ -204,14 +204,14 @@ const SignUp: React.FC = () => {
                 className="w-6 h-6"
               />
             </button>
-          </div>
+          </div> */}
 
           {/* Chuyển đến trang đăng nhập */}
           <div className="text-center mt-4">
             <span className="text-gray-600">Bạn đã có tài khoản? </span>
-            <Link to="/login" className="text-red-700 hover:underline">
+            <div className="text-red-700 hover:underline">
               Đăng nhập
-            </Link>
+            </div>
           </div>
         </div>
       </div>

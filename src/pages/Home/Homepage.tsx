@@ -139,7 +139,7 @@ const Homepage: React.FC = () => {
                 <div className="flex justify-between items-center p-4 text-3xl font-bold ">
                     <span> Gợi ý cho bạn</span>
                 </div>
-                <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-2">
+                <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-2 gap-2">
                     {dataRecommendProducts?.length > 0 ? dataRecommendProducts?.map((product, index) => (
                         <div key={index} >
                             <ProductCard product={product} />

@@ -16,7 +16,7 @@ function ProductCard({ product }: Props) {
   return (
     //Card product
     <div
-      className="card-product relative md:m-2 m-1 box-border min-w-[11.3em] max-h-[18rem]"
+      className="card-product relative md:m-2 box-border min-w-[11.3em] max-h-[20rem]"
       onClick={() => navigateProductDetail(product.slug)}
     >
       <div className="relative h-48 overflow-hidden group">
@@ -32,22 +32,23 @@ function ProductCard({ product }: Props) {
         />
       </div>
 
-      <div className="flex flex-col justify-between ml-3 mb-2">
+      <div className="flex flex-col justify-between ml-3 mb-2 md:text-sm text-[0.8rem]">
         <h3 className="md:text-[1.1rem] ml-1 mt-2 min-h-[3.4rem] ">{product.name}</h3>
-        <div className="flex items-center flex-wrap justify-between">
+        <div className="flex flex-row sm:flex-wrap items-center justify-between">
           <div className="flex items-center flex-wrap">
-            <div className="text-[#2b8a3e] sm:pl-1 px-1">{product.salePrice.toLocaleString()}đ</div>
+            <div className="text-[#2b8a3e] w-max flex-wrap sm:pl-1 px-1">{product.salePrice.toLocaleString()}đ</div>
             {product.price !== 0 && (
-              <div className="md:text-sm text-[0.8rem] line-through text-gray-400 ml-1">
+              <div className=" line-through text-gray-400 ml-1">
                 {product.price.toLocaleString("vn")}đ
               </div>
             )}
           </div>
-          <div className="mr-2 text-gray-500">
+          <div className="mr-1 text-gray-500">
             Đã bán: {product.totalSoldQuantity}
           </div>
         </div>
       </div>
+
       <div className="absolute top-1 left-1 flex flex-col gap-1">
         {product.salePrice !== product.price && (<div className="flex justify-center items-center text-[16px] w-10 h-10 rounded-full text-white bg-[#c92a2a]">
           {((1 - product.salePrice / product.price) * 100).toFixed(0)}%

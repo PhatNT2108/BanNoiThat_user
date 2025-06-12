@@ -32,10 +32,11 @@ const Header = () => {
     window.location.reload();
   };
 
+
   return (
     <header className="header max-w-full relative">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-around py-2">
+      <div className="container mx-auto px-1">
+        <div className="flex items-center justify-around sm:p-2 p-4">
           {/* Logo */}
           <Link to="/">
             <img
@@ -83,27 +84,37 @@ const Header = () => {
                         }`}
                     >
                       <div className="text-lg p-3 border-b-2 mx-auto">
-                        {" "}
-                        Thông tin tài khoản{" "}
+                        Thông tin tài khoản
                       </div>
-                      <Link
-                        to="/information"
-                        className="p-2 hover:cursor-pointer block"
-                      >
-                        Tài khoản của bạn
-                      </Link>
-                      <Link
-                        to="/orders"
-                        className="p-2 hover:cursor-pointer block"
-                      >
-                        Đơn hàng
-                      </Link>
-                      <div
-                        className="p-2 hover:cursor-pointer"
-                        onClick={triggerLogout}
-                      >
-                        Đăng xuất
-                      </div>
+                      {
+                        userData && userData.user_id ? (
+                          <div><Link
+                            to="/information"
+                            className="p-2 hover:cursor-pointer block"
+                          >
+                            Tài khoản của bạn
+                          </Link>
+                            <Link
+                              to="/orders"
+                              className="p-2 hover:cursor-pointer block"
+                            >
+                              Đơn hàng
+                            </Link>
+                            <div
+                              className="p-2 hover:cursor-pointer"
+                              onClick={triggerLogout}
+                            >
+                              Đăng xuất
+                            </div>
+                          </div>)
+                          :
+                          (<Link
+                            to="/auth"
+                            className="p-2 hover:cursor-pointer block"
+                          >
+                            Đăng nhập
+                          </Link>)
+                      }
                       <svg
                         onClick={() => setIsOpenUser((prev) => !prev)}
                         xmlns="http://www.w3.org/2000/svg"
@@ -216,7 +227,7 @@ const Header = () => {
               <div className="text-sm">
                 <Link
                   to="/auth"
-                  className="max-[640px]:hidden flex bg-slate-200 px-2 py-1 rounded-full items-center text-black hover:text-gray-500"
+                  className="max-[640px]:hidden flex  bg-slate-200 px-2 py-1 rounded-full items-center text-black hover:text-gray-500"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -224,7 +235,7 @@ const Header = () => {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="size-10"
+                    className="size-10 "
                   >
                     <path
                       strokeLinecap="round"
@@ -232,7 +243,9 @@ const Header = () => {
                       d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
                     />
                   </svg>
-                  <span>Đăng nhập/Đăng ký</span>
+                  <div>
+                    <span>Đăng nhập </span>
+                  </div>
                 </Link>
               </div>
             )}
