@@ -41,6 +41,7 @@
     "start": "set PORT=3005 && react-scripts start",
     "build": "react-scripts build",
     "build-win": "set CI=false&&rescripts build",
+    "dev:prod": "cross-env NODE_ENV=production react-scripts start",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -64,8 +65,10 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",
+    "cross-env": "^7.0.3",
     "postcss": "^8.5.3",
     "postcss-cli": "^11.0.0",
-    "tailwindcss": "^3.4.17"
+    "tailwindcss": "^3.4.17",
+    "webpack-cli": "^6.0.1"
   }
 }
