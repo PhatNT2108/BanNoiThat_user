@@ -31,7 +31,8 @@ class RestClient {
       (error) => {
         switch (error.response.status) {
           case 401:
-            toast.warning("Vui lòng đăng nhập!");
+            console.log(error);
+            toast.warning(error.response?.data || "Vui lòng đăng nhập!");
             if (window.location.pathname !== "/auth") {
               setTimeout(() => {
                 window.location.href = "/auth";

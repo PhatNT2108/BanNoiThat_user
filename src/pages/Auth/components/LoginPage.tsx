@@ -20,15 +20,15 @@ const Login: React.FC = () => {
 
   const handleLogin = async () => {
     try {
+      if (!email || !password) throw expect;
       let data: ApiResponse = await clientApi.service("auth/login").authentication(email, password);
-
       dispatch(setUser(data.result));
       if (data.isSuccess) {
         navigate("/");
       }
     }
     catch {
-      setErrAccount("Thông tin không chính xác");
+      setErrAccount("Vui lòng nhập mật khẩu");
     }
   };
 
@@ -96,6 +96,7 @@ const Login: React.FC = () => {
                 name="password"
                 id="password"
                 placeholder="Mật khẩu"
+                required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-2 pl-10 border rounded-md focus:ring focus:ring-red-300 focus:outline-none"
@@ -135,7 +136,7 @@ const Login: React.FC = () => {
           </div>
 
           {/* Đăng nhập bằng Google */}
-          <div className="mt-2">
+          <div className="mt-2 mx-auto">
             <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID || ""}>
               <GoogleLogin
                 onSuccess={handleSuccessLoginGoogle}

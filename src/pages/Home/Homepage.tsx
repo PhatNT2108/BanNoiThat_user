@@ -6,7 +6,7 @@ import ApiResponse from '../../model/ApiResponse';
 import PagingBar from '../../components/common/PagingBar';
 import PaginationDto from '../../model/PaginationDto';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { getFromLocalStorage } from '../../utils/HandleInteracted';
+import { getRecentProducts } from '../../utils/HandleInteracted';
 import ProductCard from './components/ProductCard/ProductCard';
 import SectionCategories from './components/SectionCategory';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -35,10 +35,15 @@ const Homepage: React.FC = () => {
             if (slug) {
                 stringSearch = slug;
             }
-            let userInteractions = getFromLocalStorage("userInteractions") || {};
-            let interactedProductIds = (userInteractions["view"] || []).slice(0, 30);
+
+            const interactedProductIds = getRecentProducts();
+            if (!interactedProductIds.length) {
+                console.warn("No interacted products found");
+                setIsLoading(false);
+                return;
+            }
             let formData = new FormData();
-            interactedProductIds.forEach((productId: string, index: number) => {
+            interactedProductIds.forEach((productId, index) => {
                 formData.append(`InteractedProductIds[${index}]`, productId);
             });
 
@@ -58,13 +63,13 @@ const Homepage: React.FC = () => {
             if (slug) {
                 stringSearch = slug;
             }
-            let userInteractions = getFromLocalStorage("userInteractions") || {};
-            let interactedProductIds = userInteractions["view"] || [];
+            // let userInteractions = getFromLocalStorage("userInteractions") || {};
+            // let interactedProductIds = userInteractions["view"] || [];
 
             let formData = new FormData();
-            interactedProductIds.forEach((productId: string, index: number) => {
-                formData.append(`InteractedProductIds[${index}]`, productId);
-            });
+            // interactedProductIds.forEach((productId: string, index: number) => {
+            //     formData.append(`InteractedProductIds[${index}]`, productId);
+            // });
 
             const result = await clientAPI.service("products").findPagedList<ApiResponse>(`pageSize=${10}&pageCurrent=${1}`);
 

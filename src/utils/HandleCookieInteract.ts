@@ -8,13 +8,22 @@ function getCookie(name: string): string | null {
   return null;
 }
 
-// Hàm lưu danh sách sản phẩm vào cookie
-function setCookie(name: string, value: string, days: number): void {
+function setCookie(
+  name: string,
+  value: string,
+  days: number,
+  isHttps: boolean = true
+): void {
   const expires = new Date();
   expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+
+  const secureAttribute = isHttps ? "; Secure" : "";
+  const domainAttribute = "; Domain=api.noithatvn.click"; // Đặt domain cookie
+  const sameSiteAttribute = "; SameSite=None"; // Cho phép cross-origin
+
   document.cookie = `${name}=${encodeURIComponent(
     value
-  )}; path=/; expires=${expires.toUTCString()}; Secure; SameSite=Lax`;
+  )}; path=/; expires=${expires.toUTCString()}${sameSiteAttribute}${secureAttribute}${domainAttribute}`;
 }
 
 // Hàm thêm sản phẩm vào cookie

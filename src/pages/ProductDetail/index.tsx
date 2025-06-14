@@ -13,9 +13,9 @@ import QuantitySelector from "../../components/layout/components/QuantityPlusMin
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import {
-  addProductToCookie,
+  addProductToLocalStorage,
   getRecentProducts
-} from "../../utils/HandleCookieInteract";
+} from "../../utils/HandleInteracted";
 
 const ProductDetailPage: React.FC = () => {
   const { slug } = useParams();
@@ -45,7 +45,7 @@ const ProductDetailPage: React.FC = () => {
         .find();
       setDataProducts(() => data.result);
       if (data) {
-        addProductToCookie(data?.result.id);
+        addProductToLocalStorage(data?.result.id);
 
         const images = data.result.productItems.map(
           (item: ProductItemResponse) => item.imageUrl
@@ -67,8 +67,17 @@ const ProductDetailPage: React.FC = () => {
 
   const LoadProductRecommend = async () => {
     try {
+      const interactedProductIds = getRecentProducts();
+      if (!interactedProductIds.length) {
+        console.warn("No interacted products found");
+        setIsLoading(false);
+        return;
+      }
       let formData = new FormData();
-      formData.append(`IsSpecial`, "false");
+      interactedProductIds.forEach((productId, index) => {
+        formData.append(`InteractedProductIds[${index}]`, productId);
+      });
+
 
       const result = await clientAPI
         .service("products/recommend")
@@ -84,7 +93,7 @@ const ProductDetailPage: React.FC = () => {
     try {
       let formData = new FormData();
       formData.append(`IsSpecial`, "true");
-      formData.append(`InteractedProductId`, dataProduct?.id || "");
+      formData.append(`InteractedProductIds[0]`, dataProduct?.id || "");
 
       const result = await clientAPI
         .service("products/recommend")
